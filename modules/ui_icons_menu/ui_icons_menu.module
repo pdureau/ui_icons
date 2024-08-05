@@ -1,0 +1,125 @@
+<?php
+
+/**
+ * @file
+ * Drupal hooks and global functions for ui_icons_menu module.
+ */
+
+use Drupal\Core\Entity\EntityTypeInterface;
+use Drupal\Core\Routing\RouteMatchInterface;
+use Drupal\ui_icons\IconDefinitionInterface;
+
+/**
+ * Implements hook_help().
+ */
+function ui_icons_menu_help(string $route_name, RouteMatchInterface $route_match) {
+  switch ($route_name) {
+    case 'help.page.ui_icons_menu':
+      $output = '';
+      $output .= '<h3>' . t('About') . '</h3>';
+      $output .= '<p>' . t('The UI Icons Menu module overtakes the core default widget for menu link content entities, allowing you to set icons on menu links.') . '</p>';
+      return $output;
+
+    default:
+  }
+}
+
+/**
+ * Implements hook_entity_base_field_info_alter().
+ *
+ * @todo set settings options, position and required as menu setting or global
+ * for all menus.
+ */
+function ui_icons_menu_entity_base_field_info_alter(array &$fields, EntityTypeInterface $entity_type): void {
+  if ($entity_type->id() === 'menu_link_content') {
+    $moduleDiscovery = \Drupal::service('module_handler');
+    $type = 'ui_icon_link_widget';
+    if ($moduleDiscovery->moduleExists('link_attributes')) {
+      $type = 'ui_icon_link_attributes_widget';
+    }
+    $fields['link']->setDisplayOptions('form', [
+      'type' => $type,
+      // Allow icon position and settings.
+      'settings' => [
+        'icon_position' => TRUE,
+        'show_settings' => TRUE,
+      ],
+    ]);
+    // Icon is always optional for now.
+    $fields['link']->setRequired(FALSE);
+  }
+}
+
+/**
+ * Implements hook_preprocess_menu().
+ */
+function ui_icons_menu_preprocess_menu(array &$variables): void {
+  if (empty($variables['items'])) {
+    return;
+  }
+  ui_icons_menu__preprocess_menu($variables['items']);
+}
+
+/**
+ * Handle menu items to add our icon.
+ *
+ * @param array $items
+ *   The menu items.
+ */
+function ui_icons_menu__preprocess_menu(array &$items): void {
+  foreach ($items as &$item) {
+    if (empty($item['url'])) {
+      continue;
+    }
+
+    ui_icons_menu__preprocess_menu_item($item);
+
+    if (!empty($item['below'])) {
+      ui_icons_menu__preprocess_menu($item['below']);
+    }
+  }
+}
+
+/**
+ * Handle a single menu item.
+ *
+ * @param array $item
+ *   The menu item.
+ */
+function ui_icons_menu__preprocess_menu_item(array &$item): void {
+  /** @var \Drupal\Core\Url $url */
+  $url = $item['url'];
+  $options = $url->getOptions();
+
+  if (!empty($options['value']['icon']) && $options['value']['icon'] instanceof IconDefinitionInterface && empty($options['already_processed'])) {
+    $icon = $options['value']['icon'];
+    $icon_display = $options['icon_display'] ?? 'before';
+
+    $icon_settings = [];
+    if (isset($options['value']['settings'][$icon->getIconsetId()])) {
+      $icon_settings = reset($options['value']['settings'][$icon->getIconsetId()]);
+    }
+    $icon = $icon->getRenderable($icon_settings);
+
+    switch ($icon_display) {
+      case 'before':
+        $item['title'] = [
+          'icon' => $icon,
+          'title' => ['#markup' => '<span class="ui-icons-menu-text">' . $item['title'] . '</span>'],
+        ];
+        break;
+
+      case 'after':
+        $item['title'] = [
+          'title' => ['#markup' => '<span class="ui-icons-menu-text">' . $item['title'] . '</span>'],
+          'icon' => $icon,
+        ];
+        break;
+
+      default:
+        $item['title'] = $icon;
+        break;
+    }
+
+  }
+}

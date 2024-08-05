@@ -1,0 +1,5 @@
+ui_icons_library.index:
+  title: 'Ui Icons Library'
+  description: 'Library of icons.'
+  route_name: ui_icons_library.index
+  parent: system.themes_page

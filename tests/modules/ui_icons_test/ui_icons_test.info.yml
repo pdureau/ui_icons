@@ -1,0 +1,4 @@
+name: 'UI Icons Tests'
+type: module
+description: 'Provides test icons.'
+package: 'Testing'

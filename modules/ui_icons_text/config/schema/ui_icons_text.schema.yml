@@ -1,0 +1,10 @@
+filter_settings.icon_embed:
+  type: mapping
+  label: 'Icon Embed'
+  mapping:
+    allowed_iconset:
+      type: sequence
+      label: 'Iconset allowed for selection'
+      sequence:
+        type: string
+        label: 'Iconset id'

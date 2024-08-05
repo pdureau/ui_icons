@@ -1,0 +1,8 @@
+name: 'UI Icons Text'
+type: module
+description: 'Provide text filter integration for icon selection.'
+package: User interface
+core_version_requirement: ^10 || ^11
+dependencies:
+  - drupal:filter
+  - ui_icons:ui_icons

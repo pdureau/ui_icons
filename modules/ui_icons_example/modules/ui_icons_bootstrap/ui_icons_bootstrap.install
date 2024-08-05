@@ -1,0 +1,32 @@
+<?php
+
+/**
+ * @file
+ * Install, update and uninstall functions for the ui_icons_bootstrap module.
+ */
+
+/**
+ * Implements hook_requirements().
+ */
+function ui_icons_bootstrap_requirements($phase) {
+  if ($phase != 'runtime') {
+    return [];
+  }
+
+  $link = 'https://icons.getbootstrap.com';
+  $pattern = '/libraries/bootstrap-icons/node_modules/bootstrap-icons/icons/*.svg';
+
+  $requirements = [];
+  $library_exists = count(glob(DRUPAL_ROOT . $pattern));
+  $requirements['ui_icons_bootstrap'] = [
+    'title' => t('Icons Bootstrap'),
+    'value' => $library_exists ? t('Found @num Bootstrap icons', ['@num' => $library_exists]) : t('Missing icons in libraries folder.'),
+    'description' => $library_exists ? '' : t('Install <a href=":link">Bootstrap icons</a> with <code>npm i bootstrap-icons</code> under Drupal web directory as <code>@path</code>.', [
+      ':link' => $link,
+      '@path' => $pattern,
+    ]),
+    'severity' => $library_exists ? REQUIREMENT_OK : REQUIREMENT_WARNING,
+  ];
+
+  return $requirements;
+}

@@ -1,0 +1,36 @@
+.ui-icons-input-wrapper {
+  display: flex;
+}
+
+.ui-icons-input-wrapper .ui-icons-select input {
+  border-top-left-radius: 0;
+  border-bottom-left-radius: 0;
+}
+
+/* Claro and default */
+.ui-icons-input-wrapper .form-item {
+  margin-block: 0;
+}
+
+.ui-icons-preview {
+  text-align: center;
+}
+
+.ui-icons-preview.form-item {
+  min-width: 3rem;
+  max-width: 3rem;
+  max-height: 2.65rem;
+  padding: calc(var(--input-padding-vertical) / 3) 0 0 0;
+  border: var(--input-border-size) solid var(--input-border-color);
+  border-right: 0 none;
+  border-top-right-radius: 0;
+  border-bottom-right-radius: 0;
+  background-color: var(--color-gray-050);
+}
+
+.ui-icons-preview.form-item img,
+.ui-icons-preview.form-item svg {
+  min-width: 2.2rem;
+  max-width: 2.2rem;
+  max-height: 2.2rem;
+}

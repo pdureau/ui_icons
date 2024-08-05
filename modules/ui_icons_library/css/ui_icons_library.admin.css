@@ -1,0 +1,34 @@
+.ui-icons-library-search > div {
+  display: inline-block;
+}
+
+.ui-icons-library-search div.ui-icons-wrapper {
+  display: block;
+}
+
+.ui-icons-library-search .form-submit {
+  margin-left: 1rem;
+}
+
+.ui-icons-grid .ui-icons-item--grid {
+  display: inline-block;
+  margin: 0.25rem;
+  border: 1px solid #f7f7f7;
+  border-radius: 5px;
+  box-shadow: 2px 2px 2px 1px rgb(0, 0, 0, 0.2);
+}
+
+.ui-icons-grid .ui-icons-item--grid .ui-icons-item__name {
+  font-size: x-small;
+}
+
+.ui-icons-item__preview .thumbnail {
+  background-color: #f7f7f7;
+}
+
+.ui-icons-item__preview .thumbnail img,
+.ui-icons-item__preview .thumbnail svg {
+  display: block;
+  margin: auto;
+  padding: 0.25rem 0.25rem 0 0.25rem;
+}

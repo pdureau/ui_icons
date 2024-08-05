@@ -1,0 +1,34 @@
+ui_icons_icomoon_svg:
+  label: IcoMoon
+  description: IcoMoon icons from SVG sources.
+  extractor: svg
+  config:
+    sources:
+      - /libraries/icomoon/{group}/{icon_id}.svg
+  options:
+    title:
+      { title: "Title", description: "Set a title on hover for this icon." }
+    alt:
+      {
+        title: "Alt text",
+        description: "Accessibility alternative text, leave empty for decorative icon.",
+        placeholder: "Set an alternative text.",
+      }
+    width:
+      {
+        title: "Width",
+        description: "Set a width for this icon.",
+        type: "integer",
+        default: 40,
+        required: true,
+        suffix: "px",
+      }
+    height:
+      {
+        title: "Height",
+        description: "Set a height for this icon.",
+        type: "integer",
+        default: 40,
+        required: true,
+        suffix: "px",
+      }

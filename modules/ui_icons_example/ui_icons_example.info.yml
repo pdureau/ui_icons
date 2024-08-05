@@ -1,0 +1,7 @@
+name: 'UI Icons Examples'
+type: module
+description: 'Provide examples for UI Icons module.'
+package: User interface Example
+core_version_requirement: ^10 || ^11
+dependencies:
+  - ui_icons:ui_icons

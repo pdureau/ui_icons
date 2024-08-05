@@ -1,0 +1,36 @@
+field.widget.settings.ui_icon_link_attributes_widget:
+  type: mapping
+  label: 'UI icon link attributes widget settings'
+  mapping:
+    # @see ui_icons_field_link/config/schema/ui_icons_field_link.schema.yml
+    allowed_iconset:
+      type: sequence
+      label: 'Iconset limitation for selection'
+      sequence:
+        type: string
+        label: 'Iconset id'
+    show_settings:
+      type: string
+      label: 'Show extractor settings'
+    icon_required:
+      type: string
+      label: 'Set icon required'
+    icon_position:
+      type: string
+      label: 'Allow iconset display selection'
+    # @see core/modules/link/config/schema/link.schema.yml
+    placeholder_url:
+      type: string
+      label: 'Placeholder for URL'
+    placeholder_title:
+      type: label
+      label: 'Placeholder for link text'
+    # @see link_attributes/config/schema/link_attributes.schema.yml
+    enabled_attributes:
+      type: sequence
+      sequence:
+        type: boolean
+        label: 'Enabled'
+    widget_default_open:
+      type: string
+      label: 'Widget expand behavior'

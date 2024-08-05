@@ -1,0 +1,155 @@
+<?php
+
+declare(strict_types=1);
+
+namespace Drupal\ui_icons;
+
+use Drupal\ui_icons\Exception\IconDefinitionInvalidDataException;
+
+/**
+ * Handle a UI Icon definition.
+ */
+class IconDefinition implements IconDefinitionInterface {
+
+  protected const DEFAULT_TEMPLATE = '<img src="{{ source }}" title="{{ title|default(icon_id|capitalize) }}" alt="{{ alt|default(icon_id|capitalize) }}" width="{{ width }}" height="{{ height }}">';
+
+  /**
+   * Constructor for IconDefinition.
+   *
+   * @param string $name
+   *   The name of the icon.
+   * @param string $source
+   *   The source of the icon.
+   * @param array $data
+   *   The additional data of the icon.
+   * @param string|null $group
+   *   The group of the icon (optional).
+   */
+  private function __construct(
+    private string $name,
+    private string $source,
+    private array $data,
+    private ?string $group = NULL,
+  ) {}
+
+  /**
+   * {@inheritdoc}
+   */
+  public static function create(string $name, string $source, array $data, ?string $group = NULL): self {
+    self::validateData($name, $source, $data);
+    return new self($name, $source, $data, $group);
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getId(): string {
+    return $this->getIconsetId() . ':' . $this->name;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getName(): string {
+    return $this->name;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getSource(): string {
+    return $this->source;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getGroup(): string {
+    return $this->group ?? '';
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getContent(): string {
+    return $this->data['content'] ?? '';
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getIconsetId(): string {
+    return $this->data['iconset_id'];
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getIconsetLabel(): string {
+    return $this->data['iconset_label'] ?? '';
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getRenderable(array $options = []): array {
+    // @todo should we pass the whole icon object? The data?
+    $context = [
+      'icon_id' => $this->name,
+      'source' => $this->source,
+      'content' => $this->getContent(),
+      'iconset_label' => $this->getIconsetLabel(),
+    ];
+
+    if (!isset($this->data['template']) || empty($this->data['template'])) {
+      $template = self::DEFAULT_TEMPLATE;
+    }
+    else {
+      $template = $this->data['template'];
+    }
+
+    $template = [
+      '#type' => 'inline_template',
+      '#template' => $template,
+      '#context' => array_merge($context, $options),
+    ];
+
+    if (isset($this->data['library']) && !empty($this->data['library'])) {
+      $template['#attached'] = ['library' => [$this->data['library']]];
+    }
+
+    return $template;
+  }
+
+  /**
+   * Basic validation before creating the icon.
+   *
+   * @param string $name
+   *   The name of the icon.
+   * @param string $source
+   *   The source of the icon.
+   * @param array $data
+   *   The additional data of the icon.
+   */
+  private static function validateData(string $name, string $source, array $data): void {
+    $errors = NULL;
+
+    // Empty can have "0" as false positive.
+    if ('' === $name) {
+      $errors[] = 'Empty name provided';
+    }
+    // @todo test source is valid? ie path or url?
+    if (empty($source)) {
+      $errors[] = 'Empty source provided';
+    }
+
+    if (!isset($data['iconset_id'])) {
+      $errors[] = 'Missing Iconset Id in data';
+    }
+
+    if ($errors) {
+      throw new IconDefinitionInvalidDataException(implode('. ', $errors));
+    }
+  }
+
+}

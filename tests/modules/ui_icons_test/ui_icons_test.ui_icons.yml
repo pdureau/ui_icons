@@ -1,0 +1,54 @@
+test_local_files:
+  label: Local files
+  description: Local files relative available.
+  extractor: path
+  config:
+    sources:
+      - icons/local_png/{icon_id}.png
+      - icons/local_png_group/{group}/{icon_id}.png
+  options:
+    foo:
+      {
+        title: 'Test',
+        description: 'Test.',
+        type: 'integer',
+        default: 50,
+        required: true,
+        suffix: 'px',
+      }
+    bar: { title: 'Test', type: 'string', default: 'baz' }
+
+test_local_svg:
+  label: SVG manual
+  description: Local svg files.
+  extractor: svg
+  config:
+    sources:
+      - icons/local_svg/{icon_id}.svg
+      - icons/local_svg_group/{group}/{icon_id}.svg
+    options: {}
+  template: '<svg xmlns="http://www.w3.org/2000/svg" width="{{ width }}" height="{{ height }}" fill="currentColor" viewBox="0 0 {{ width }} {{ height }}">{{ content|raw }}</svg>'
+
+test_local_svg_sprite:
+  label: Small sprite
+  description: Local svg sprite file.
+  extractor: svg_sprite
+  config:
+    sources:
+      - icons/sprite/{icon_id}.svg
+  template: '<svg width="{{ width }}" height="{{ height }}" fill="currentColor"><use xlink:href="{{ source }}#{{ icon_id }}"/></svg>'
+
+test_disabled_iconset:
+  label: Disabled
+  extractor: path
+  enabled: false
+  config:
+    sources:
+      - icons/local_png/{icon_id}.png
+
+test_no_icons:
+  label: No Icons
+  extractor: path
+  config:
+    sources:
+      - invalid_path/{icon_id}.png

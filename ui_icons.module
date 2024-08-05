@@ -1,0 +1,43 @@
+<?php
+
+/**
+ * @file
+ * Drupal UI Icons.
+ */
+
+declare(strict_types=1);
+
+use Drupal\Core\Routing\RouteMatchInterface;
+use Drupal\Core\StringTranslation\TranslatableMarkup;
+
+/**
+ * Implements hook_help().
+ */
+function ui_icons_help($route_name, RouteMatchInterface $route_match) {
+  switch ($route_name) {
+    case 'help.page.ui_icons':
+      $output = '<h2>' . new TranslatableMarkup('About') . '</h2>';
+      $output .= '<p>' . new TranslatableMarkup('UI Icons is a module that aims to simplify the front-end management of icons. For more information, see the <a href=":docs">online documentation for the UI Icons module</a>.', [
+        ':docs' => 'https://www.drupal.org/docs/develop/theming-drupal/using-ui-icons',
+      ]) . '</p>';
+      $output .= '<dl>';
+      $output .= '<dt>' . new TranslatableMarkup('General') . '</dt>';
+      $output .= '<dd>' . new TranslatableMarkup('<a href=":docs">UI Icons</a> allow the declaration of icons in a Yaml file to be used globally on your website. The format allow to integrate many source provider for your icons and expose them in all Drupal display tools..', [
+        ':docs' => 'https://www.drupal.org/docs/develop/theming-drupal/using-ui-icons',
+      ]) . '</dd>';
+      $output .= '</dl>';
+      return $output;
+  }
+  return NULL;
+}
+
+/**
+ * Implements hook_theme().
+ */
+function ui_icons_theme($existing, $type, $theme, $path) {
+  return [
+    'input__icon' => [
+      'render element' => 'element',
+    ],
+  ];
+}

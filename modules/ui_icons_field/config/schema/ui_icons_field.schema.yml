@@ -1,0 +1,50 @@
+field.value.ui_icon:
+  type: mapping
+  label: 'Default icon value'
+  mapping:
+    default_icon:
+      type: mapping
+      mapping:
+        target_id:
+          type: string
+          label: 'Default icon ID'
+        # @todo define a custom schema or serialize?
+        # Seems link_attributes do not define sequence and have errors.
+        settings:
+          type: sequence
+          label: 'Default icon settings'
+          sequence:
+            type: sequence
+            sequence:
+              type: sequence
+              sequence:
+                type: string
+
+field.formatter.settings.ui_icon_formatter:
+  type: mapping
+  label: 'UI icon formatter settings'
+  mapping:
+    # @todo define a custom schema or serialize?
+    icon_settings:
+      type: sequence
+      label: 'Icon extractor settings'
+      sequence:
+        type: sequence
+        sequence:
+          type: sequence
+          sequence:
+            type: string
+
+field.widget.settings.ui_icon_widget:
+  type: mapping
+  label: 'UI icon widget settings'
+  mapping:
+    allowed_iconset:
+      type: sequence
+      label: 'Iconset limitation for selection'
+      sequence:
+        type: integer
+        label: 'Iconset id'
+    show_settings:
+      type: boolean
+      label: 'Show extractor settings'

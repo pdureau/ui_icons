@@ -1,0 +1,5 @@
+ui_icons_library.index:
+  title: 'Ui Icons Library'
+  route_name: ui_icons_library.index
+  base_route: system.themes_page
+  weight: 2

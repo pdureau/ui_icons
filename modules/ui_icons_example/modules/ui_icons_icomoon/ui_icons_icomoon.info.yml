@@ -1,0 +1,7 @@
+name: 'UI Icons IcoMoon'
+type: module
+description: 'Provide IcoMoon icons to UI Icons.'
+package: User interface Example
+core_version_requirement: ^10 || ^11
+dependencies:
+  - ui_icons:ui_icons

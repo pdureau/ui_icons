@@ -1,0 +1,9 @@
+name: 'UI Icons Ckeditor5'
+type: module
+description: 'Provide Ckeditor 5 integration for icon selection.'
+package: User interface
+core_version_requirement: ^10 || ^11
+dependencies:
+  - drupal:ckeditor5
+  - ui_icons:ui_icons
+  - ui_icons:ui_icons_text
