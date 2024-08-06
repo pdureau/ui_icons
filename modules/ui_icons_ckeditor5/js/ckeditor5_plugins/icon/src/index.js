@@ -1,4 +1,4 @@
-/* eslint-disable import/no-extraneous-dependencies import/no-unresolved */
+/* eslint-disable import/no-extraneous-dependencies, import/no-unresolved */
 import { Plugin } from 'ckeditor5/src/core';
 import IconUi from './iconUi';
 import IconEditing from './iconEditing';

@@ -2,7 +2,7 @@
  * @file defines insertIconsCommand, which is executed when the icon
  * toolbar button is pressed.
  */
-/* eslint-disable import/no-extraneous-dependencies import/no-unresolved */
+/* eslint-disable import/no-extraneous-dependencies, import/no-unresolved */
 import { Command } from 'ckeditor5/src/core';
 
 function createDrupalIcon(writer, attributes) {
