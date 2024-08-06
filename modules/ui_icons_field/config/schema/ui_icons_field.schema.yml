@@ -43,7 +43,7 @@ field.widget.settings.ui_icon_widget:
       type: sequence
       label: 'Iconset limitation for selection'
       sequence:
-        type: integer
+        type: string
         label: 'Iconset id'
     show_settings:
       type: boolean
