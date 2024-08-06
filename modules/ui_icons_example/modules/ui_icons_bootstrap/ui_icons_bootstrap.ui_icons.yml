@@ -7,35 +7,26 @@
 #     sources:
 #       - /libraries/bootstrap-icons/node_modules/bootstrap-icons/icons/{icon_id}.svg
 #   options:
-#     title:
-#       {
-#         title: 'Title',
-#         description: 'Set a title on hover for this icon.',
-#       }
-#     alt:
-#       {
-#         title: "Alt text",
-#         description: "Accessibility alternative text, leave empty for decorative icon.",
-#         placeholder: "Set an alternative text.",
-#       }
 #     width:
-#       {
-#         title: 'Width',
-#         description: 'Set a width for this icon.',
-#         type: 'integer',
-#         default: 40,
-#         required: true,
-#         suffix: 'px',
-#       }
+#       title: "Width"
+#       description: "Set a width for this icon."
+#       type: "integer"
+#       default: 40
+#       required: true
+#       suffix: "px"
 #     height:
-#       {
-#         title: 'Height',
-#         description: 'Set a height for this icon.',
-#         type: 'integer',
-#         default: 40,
-#         required: true,
-#         suffix: 'px',
-#       }
+#       title: "Height"
+#       description: "Set a height for this icon."
+#       type: "integer"
+#       default: 40
+#       required: true
+#       suffix: "px"
+#     title:
+#       title: "Title"
+#       description: "Set a title on hover for this icon."
+#     alt:
+#       title: "Alt text"
+#       description: "Accessibility alternative text, leave empty for decorative icon."
 #   template: <img src="{{ source }}" title="{{ title|default(icon_id|capitalize) }}" alt="{{ alt|default(icon_id|capitalize) }}" width="{{ width }}" height="{{ height }}">
 #   template: >
 #     <svg xmlns="http://www.w3.org/2000/svg" width="{{ width }}px" height="{{ height }}px" fill="currentColor" class="bi bi-{{ icon_id }}" viewBox="0 0 {{ width }} {{ height }}">
@@ -51,32 +42,26 @@ ui_icons_bootstrap_svg_sprite:
     sources:
       - /libraries/bootstrap-icons/node_modules/bootstrap-icons/bootstrap-icons.svg
   options:
-    title:
-      { title: "Title", description: "Set a title on hover for this icon." }
-    alt:
-      {
-        title: "Alt text",
-        description: "Accessibility alternative text, leave empty for decorative icon.",
-        placeholder: "Set an alternative text.",
-      }
     width:
-      {
-        title: "Width",
-        description: "Set a width for this icon.",
-        type: "integer",
-        default: 40,
-        required: true,
-        suffix: "px",
-      }
+      title: "Width"
+      description: "Set a width for this icon."
+      type: "integer"
+      default: 40
+      required: true
+      suffix: "px"
     height:
-      {
-        title: "Height",
-        description: "Set a height for this icon.",
-        type: "integer",
-        default: 40,
-        required: true,
-        suffix: "px",
-      }
+      title: "Height"
+      description: "Set a height for this icon."
+      type: "integer"
+      default: 40
+      required: true
+      suffix: "px"
+    title:
+      title: "Title"
+      description: "Set a title on hover for this icon."
+    alt:
+      title: "Alt text"
+      description: "Accessibility alternative text, leave empty for decorative icon."
   template: >
     <svg class="bi" width="{{ width }}" height="{{ height }}" fill="currentColor" aria-label="{{ alt|default(icon_id|capitalize) }}">
       <title>{{ title|default(icon_id|capitalize) }}</title>
