@@ -5,12 +5,12 @@ declare(strict_types=1);
 namespace Drupal\ui_icons_field\Kernel\Plugin;
 
 use Drupal\Core\Field\BaseFieldDefinition;
+use Drupal\Core\Field\FieldDefinitionInterface;
+use Drupal\Core\Field\FieldStorageDefinitionInterface;
 use Drupal\Core\Form\FormState;
 use Drupal\entity_test\Entity\EntityTest;
 use Drupal\KernelTests\KernelTestBase;
 use Drupal\ui_icons\Plugin\UiIconsetManagerInterface;
-use Drupal\Core\Field\FieldDefinitionInterface;
-use Drupal\Core\Field\FieldStorageDefinitionInterface;
 use Drupal\ui_icons_field\Plugin\Field\FieldWidget\UiIconWidget;
 
 /**
@@ -38,28 +38,28 @@ class UiIconWidgetTest extends KernelTestBase {
    *
    * @var \Drupal\ui_icons_field\Plugin\Field\FieldWidget\UiIconWidget
    */
-  protected UiIconWidget $widget;
+  private UiIconWidget $widget;
 
   /**
    * The field definition.
    *
    * @var \Drupal\Core\Field\FieldDefinitionInterface
    */
-  protected FieldDefinitionInterface $fieldDefinition;
+  private FieldDefinitionInterface $fieldDefinition;
 
   /**
    * The UiIconsetManager instance.
    *
    * @var \Drupal\ui_icons\Plugin\UiIconsetManagerInterface
    */
-  protected UiIconsetManagerInterface $pluginManagerUiIconset;
+  private UiIconsetManagerInterface $pluginManagerUiIconset;
 
   /**
    * The base field definition.
    *
    * @var \Drupal\Core\Field\BaseFieldDefinition
    */
-  protected BaseFieldDefinition $baseField;
+  private BaseFieldDefinition $baseField;
 
   /**
    * {@inheritdoc}
@@ -106,10 +106,10 @@ class UiIconWidgetTest extends KernelTestBase {
 
     $this->assertArrayHasKey('value', $element);
     $this->assertSame('ui_icon_autocomplete', $element['value']['#type']);
-    $this->assertSame(NULL, $element['value']['#default_value']);
-    $this->assertSame([], $element['value']['#allowed_iconset']);
-    $this->assertSame(FALSE, $element['value']['#show_settings']);
-    $this->assertSame(FALSE, $element['value']['#required']);
+    $this->assertNull($element['value']['#default_value']);
+    $this->assertEmpty($element['value']['#allowed_iconset']);
+    $this->assertFalse($element['value']['#show_settings']);
+    $this->assertFalse($element['value']['#required']);
   }
 
   /**
@@ -131,10 +131,10 @@ class UiIconWidgetTest extends KernelTestBase {
 
     $this->assertArrayHasKey('value', $element);
     $this->assertSame('ui_icon_autocomplete', $element['value']['#type']);
-    $this->assertSame(NULL, $element['value']['#default_value']);
+    $this->assertNull($element['value']['#default_value']);
     $this->assertSame(['foo' => 'bar'], $element['value']['#allowed_iconset']);
-    $this->assertSame(TRUE, $element['value']['#show_settings']);
-    $this->assertSame(FALSE, $element['value']['#required']);
+    $this->assertTrue($element['value']['#show_settings']);
+    $this->assertFalse($element['value']['#required']);
   }
 
   /**

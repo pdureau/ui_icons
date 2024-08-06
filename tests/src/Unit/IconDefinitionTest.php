@@ -19,7 +19,7 @@ class IconDefinitionTest extends TestCase {
   /**
    * Test the getRenderable method.
    */
-  public function testGetRenderable() {
+  public function testGetRenderable(): void {
     $icon = IconDefinition::create(
       'test_iconset:test',
       '/foo/bar',
@@ -52,6 +52,8 @@ class IconDefinitionTest extends TestCase {
   }
 
   /**
+   * Test the create method.
+   *
    * @param array $icon_data
    *   The icon data.
    *
@@ -111,6 +113,8 @@ class IconDefinitionTest extends TestCase {
   }
 
   /**
+   * Test the create method.
+   *
    * @param array $icon_data
    *   The icon data.
    * @param array $errors

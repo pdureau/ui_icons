@@ -4,13 +4,13 @@ declare(strict_types=1);
 
 namespace Drupal\ui_icons\Element;
 
-use Drupal\Core\Form\FormStateInterface;
-use Drupal\Core\Render\Attribute\FormElement;
 use Drupal\Component\Utility\NestedArray;
 use Drupal\Core\Form\FormElementHelper;
+use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\Render\Attribute\FormElement;
 use Drupal\Core\Render\Element\FormElementBase;
-use Drupal\ui_icons\IconDefinitionInterface;
 use Drupal\Core\StringTranslation\TranslatableMarkup;
+use Drupal\ui_icons\IconDefinitionInterface;
 
 /**
  * Provides a form element to select an icon.

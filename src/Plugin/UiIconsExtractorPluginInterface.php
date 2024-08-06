@@ -19,9 +19,9 @@ interface UiIconsExtractorPluginInterface extends PluginFormInterface {
    * to the icon ID and icon definition respectively.
    *
    * @return \Drupal\ui_icons\IconDefinition[]
-   *   Gets a built list of icons that are found by this extractor. Array is keyed
-   *   by the icon ID and the array values are the icon definition for each of
-   *   the icons listed.
+   *   Gets a built list of icons that are found by this extractor. Array is
+   *   keyed by the icon ID and the array values are the icon definition for
+   *   each of the icons listed.
    */
   public function getIcons(): array;
 

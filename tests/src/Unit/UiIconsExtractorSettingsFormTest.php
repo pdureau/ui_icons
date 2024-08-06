@@ -16,15 +16,27 @@ use Drupal\ui_icons\Form\UiIconsExtractorSettingsForm;
 class UiIconsExtractorSettingsFormTest extends UnitTestCase {
 
   /**
+   * Test the generateSettingsForm method.
+   *
+   * @param array $options
+   *   The options to test.
+   * @param array $expected
+   *   The expected result.
+   *
    * @dataProvider settingsFormDataProvider
    */
-  public function testGenerateSettingsForm($options, $expected): void {
+  public function testGenerateSettingsForm(array $options, array $expected): void {
     $actual = UiIconsExtractorSettingsForm::generateSettingsForm($options);
     $this->assertSame($expected, $actual);
   }
 
   /**
    * Provide data for testGenerateSettingsForm.
+   *
+   * @return array
+   *   The data for options and expected.
+   *
+   * @phpcs:disable 
    */
   public static function settingsFormDataProvider(): array {
     return [

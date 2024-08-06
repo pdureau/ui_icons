@@ -22,7 +22,7 @@ class UiIconsExtractorTest extends UnitTestCase {
    *
    * @var \Drupal\Core\DependencyInjection\ContainerBuilder
    */
-  protected $container;
+  private ContainerBuilder $container;
 
   /**
    * {@inheritdoc}

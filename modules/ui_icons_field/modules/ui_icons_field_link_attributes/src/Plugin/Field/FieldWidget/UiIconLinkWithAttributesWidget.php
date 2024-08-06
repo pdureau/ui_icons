@@ -24,6 +24,7 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 )]
 class UiIconLinkWithAttributesWidget extends UiIconLinkWidget implements ContainerFactoryPluginInterface {
 
+  // @phpstan-disable-next-line
   use LinkWithAttributesWidgetTrait {
     defaultSettings as protected traitDefaultSettings;
     formElement as protected traitFormElement;
@@ -56,6 +57,7 @@ class UiIconLinkWithAttributesWidget extends UiIconLinkWidget implements Contain
     array $settings,
     array $third_party_settings,
     protected UiIconsetManagerInterface $pluginManagerUiIconset,
+    // @phpstan-disable-next-line
     protected LinkAttributesManager $linkAttributesManager,
   ) {
     parent::__construct($plugin_id, $plugin_definition, $field_definition, $settings, $third_party_settings, $pluginManagerUiIconset);
@@ -86,6 +88,7 @@ class UiIconLinkWithAttributesWidget extends UiIconLinkWidget implements Contain
    * {@inheritdoc}
    */
   public static function defaultSettings(): array {
+    // @phpstan-disable-next-line
     return self::traitDefaultSettings() + parent::defaultSettings();
   }
 
@@ -93,6 +96,7 @@ class UiIconLinkWithAttributesWidget extends UiIconLinkWidget implements Contain
    * {@inheritdoc}
    */
   public function settingsForm(array $form, FormStateInterface $form_state): array {
+    // @phpstan-disable-next-line
     $elements = $this->traitSettingsForm($form, $form_state);
     return $elements;
   }
@@ -101,6 +105,7 @@ class UiIconLinkWithAttributesWidget extends UiIconLinkWidget implements Contain
    * {@inheritdoc}
    */
   public function settingsSummary(): array {
+    // @phpstan-disable-next-line
     $summary = $this->traitSettingsSummary();
     return $summary;
   }
@@ -109,6 +114,7 @@ class UiIconLinkWithAttributesWidget extends UiIconLinkWidget implements Contain
    * {@inheritdoc}
    */
   public function formElement(FieldItemListInterface $items, $delta, array $element, array &$form, FormStateInterface $form_state): array {
+    // @phpstan-disable-next-line
     $element = $this->traitFormElement($items, $delta, $element, $form, $form_state);
     return $element;
   }

@@ -16,11 +16,13 @@ use PHPUnit\Framework\TestCase;
  *
  * @group ui_icons
  *
- * @todo test with vfs?
+ * @todo test with vfs if possible?
  */
 class UiIconsFinderTest extends TestCase {
 
   /**
+   * Test method getFilesFromSources.
+   *
    * @param string $source
    *   The source path.
    * @param array $files
@@ -303,7 +305,7 @@ class UiIconsFinderTest extends TestCase {
 
     $this->expectException(IconsetConfigErrorException::class);
     $this->expectExceptionMessage('Missing `config: sources` in your definition, extractor test_extractor require this value.');
-    $actual = $extractorPlugin->getFilesFromSources(
+    $extractorPlugin->getFilesFromSources(
       [], []
     );
   }
@@ -325,7 +327,7 @@ class UiIconsFinderTest extends TestCase {
 
     $this->expectException(IconsetConfigErrorException::class);
     $this->expectExceptionMessage('Could not retrieve paths for extractor test_extractor.');
-    $actual = $extractorPlugin->getFilesFromSources(
+    $extractorPlugin->getFilesFromSources(
       ['/foo/bar.svg'], []
     );
   }
@@ -333,6 +335,8 @@ class UiIconsFinderTest extends TestCase {
 }
 
 /**
+ * Dummy class to simulate SPL.
+ *
  * @codeCoverageIgnore
  */
 class DummySplFileFinfo {

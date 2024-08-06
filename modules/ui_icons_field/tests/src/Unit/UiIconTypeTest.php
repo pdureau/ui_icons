@@ -21,7 +21,7 @@ class UiIconTypeTest extends UnitTestCase {
    *
    * @var \Drupal\ui_icons_field\Plugin\Field\FieldType\UiIconType
    */
-  protected $uiIconType;
+  private UiIconType $uiIconType;
 
   /**
    * {@inheritdoc}

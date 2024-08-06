@@ -8,9 +8,9 @@ use Drupal\Core\DependencyInjection\ContainerBuilder;
 use Drupal\Core\Field\FieldDefinitionInterface;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\StringTranslation\TranslationInterface;
-use Drupal\ui_icons_field\Plugin\Field\FieldWidget\UiIconWidget;
-use Drupal\ui_icons\Plugin\UiIconsetManagerInterface;
 use Drupal\Tests\ui_icons\Unit\UiIconsUnitTestCase;
+use Drupal\ui_icons\Plugin\UiIconsetManagerInterface;
+use Drupal\ui_icons_field\Plugin\Field\FieldWidget\UiIconWidget;
 
 /**
  * Tests the UiIconWidget field class.
@@ -24,28 +24,28 @@ class UiIconWidgetTest extends UiIconsUnitTestCase {
    *
    * @var \Drupal\ui_icons_field\Plugin\Field\FieldWidget\UiIconWidget
    */
-  protected UiIconWidget $widget;
+  private UiIconWidget $widget;
 
   /**
    * The field definition.
    *
    * @var \Drupal\Core\Field\FieldDefinitionInterface
    */
-  protected FieldDefinitionInterface $fieldDefinition;
+  private FieldDefinitionInterface $fieldDefinition;
 
   /**
    * The UiIconsetManager instance.
    *
    * @var \Drupal\ui_icons\Plugin\UiIconsetManagerInterface
    */
-  protected UiIconsetManagerInterface $pluginManagerUiIconset;
+  private UiIconsetManagerInterface $pluginManagerUiIconset;
 
   /**
    * The container.
    *
    * @var \Drupal\Core\DependencyInjection\ContainerBuilder
    */
-  protected ContainerBuilder $container;
+  private ContainerBuilder $container;
 
   /**
    * {@inheritdoc}

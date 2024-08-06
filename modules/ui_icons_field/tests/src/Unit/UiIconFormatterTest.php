@@ -4,13 +4,13 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\ui_icons_field\Unit\Plugin;
 
-use Drupal\Core\Form\FormStateInterface;
-use Drupal\ui_icons\Plugin\UiIconsetManagerInterface;
-use Drupal\Core\Field\FieldDefinitionInterface;
-use Drupal\ui_icons_field\Plugin\Field\FieldFormatter\UiIconFormatter;
-use Drupal\Tests\UnitTestCase;
 use Drupal\Core\DependencyInjection\ContainerBuilder;
+use Drupal\Core\Field\FieldDefinitionInterface;
+use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\StringTranslation\TranslationInterface;
+use Drupal\Tests\UnitTestCase;
+use Drupal\ui_icons\Plugin\UiIconsetManagerInterface;
+use Drupal\ui_icons_field\Plugin\Field\FieldFormatter\UiIconFormatter;
 
 /**
  * Tests the UiIconFormatter field class.
@@ -24,28 +24,28 @@ class UiIconFormatterTest extends UnitTestCase {
    *
    * @var \Drupal\ui_icons_field\Plugin\Field\FieldFormatter\UiIconFormatter
    */
-  protected UiIconFormatter $formatter;
+  private UiIconFormatter $formatter;
 
   /**
    * The field definition.
    *
    * @var \Drupal\Core\Field\FieldDefinitionInterface
    */
-  protected FieldDefinitionInterface $fieldDefinition;
+  private FieldDefinitionInterface $fieldDefinition;
 
   /**
    * The UiIconsetManager instance.
    *
    * @var \Drupal\ui_icons\Plugin\UiIconsetManagerInterface
    */
-  protected UiIconsetManagerInterface $pluginManagerUiIconset;
+  private UiIconsetManagerInterface $pluginManagerUiIconset;
 
   /**
    * The container.
    *
    * @var \Drupal\Core\DependencyInjection\ContainerBuilder
    */
-  protected ContainerBuilder $container;
+  private ContainerBuilder $container;
 
   /**
    * {@inheritdoc}

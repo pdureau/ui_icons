@@ -21,6 +21,8 @@ use Symfony\Component\HttpFoundation\Response;
  * Tests UiIconsAutocompleteController Controller class.
  *
  * @group ui_icons
+ *
+ * @cspell:ignore tri OME
  */
 class UiIconsAutocompleteControllerTest extends UnitTestCase {
 
@@ -29,7 +31,7 @@ class UiIconsAutocompleteControllerTest extends UnitTestCase {
    *
    * @var \Drupal\Core\DependencyInjection\ContainerBuilder
    */
-  protected $container;
+  private ContainerBuilder $container;
 
   /**
    * {@inheritdoc}
@@ -53,7 +55,7 @@ class UiIconsAutocompleteControllerTest extends UnitTestCase {
   }
 
   /**
-   * @dataProvider handleRenderIconDataProvider
+   * Test the handleRenderIcon method.
    *
    * @param string|null $iconId
    *   The ID of the icon to be rendered. Can be null.
@@ -67,6 +69,8 @@ class UiIconsAutocompleteControllerTest extends UnitTestCase {
    *   The expected content of the response.
    * @param int $expectedStatusCode
    *   The expected status code of the response.
+   *
+   * @dataProvider handleRenderIconDataProvider
    */
   public function testHandleRenderIcon(?string $iconId, bool $hasResult, array $queryParams, ?array $iconData, string $expectedContent, int $expectedStatusCode): void {
     $prophecy = $this->prophesize(UiIconsetManagerInterface::class);
@@ -277,7 +281,8 @@ class UiIconsAutocompleteControllerTest extends UnitTestCase {
    * @param string|null $iconset_label
    *   The label of the icon set.
    *
-   * @return array The icon data array.
+   * @return array
+   *   The icon data array.
    */
   private static function createIconData(?string $iconset_id = NULL, ?string $icon_id = NULL, ?string $icon_name = NULL, ?string $iconset_label = NULL): array {
     return [
@@ -302,7 +307,8 @@ class UiIconsAutocompleteControllerTest extends UnitTestCase {
    * @param string|null $iconset_label
    *   The label of the icon set.
    *
-   * @return array The icon data array.
+   * @return array
+   *   The icon data array.
    */
   private static function createIconResultData(?string $iconset_id = NULL, ?string $icon_id = NULL, ?string $icon_name = NULL, ?string $iconset_label = NULL): array {
     return [

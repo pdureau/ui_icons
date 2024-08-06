@@ -186,7 +186,7 @@ class SvgExtractorTest extends UnitTestCase {
     );
     $icons = $svgExtractorPlugin->getIcons();
 
-    $this->assertisArray($icons);
+    $this->assertIsArray($icons);
     $this->assertArrayHasKey('svg:baz', $icons);
 
     $this->assertInstanceOf(IconDefinitionInterface::class, $icons['svg:baz']);

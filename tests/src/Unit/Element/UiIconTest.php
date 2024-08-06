@@ -21,7 +21,7 @@ class UiIconTest extends UnitTestCase {
    *
    * @var \Drupal\Core\DependencyInjection\ContainerBuilder
    */
-  protected $container;
+  private ContainerBuilder $container;
 
   /**
    * {@inheritdoc}
@@ -50,6 +50,8 @@ class UiIconTest extends UnitTestCase {
   }
 
   /**
+   * Test the preRenderUiIcon method.
+   *
    * @param array $data
    *   The icon data.
    * @param array $expected

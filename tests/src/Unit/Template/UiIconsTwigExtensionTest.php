@@ -12,8 +12,20 @@ use Twig\TwigFunction;
  * Test the class UiIconsTwigExtension.
  */
 class UiIconsTwigExtensionTest extends TestCase {
-  private $pluginManagerUiIconset;
-  private $uiIconsTwigExtension;
+
+  /**
+   * The plugin manager.
+   *
+   * @var \Drupal\ui_icons\Plugin\UiIconsetManagerInterface
+   */
+  private UiIconsetManagerInterface $pluginManagerUiIconset;
+
+  /**
+   * The twig extension.
+   *
+   * @var \Drupal\ui_icons\Template\UiIconsTwigExtension
+   */
+  private UiIconsTwigExtension $uiIconsTwigExtension;
 
   /**
    * {@inheritdoc}
@@ -26,7 +38,7 @@ class UiIconsTwigExtensionTest extends TestCase {
   /**
    * Test the getFunctions method.
    */
-  public function testGetFunctions() {
+  public function testGetFunctions(): void {
     $functions = $this->uiIconsTwigExtension->getFunctions();
     $this->assertIsArray($functions);
     $this->assertCount(1, $functions);
@@ -37,7 +49,7 @@ class UiIconsTwigExtensionTest extends TestCase {
   /**
    * Test the getIconRenderable method.
    */
-  public function testGetIconRenderableReturnsEmptyArrayWhenIconNotFound() {
+  public function testGetIconRenderableReturnsEmptyArrayWhenIconNotFound(): void {
     $this->pluginManagerUiIconset
       ->method('getIcon')
       ->willReturn(NULL);
@@ -50,7 +62,7 @@ class UiIconsTwigExtensionTest extends TestCase {
   /**
    * Test the getIconRenderable method.
    */
-  public function testGetIconRenderableReturnsRenderableArray() {
+  public function testGetIconRenderableReturnsRenderableArray(): void {
     $iconMock = $this->createMock(IconDefinitionInterface::class);
     $iconMock->method('getRenderable')
       ->willReturn(['rendered_icon']);

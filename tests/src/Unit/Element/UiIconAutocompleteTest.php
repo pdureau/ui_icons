@@ -24,7 +24,7 @@ class UiIconAutocompleteTest extends UnitTestCase {
    *
    * @var \Drupal\Core\DependencyInjection\ContainerBuilder
    */
-  protected $container;
+  private ContainerBuilder $container;
 
   /**
    * {@inheritdoc}
@@ -61,7 +61,7 @@ class UiIconAutocompleteTest extends UnitTestCase {
     $this->assertSame([], $info['#allowed_iconset']);
 
     $this->assertArrayHasKey('#show_settings', $info);
-    $this->assertSame(FALSE, $info['#show_settings']);
+    $this->assertFalse($info['#show_settings']);
   }
 
   /**
@@ -82,7 +82,7 @@ class UiIconAutocompleteTest extends UnitTestCase {
     $this->assertSame('ui_icons.autocomplete', $element['icon_id']['#autocomplete_route_name']);
 
     $this->assertArrayHasKey('#error_no_message', $element['icon_id']);
-    $this->assertSame(TRUE, $element['icon_id']['#error_no_message']);
+    $this->assertTrue($element['icon_id']['#error_no_message']);
 
     // Test empty allowed.
     $element = [
@@ -135,6 +135,8 @@ class UiIconAutocompleteTest extends UnitTestCase {
   }
 
   /**
+   * Test the validateIcon method.
+   *
    * @param array $element
    *   The element data.
    * @param array $values
@@ -172,6 +174,9 @@ class UiIconAutocompleteTest extends UnitTestCase {
 
   /**
    * Provides data for testValidateIcon.
+   *
+   * @return array
+   *   The data to test.
    */
   public static function providerValidateIcon(): array {
     return [

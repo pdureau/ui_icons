@@ -11,8 +11,8 @@ use Drupal\Core\Field\FormatterBase;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
 use Drupal\Core\StringTranslation\TranslatableMarkup;
-use Drupal\ui_icons\Plugin\UiIconsetManagerInterface;
 use Drupal\ui_icons\IconDefinitionInterface;
+use Drupal\ui_icons\Plugin\UiIconsetManagerInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**

@@ -168,7 +168,7 @@ class UiIconWidget extends WidgetBase implements ContainerFactoryPluginInterface
   public function massageFormValues(array $values, array $form, FormStateInterface $form_state): array {
     foreach ($values as &$item) {
       if (empty($item['value']['icon']) || !$item['value']['icon'] instanceof IconDefinitionInterface) {
-        // @todo null or unset?
+        // @todo should we set null or unset?
         $item['target_id'] = NULL;
         $item['settings'] = [];
         continue;

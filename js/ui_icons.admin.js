@@ -73,8 +73,8 @@
     const iconSettingsWrapper = findNearest(
       iconSelector,
       // @see ui_icons/templates/input--icon.html.twig
-      ".ui-icons-settings-wrapper",
-      "form-type--ui-icon-autocomplete",
+      '.ui-icons-settings-wrapper',
+      'form-type--ui-icon-autocomplete',
     );
 
     if (!iconSettingsWrapper) {
@@ -82,7 +82,7 @@
     }
 
     const iconsetSettings = iconSettingsWrapper.querySelectorAll(
-      "[name^=icon-settings--]",
+      '[name^=icon-settings--]',
     );
 
     if (!iconsetSettings) {
@@ -91,15 +91,15 @@
 
     iconsetSettings.forEach((iconsetSetting) => {
       if (
-        `icon-settings--${iconSetID}` === iconsetSetting.getAttribute("name")
+        `icon-settings--${iconSetID}` === iconsetSetting.getAttribute('name')
       ) {
-        iconsetSetting.style.display = "block";
+        iconsetSetting.style.display = 'block';
       } else {
-        iconsetSetting.style.display = "none";
+        iconsetSetting.style.display = 'none';
       }
     });
 
-    iconSettingsWrapper.classList.remove("hidden");
+    iconSettingsWrapper.classList.remove('hidden');
   }
 
   /**
@@ -117,14 +117,14 @@
   async function processAutocomplete(iconSelector, settings) {
     const iconPreviewElement = findNearest(
       iconSelector,
-      ".ui-icons-preview",
-      "form-type--ui-icon-autocomplete",
+      '.ui-icons-preview',
+      'form-type--ui-icon-autocomplete',
     );
-    const [iconSetID, iconID] = iconSelector.value.split(":");
+    const [iconSetID, iconID] = iconSelector.value.split(':');
 
     if (!iconSetID || !iconID) {
       if (iconPreviewElement) {
-        iconPreviewElement.innerHTML = "";
+        iconPreviewElement.innerHTML = '';
       }
       processAutocompleteSettings(iconSetID, iconSelector);
       return;
@@ -150,8 +150,8 @@
   Drupal.behaviors.UiIconsPreview = {
     attach(context, settings) {
       const iconSelectors = once(
-        "setIconPreview",
-        ".ui-icons-wrapper .ui-icons-input-wrapper input",
+        'setIconPreview',
+        '.ui-icons-wrapper .ui-icons-input-wrapper input',
         context,
       );
 
@@ -163,8 +163,8 @@
         // console.log(iconSelector.value);
         // Form is loaded with an existing value.
         // if (iconSelector.value) {
-        if (iconSelector.value && iconSelector.value.indexOf(":") > -1) {
-          const [iconSetID] = iconSelector.value.split(":");
+        if (iconSelector.value && iconSelector.value.indexOf(':') > -1) {
+          const [iconSetID] = iconSelector.value.split(':');
           processAutocompleteSettings(iconSetID, iconSelector);
         }
         // Current Drupal core autocomplete is based on jQuery UI.

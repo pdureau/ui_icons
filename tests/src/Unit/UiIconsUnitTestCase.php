@@ -25,7 +25,8 @@ abstract class UiIconsUnitTestCase extends UnitTestCase {
    * @param string|null $iconset_label
    *   The label of the icon set.
    *
-   * @return array The icon data array.
+   * @return array
+   *   The icon data array.
    */
   protected static function createIconData(?string $iconset_id = NULL, ?string $icon_id = NULL, ?string $icon_name = NULL, ?string $iconset_label = NULL): array {
     return [

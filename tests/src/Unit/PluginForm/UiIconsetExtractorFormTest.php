@@ -17,19 +17,25 @@ use Drupal\ui_icons\PluginForm\UiIconsetExtractorForm;
 class UiIconsetExtractorFormTest extends UnitTestCase {
 
   /**
+   * The Iconset form.
+   *
    * @var \Drupal\ui_icons\PluginForm\UiIconsetExtractorForm
    */
-  protected $uiIconsetForm;
+  private UiIconsetExtractorForm $uiIconsetForm;
 
   /**
+   * The plugin form.
+   *
    * @var \Drupal\Core\Plugin\PluginWithFormsInterface
    */
-  protected $plugin;
+  private PluginWithFormsInterface $plugin;
 
   /**
+   * The form state.
+   *
    * @var \Drupal\Core\Form\FormStateInterface|\Prophecy\Prophecy\ObjectProphecy
    */
-  protected $formState;
+  private $formState;
 
   /**
    * {@inheritdoc}

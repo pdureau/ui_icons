@@ -1,8 +1,8 @@
 /* eslint-disable import/no-extraneous-dependencies */
-import { Plugin } from "ckeditor5/src/core";
-import { toWidget, Widget } from "ckeditor5/src/widget";
+import { Plugin } from 'ckeditor5/src/core';
+import { toWidget, Widget } from 'ckeditor5/src/widget';
 
-import InsertIconCommand from "./insertIconCommand";
+import InsertIconCommand from './insertIconCommand';
 
 /**
  * The Drupal Icon Editing plugin.
@@ -23,17 +23,17 @@ export default class IconEditing extends Plugin {
     super(editor);
 
     this.attrs = {
-      drupalIconId: "data-icon-id",
-      drupalIconOptions: "data-icon-options",
+      drupalIconId: 'data-icon-id',
+      drupalIconOptions: 'data-icon-options',
     };
-    this.converterAttributes = ["drupalIconId", "drupalIconOptions"];
+    this.converterAttributes = ['drupalIconId', 'drupalIconOptions'];
   }
 
   /**
    * @inheritdoc
    */
   init() {
-    const options = this.editor.config.get("icon");
+    const options = this.editor.config.get('icon');
     if (!options) {
       return;
     }
@@ -41,7 +41,7 @@ export default class IconEditing extends Plugin {
     this._defineSchema();
     this._defineConverters();
 
-    this.editor.commands.add("insertIcon", new InsertIconCommand(this.editor));
+    this.editor.commands.add('insertIcon', new InsertIconCommand(this.editor));
   }
 
   /**
@@ -51,15 +51,15 @@ export default class IconEditing extends Plugin {
    */
   _defineSchema() {
     const schema = this.editor.model.schema;
-    schema.register("drupalIcon", {
+    schema.register('drupalIcon', {
       // inheritAllFrom: '$inlineObject',
-      inheritAllFrom: "imageInline",
+      inheritAllFrom: 'imageInline',
       allowAttributes: Object.keys(this.attrs),
     });
     // Register `<drupal-icon>` as a block element in the DOM converter. This
     // ensures that the DOM converter knows to handle the `<drupal-icon>` as a
     // block element.
-    this.editor.editing.view.domConverter.blockElements.push("drupal-icon");
+    this.editor.editing.view.domConverter.blockElements.push('drupal-icon');
   }
 
   /**
@@ -72,19 +72,19 @@ export default class IconEditing extends Plugin {
 
     // Upcast Converters: determine how existing HTML is interpreted by the
     // editor. These trigger when an editor instance loads.
-    conversion.for("upcast").elementToElement({
-      model: "drupalIcon",
+    conversion.for('upcast').elementToElement({
+      model: 'drupalIcon',
       view: {
-        name: "drupal-icon",
+        name: 'drupal-icon',
       },
     });
 
     // Data Downcast Converters: converts stored model data into HTML.
     // These trigger when content is saved.
-    conversion.for("dataDowncast").elementToElement({
-      model: "drupalIcon",
+    conversion.for('dataDowncast').elementToElement({
+      model: 'drupalIcon',
       view: {
-        name: "drupal-icon",
+        name: 'drupal-icon',
       },
     });
 
@@ -93,16 +93,16 @@ export default class IconEditing extends Plugin {
     // after the Data Upcast Converters, and are re-triggered any time there
     // are changes to any of the models' properties.
     conversion
-      .for("editingDowncast")
+      .for('editingDowncast')
       .elementToElement({
-        model: "drupalIcon",
+        model: 'drupalIcon',
         view: (modelElement, { writer }) => {
-          const container = writer.createContainerElement("span", {
-            class: "drupal-icon",
+          const container = writer.createContainerElement('span', {
+            class: 'drupal-icon',
           });
-          writer.setCustomProperty("drupalIcon", true, container);
+          writer.setCustomProperty('drupalIcon', true, container);
           return toWidget(container, writer, {
-            label: Drupal.t("Icon widget"),
+            label: Drupal.t('Icon widget'),
           });
         },
       })
@@ -117,8 +117,8 @@ export default class IconEditing extends Plugin {
             viewWriter.remove(existingPreview);
           }
 
-          const iconPreview = viewWriter.createRawElement("span", {
-            "data-drupal-icon-preview": "loading",
+          const iconPreview = viewWriter.createRawElement('span', {
+            'data-drupal-icon-preview': 'loading',
           });
 
           viewWriter.insert(
@@ -134,8 +134,8 @@ export default class IconEditing extends Plugin {
 
             this.editor.editing.view.change((writer) => {
               const iconPreviewContainer = writer.createRawElement(
-                "span",
-                { "data-drupal-icon-preview": "ready" },
+                'span',
+                { 'data-drupal-icon-preview': 'ready' },
                 (domElement) => {
                   domElement.innerHTML = preview;
                 },
@@ -149,7 +149,7 @@ export default class IconEditing extends Plugin {
             });
           } catch (error) {
             // eslint-disable-next-line no-console
-            console.error("Error fetching icon preview:", error);
+            console.error('Error fetching icon preview:', error);
           }
         };
 
@@ -165,17 +165,17 @@ export default class IconEditing extends Plugin {
       const attributeMapping = {
         model: {
           key: modelKey,
-          name: "drupalIcon",
+          name: 'drupalIcon',
         },
         view: {
-          name: "drupal-icon",
+          name: 'drupal-icon',
           key: this.attrs[modelKey],
         },
       };
       // Attributes should be rendered only in dataDowncast to avoid having
       // unfiltered data-attributes on the Drupal Icon widget.
-      conversion.for("dataDowncast").attributeToAttribute(attributeMapping);
-      conversion.for("upcast").attributeToAttribute(attributeMapping);
+      conversion.for('dataDowncast').attributeToAttribute(attributeMapping);
+      conversion.for('upcast').attributeToAttribute(attributeMapping);
     });
   }
 
@@ -190,17 +190,17 @@ export default class IconEditing extends Plugin {
    * @private
    */
   static async _fetchIcon(modelElement) {
-    let options = modelElement.getAttribute("drupalIconOptions");
-    if (typeof options === "undefined") {
-      options = "";
+    let options = modelElement.getAttribute('drupalIconOptions');
+    if (typeof options === 'undefined') {
+      options = '';
     }
     const query = {
-      icon_id: modelElement.getAttribute("drupalIconId"),
+      icon_id: modelElement.getAttribute('drupalIconId'),
       options,
     };
 
     const response = await fetch(
-      `${Drupal.url("ui-icons/icon/preview")}?${new URLSearchParams(query)}`,
+      `${Drupal.url('ui-icons/icon/preview')}?${new URLSearchParams(query)}`,
     );
 
     if (response.ok) {
@@ -209,7 +209,7 @@ export default class IconEditing extends Plugin {
     }
 
     // @todo from filter settings if set?
-    const title = `The referenced icon: "${modelElement.getAttribute("drupalIconId")}" is missing and needs to be re-embedded.`;
+    const title = `The referenced icon: "${modelElement.getAttribute('drupalIconId')}" is missing and needs to be re-embedded.`;
     const error = `<span class="drupal-icon"><svg width="15" height="14" fill="none" xmlns="http://www.w3.org/2000/svg"><title>${title}</title><path d="M7.002 0a7 7 0 100 14 7 7 0 000-14zm3 5c0 .551-.16 1.085-.477 1.586l-.158.22c-.07.093-.189.241-.361.393a9.67 9.67 0 01-.545.447l-.203.189-.141.129-.096.17L8 8.369v.63H5.999v-.704c.026-.396.078-.73.204-.999a2.83 2.83 0 01.439-.688l.225-.21-.01-.015.176-.14.137-.128c.186-.139.357-.277.516-.417l.148-.18A.948.948 0 008.002 5 1.001 1.001 0 006 5H4a3 3 0 016.002 0zm-1.75 6.619a.627.627 0 01-.625.625h-1.25a.627.627 0 01-.626-.625v-1.238c0-.344.281-.625.626-.625h1.25c.344 0 .625.281.625.625v1.238z" fill="#d72222"/></svg></span>`;
     return { preview: error };
   }

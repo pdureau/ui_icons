@@ -86,14 +86,12 @@ abstract class UiIconsExtractorPluginBase extends PluginBase implements UiIconsE
    * {@inheritdoc}
    */
   public function validateConfigurationForm(array &$form, FormStateInterface $form_state): void {
-    // $values = $form_state->getValues();
   }
 
   /**
    * {@inheritdoc}
    */
   public function submitConfigurationForm(array &$form, FormStateInterface $form_state): void {
-    // $values = $form_state->getValues();
   }
 
   /**
@@ -106,7 +104,13 @@ abstract class UiIconsExtractorPluginBase extends PluginBase implements UiIconsE
   }
 
   /**
-   * {@inheritdoc}
+   * Clean the icon data object values.
+   *
+   * @param array $definition
+   *   The definition used as data.
+   *
+   * @return array
+   *   The clean data definition.
    */
   private static function filterDataFromDefinition(array $definition): array {
     return [

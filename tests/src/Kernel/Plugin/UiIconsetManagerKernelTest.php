@@ -9,6 +9,7 @@ use Drupal\KernelTests\KernelTestBase;
 use Drupal\ui_icons\Exception\IconsetConfigErrorException;
 use Drupal\ui_icons\IconDefinitionInterface;
 use Drupal\ui_icons\Plugin\UiIconsetManager;
+use Drupal\ui_icons\Plugin\UiIconsetManagerInterface;
 
 /**
  * Tests the UiIconsetManager class.
@@ -31,14 +32,14 @@ class UiIconsetManagerKernelTest extends KernelTestBase {
    *
    * @var \Drupal\ui_icons\Plugin\UiIconsetManagerInterface
    */
-  protected $uiIconsetManager;
+  private UiIconsetManagerInterface $uiIconsetManager;
 
   /**
    * The App root instance.
    *
    * @var string
    */
-  protected $appRoot;
+  private string $appRoot;
 
   /**
    * {@inheritdoc}

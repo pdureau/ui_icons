@@ -139,7 +139,7 @@ class ManualExtractorTest extends UnitTestCase {
 
     $this->assertInstanceOf(UiIconsExtractorPluginInterface::class, $manualExtractorPlugin);
 
-    // Test buildConfigurationForm with no change because of no 'options';
+    // Test buildConfigurationForm with no change because of no 'options';.
     $form = ['foo'];
     $this->assertSame($form, $manualExtractorPlugin->buildConfigurationForm($form, new FormState()));
 
