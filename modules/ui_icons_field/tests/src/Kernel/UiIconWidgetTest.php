@@ -156,7 +156,6 @@ class UiIconWidgetTest extends KernelTestBase {
       'field_definition' => $this->baseField,
       'settings' => $settings,
       'third_party_settings' => [],
-    // @phpstan-ignore-next-line
     ])->formElement($entity->icon, 0, ['#description' => ''], $form, new FormState());
   }
 

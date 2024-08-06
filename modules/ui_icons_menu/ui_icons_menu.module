@@ -12,15 +12,12 @@ use Drupal\ui_icons\IconDefinitionInterface;
 /**
  * Implements hook_help().
  */
-function ui_icons_menu_help(string $route_name, RouteMatchInterface $route_match) {
-  switch ($route_name) {
-    case 'help.page.ui_icons_menu':
-      $output = '';
-      $output .= '<h3>' . t('About') . '</h3>';
-      $output .= '<p>' . t('The UI Icons Menu module overtakes the core default widget for menu link content entities, allowing you to set icons on menu links.') . '</p>';
-      return $output;
-
-    default:
+function ui_icons_menu_help(string $route_name, RouteMatchInterface $route_match): string {
+  if ('help.page.ui_icons_menu' === $route_name) {
+    $output = '';
+    $output .= '<h3>' . t('About') . '</h3>';
+    $output .= '<p>' . t('The UI Icons Menu module overtakes the core default widget for menu link content entities, allowing you to set icons on menu links.') . '</p>';
+    return $output;
   }
 }
 

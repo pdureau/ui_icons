@@ -1,0 +1,23 @@
+includes:
+  - phpstan-baseline.neon
+parameters:
+  level: 5
+  excludePaths:
+    analyseAndScan:
+      - */node_modules/*
+      - */vendor/*
+      - */tests/*
+  fileExtensions:
+    - php
+    - module
+    - inc
+    - install
+    - theme
+    - profile
+  treatPhpDocTypesAsCertain: false
+  inferPrivatePropertyTypeFromConstructor: true
+  reportUnmatchedIgnoredErrors: false
+  ignoreErrors:
+    # new static() is a best practice in Drupal, so we cannot fix that.
+    - "#^Unsafe usage of new static#"
+    - identifier: missingType.iterableValue

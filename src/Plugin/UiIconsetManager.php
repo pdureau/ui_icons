@@ -324,7 +324,7 @@ class UiIconsetManager extends DefaultPluginManager implements UiIconsetManagerI
   /**
    * {@inheritdoc}
    */
-  protected function providerExists($provider): bool {
+  protected function providerExists(mixed $provider): bool {
     return $this->moduleHandler->moduleExists($provider) || $this->themeHandler->themeExists($provider);
   }
 

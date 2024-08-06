@@ -50,7 +50,6 @@ class UiIconsExtractorTest extends UnitTestCase {
     $this->assertEquals('example', $plugin->getProvider());
     $this->assertEquals('foo', $plugin->getId());
 
-    // @phpstan-ignore-next-line
     $plugin->setClass('\Drupal\Foo');
     $this->assertEquals('\Drupal\Foo', $plugin->getClass());
 

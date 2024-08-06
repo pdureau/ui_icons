@@ -66,6 +66,7 @@ class UiIconsExtractorPluginManager extends DefaultPluginManager {
     if (!isset($extractor_configuration['options'])) {
       return NULL;
     }
+    /** @var \Drupal\ui_icons\Plugin\UiIconsExtractorPluginInterface $plugin */
     $plugin = $this->createInstance($extractor_configuration['extractor'], $extractor_configuration);
     return $this->getPluginForm($plugin);
   }

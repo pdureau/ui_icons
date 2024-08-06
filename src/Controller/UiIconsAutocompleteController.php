@@ -57,7 +57,7 @@ class UiIconsAutocompleteController extends ControllerBase {
     $width = $request->query->get('width', 32);
     $height = $request->query->get('height', 32);
 
-    $icon = $this->pluginManagerUiIconset->getIcon($icon_id);
+    $icon = $this->pluginManagerUiIconset->getIcon((string) $icon_id);
     if (!$icon) {
       return new Response();
     }
@@ -78,7 +78,7 @@ class UiIconsAutocompleteController extends ControllerBase {
    *   A JSON response containing the autocomplete suggestions for Icons.
    */
   public function handleSearchIcons(Request $request): JsonResponse {
-    $query = $request->query->get('q', '');
+    $query = (string) $request->query->get('q', '');
     if (empty(trim($query))) {
       return new JsonResponse();
     }
@@ -94,12 +94,12 @@ class UiIconsAutocompleteController extends ControllerBase {
     $query = strtolower($query);
     $query = preg_replace('/[^ \w-]/', '', $query);
 
-    $allowed_iconset = $request->query->get('allowed_iconset', NULL);
-    if ($allowed_iconset) {
-      $allowed_iconset = explode('+', $allowed_iconset);
+    $allowed_iconset = NULL;
+    if ($request->query->get('allowed_iconset', NULL)) {
+      $allowed_iconset = explode('+', (string) $request->query->get('allowed_iconset', ''));
     }
 
-    $max_result = $request->query->get('max_result', 10);
+    $max_result = (int) $request->query->get('max_result', 10);
 
     $icons = $this->pluginManagerUiIconset->getIcons();
 

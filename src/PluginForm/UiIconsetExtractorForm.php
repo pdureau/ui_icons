@@ -25,7 +25,6 @@ class UiIconsetExtractorForm extends PluginFormBase implements PluginFormInterfa
       '#suffix' => '</div>',
     ];
 
-    // @phpstan-ignore-next-line
     $form = $this->plugin->buildConfigurationForm($form['ui-icons-settings'], $form_state);
 
     return $form;
@@ -35,7 +34,6 @@ class UiIconsetExtractorForm extends PluginFormBase implements PluginFormInterfa
    * {@inheritdoc}
    */
   public function validateConfigurationForm(array &$form, FormStateInterface $form_state): void {
-    // @phpstan-ignore-next-line
     $this->plugin->validateConfigurationForm($form, $form_state);
   }
 
@@ -43,7 +41,6 @@ class UiIconsetExtractorForm extends PluginFormBase implements PluginFormInterfa
    * {@inheritdoc}
    */
   public function submitConfigurationForm(array &$form, FormStateInterface $form_state): void {
-    // @phpstan-ignore-next-line
     $this->plugin->submitConfigurationForm($form, $form_state);
   }
 

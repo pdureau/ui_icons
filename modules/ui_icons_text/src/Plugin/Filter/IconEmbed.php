@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\ui_icons_text\Plugin\Filter;
 
 use Drupal\Component\Utility\Html;

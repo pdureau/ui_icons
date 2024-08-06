@@ -45,12 +45,12 @@ final class IconFilterController implements ContainerInjectionInterface {
    *   The icon string rendered.
    */
   public function preview(Request $request): Response {
-    $icon_id = $request->query->get('icon_id');
+    $icon_id = (string) $request->query->get('icon_id');
     if ($icon_id == '') {
       throw new NotFoundHttpException();
     }
     $options = [];
-    $query_options = $request->query->get('options');
+    $query_options = (string) $request->query->get('options');
     if ($query_options !== '' && json_validate($query_options)) {
       $options = json_decode($query_options, TRUE);
     }

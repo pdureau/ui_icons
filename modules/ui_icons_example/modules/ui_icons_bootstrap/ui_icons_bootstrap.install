@@ -8,7 +8,7 @@
 /**
  * Implements hook_requirements().
  */
-function ui_icons_bootstrap_requirements($phase) {
+function ui_icons_bootstrap_requirements(string $phase): array {
   if ($phase != 'runtime') {
     return [];
   }

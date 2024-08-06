@@ -13,7 +13,7 @@ use Drupal\Core\StringTranslation\TranslatableMarkup;
 /**
  * Implements hook_help().
  */
-function ui_icons_help($route_name, RouteMatchInterface $route_match) {
+function ui_icons_help(string $route_name, RouteMatchInterface $route_match): ?string {
   switch ($route_name) {
     case 'help.page.ui_icons':
       $output = '<h2>' . new TranslatableMarkup('About') . '</h2>';
@@ -34,7 +34,7 @@ function ui_icons_help($route_name, RouteMatchInterface $route_match) {
 /**
  * Implements hook_theme().
  */
-function ui_icons_theme($existing, $type, $theme, $path) {
+function ui_icons_theme(array $existing, string $type, string $theme, string $path): array {
   return [
     'input__icon' => [
       'render element' => 'element',

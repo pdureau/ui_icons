@@ -1,0 +1,61 @@
+parameters:
+	ignoreErrors:
+		-
+			message: "#^Call to an undefined method Drupal\\\\ui_icons_field_link_attributes\\\\Plugin\\\\Field\\\\FieldWidget\\\\UiIconLinkWithAttributesWidget\\:\\:traitFormElement\\(\\)\\.$#"
+			count: 1
+			path: modules/ui_icons_field/modules/ui_icons_field_link_attributes/src/Plugin/Field/FieldWidget/UiIconLinkWithAttributesWidget.php
+
+		-
+			message: "#^Call to an undefined method Drupal\\\\ui_icons_field_link_attributes\\\\Plugin\\\\Field\\\\FieldWidget\\\\UiIconLinkWithAttributesWidget\\:\\:traitSettingsForm\\(\\)\\.$#"
+			count: 1
+			path: modules/ui_icons_field/modules/ui_icons_field_link_attributes/src/Plugin/Field/FieldWidget/UiIconLinkWithAttributesWidget.php
+
+		-
+			message: "#^Call to an undefined method Drupal\\\\ui_icons_field_link_attributes\\\\Plugin\\\\Field\\\\FieldWidget\\\\UiIconLinkWithAttributesWidget\\:\\:traitSettingsSummary\\(\\)\\.$#"
+			count: 1
+			path: modules/ui_icons_field/modules/ui_icons_field_link_attributes/src/Plugin/Field/FieldWidget/UiIconLinkWithAttributesWidget.php
+
+		-
+			message: "#^Call to an undefined static method Drupal\\\\ui_icons_field_link_attributes\\\\Plugin\\\\Field\\\\FieldWidget\\\\UiIconLinkWithAttributesWidget\\:\\:traitDefaultSettings\\(\\)\\.$#"
+			count: 1
+			path: modules/ui_icons_field/modules/ui_icons_field_link_attributes/src/Plugin/Field/FieldWidget/UiIconLinkWithAttributesWidget.php
+
+		-
+			message: "#^Parameter \\$linkAttributesManager of method Drupal\\\\ui_icons_field_link_attributes\\\\Plugin\\\\Field\\\\FieldWidget\\\\UiIconLinkWithAttributesWidget\\:\\:__construct\\(\\) has invalid type Drupal\\\\link_attributes\\\\LinkAttributesManager\\.$#"
+			count: 2
+			path: modules/ui_icons_field/modules/ui_icons_field_link_attributes/src/Plugin/Field/FieldWidget/UiIconLinkWithAttributesWidget.php
+
+		-
+			message: "#^Property Drupal\\\\ui_icons_field_link_attributes\\\\Plugin\\\\Field\\\\FieldWidget\\\\UiIconLinkWithAttributesWidget\\:\\:\\$linkAttributesManager has unknown class Drupal\\\\link_attributes\\\\LinkAttributesManager as its type\\.$#"
+			count: 2
+			path: modules/ui_icons_field/modules/ui_icons_field_link_attributes/src/Plugin/Field/FieldWidget/UiIconLinkWithAttributesWidget.php
+
+		-
+			message: "#^Access to an undefined property Drupal\\\\Core\\\\Field\\\\FieldItemInterface\\:\\:\\$settings\\.$#"
+			count: 1
+			path: modules/ui_icons_field/src/Plugin/Field/FieldWidget/UiIconWidget.php
+
+		-
+			message: "#^Access to an undefined property Drupal\\\\Core\\\\Field\\\\FieldItemInterface\\:\\:\\$target_id\\.$#"
+			count: 1
+			path: modules/ui_icons_field/src/Plugin/Field/FieldWidget/UiIconWidget.php
+
+		-
+			message: "#^Method Drupal\\\\ui_icons_text\\\\Plugin\\\\Filter\\\\IconEmbed\\:\\:tips\\(\\) should return string\\|null but returns Drupal\\\\Core\\\\StringTranslation\\\\TranslatableMarkup\\.$#"
+			count: 2
+			path: modules/ui_icons_text/src/Plugin/Filter/IconEmbed.php
+
+		-
+			message: "#^Call to an undefined method Drupal\\\\Component\\\\Plugin\\\\PluginInspectionInterface\\:\\:buildConfigurationForm\\(\\)\\.$#"
+			count: 1
+			path: src/PluginForm/UiIconsetExtractorForm.php
+
+		-
+			message: "#^Call to an undefined method Drupal\\\\Component\\\\Plugin\\\\PluginInspectionInterface\\:\\:submitConfigurationForm\\(\\)\\.$#"
+			count: 1
+			path: src/PluginForm/UiIconsetExtractorForm.php
+
+		-
+			message: "#^Call to an undefined method Drupal\\\\Component\\\\Plugin\\\\PluginInspectionInterface\\:\\:validateConfigurationForm\\(\\)\\.$#"
+			count: 1
+			path: src/PluginForm/UiIconsetExtractorForm.php
