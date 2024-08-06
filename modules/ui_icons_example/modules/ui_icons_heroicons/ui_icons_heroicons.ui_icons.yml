@@ -1,0 +1,94 @@
+ui_icons_heroicons_solid:
+  label: Hero Icons solid
+  description: Hero Icons from SVG files as Solid style.
+  extractor: svg
+  config:
+    sources:
+      - /libraries/heroicons/node_modules/heroicons/24/solid/{icon_id}.svg
+  options:
+    title:
+      title: "Title"
+      placeholder: "Set a title on hover for this icon."
+    alt:
+      title: "Alt text"
+      placeholder: "Accessibility alternative text, leave empty for decorative icon."
+    width:
+      title: "Width"
+      description: "Set a width for this icon."
+      type: "integer"
+      default: 24
+      suffix: "px"
+    height:
+      title: "Height"
+      description: "Set a height for this icon."
+      type: "integer"
+      default: 24
+      suffix: "px"
+    stroke_width:
+      title: "Stroke width"
+      description: "Set a stroke width for this icon."
+      type: "number"
+      default: 1.5
+  template: >
+    <svg
+      class="heroicon"
+      aria-label="{{ alt|default(icon_id|capitalize) }}"
+      fill="none"
+      viewBox="0 0 24 24"
+      stroke="currentColor"
+      stroke-width="{{ stroke_width|default(1.5) }}"
+      width="{{ width|default(32) }}"
+      height="{{ height|default(32) }}"
+    >
+      <title>{{ title|default(icon_id|capitalize) }}</title>
+      {{ content | raw }}
+    </svg>
+
+ui_icons_heroicons_outline:
+  label: Hero Icons outline
+  description: Hero Icons from SVG files as outline style.
+  extractor: svg
+  config:
+    sources:
+      - /libraries/heroicons/node_modules/heroicons/24/outline/{icon_id}.svg
+  options:
+    title:
+      title: "Title"
+      placeholder: "Set a title on hover for this icon."
+    alt:
+      title: "Alt text"
+      placeholder: "Accessibility alternative text, leave empty for decorative icon."
+    width:
+      title: "Width"
+      description: "Set a width for this icon."
+      type: "integer"
+      default: 24
+      suffix: "px"
+    height:
+      title: "Height"
+      description: "Set a height for this icon."
+      type: "integer"
+      default: 24
+      suffix: "px"
+    stroke_width:
+      title: "Stroke width"
+      description: "Set a stroke width for this icon."
+      type: "float"
+      default: 1.5
+      min: 0.1
+      max: 5
+      step: 0.1
+  template: >
+    <svg
+      class="heroicon"
+      aria-label="{{ alt|default(icon_id|capitalize) }}"
+      fill="none"
+      viewBox="0 0 24 24"
+      stroke="currentColor"
+      stroke-width="{{ stroke_width|default(1.5) }}"
+      width="{{ width|default(32) }}"
+      height="{{ height|default(32) }}"
+    >
+      <title>{{ title|default(icon_id|capitalize) }}</title>
+      {{ content | raw }}
+    </svg>
