@@ -12,7 +12,7 @@ use Drupal\ui_icons\IconDefinitionInterface;
 /**
  * Implements hook_help().
  */
-function ui_icons_menu_help(string $route_name, RouteMatchInterface $route_match): string {
+function ui_icons_menu_help(string $route_name, RouteMatchInterface $route_match) {
   if ('help.page.ui_icons_menu' === $route_name) {
     $output = '';
     $output .= '<h3>' . t('About') . '</h3>';

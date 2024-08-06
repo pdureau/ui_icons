@@ -288,7 +288,7 @@ class IconEmbed extends FilterBase implements ContainerFactoryPluginInterface {
    *   The text or HTML that will replace the contents of $node.
    */
   protected static function replaceNodeContent(\DOMNode &$node, $content): void {
-    if (strlen($content)) {
+    if (strlen((string) $content)) {
       // Load the content into a new DOMDocument and retrieve the DOM nodes.
       $replacement_nodes = Html::load($content)->getElementsByTagName('body')
         ->item(0)
