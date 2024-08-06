@@ -216,8 +216,8 @@ class UiIconsetManagerKernelTest extends KernelTestBase {
       'config' => [],
       '_path_info' => [
         'drupal_root' => $this->appRoot,
-        'absolute_path' => $this->appRoot . '/modules/ui_icons/tests/modules/ui_icons_test',
-        'relative_path' => 'modules/ui_icons/tests/modules/ui_icons_test',
+        'absolute_path' => $this->appRoot . '/modules/custom/ui_icons/tests/modules/ui_icons_test',
+        'relative_path' => 'modules/custom/ui_icons/tests/modules/ui_icons_test',
       ],
       'iconset_id' => 'foo',
       'iconset_label' => 'Foo',
