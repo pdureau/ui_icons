@@ -59,3 +59,8 @@ parameters:
 			message: "#^Call to an undefined method Drupal\\\\Component\\\\Plugin\\\\PluginInspectionInterface\\:\\:validateConfigurationForm\\(\\)\\.$#"
 			count: 1
 			path: src/PluginForm/UiIconsetExtractorForm.php
+
+		-
+			message: "#^Function ui_icons_menu_help() should return string but return statement is missing\\.$#"
+			count: 1
+			path: modules/ui_icons_menu/ui_icons_menu.module

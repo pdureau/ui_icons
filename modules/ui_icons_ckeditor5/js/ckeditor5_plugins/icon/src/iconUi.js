@@ -1,5 +1,4 @@
-/* eslint-disable import/no-extraneous-dependencies */
-
+/* eslint-disable import/no-extraneous-dependencies import/no-unresolved */
 import { Plugin } from 'ckeditor5/src/core';
 import { ButtonView } from 'ckeditor5/src/ui';
 import icon from '../../../../icons/icon.svg';
