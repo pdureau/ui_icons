@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Drupal\ui_icons_field\Unit\Plugin;
+namespace Drupal\Tests\ui_icons_field\Unit\Plugin;
 
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\ui_icons\Plugin\UiIconsetManagerInterface;
@@ -77,7 +77,7 @@ class UiIconFormatterTest extends UnitTestCase {
    */
   public function testDefaultSettings(): void {
     $expected = [
-      'icon_settings' => NULL,
+      'icon_settings' => [],
     ];
     $this->assertEquals($expected, $this->formatter->defaultSettings());
   }
@@ -101,7 +101,7 @@ class UiIconFormatterTest extends UnitTestCase {
   public function testSettingsSummary(): void {
     $this->formatter->setSetting('icon_settings', ['foo' => 'bar']);
     $summary = $this->formatter->settingsSummary();
-    $this->assertEquals('Specific settings saved', $summary[0]->getUntranslatedString());
+    $this->assertEquals('Specific icon settings saved', $summary[0]->getUntranslatedString());
   }
 
   /**

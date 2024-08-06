@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Drupal\ui_icons\Unit\Element\Attribute;
+namespace Drupal\Tests\ui_icons\Unit\Element\Attribute;
 
 use Drupal\Core\DependencyInjection\ContainerBuilder;
 use Drupal\Core\StringTranslation\TranslatableMarkup;

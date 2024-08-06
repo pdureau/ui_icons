@@ -103,8 +103,13 @@ class UiIconWidgetTest extends KernelTestBase {
     $entity->save();
 
     $element = $this->buildWidgetForm($entity);
-    $this->assertArrayHasKey('icon', $element);
-    $this->assertEquals('ui_icon_autocomplete', $element['icon']['#type']);
+
+    $this->assertArrayHasKey('value', $element);
+    $this->assertSame('ui_icon_autocomplete', $element['value']['#type']);
+    $this->assertSame(NULL, $element['value']['#default_value']);
+    $this->assertSame([], $element['value']['#allowed_iconset']);
+    $this->assertSame(FALSE, $element['value']['#show_settings']);
+    $this->assertSame(FALSE, $element['value']['#required']);
   }
 
   /**
@@ -116,11 +121,20 @@ class UiIconWidgetTest extends KernelTestBase {
     ]);
     $entity->save();
 
-    $element = $this->buildWidgetForm($entity, ['icon_settings' => TRUE]);
-    $this->assertArrayHasKey('icon', $element);
-    $this->assertEquals('ui_icon_autocomplete', $element['icon']['#type']);
-    $this->assertArrayHasKey('settings', $element);
-    $this->assertEquals('details', $element['settings']['#type']);
+    $element = $this->buildWidgetForm($entity, [
+      'show_settings' => TRUE,
+      'allowed_iconset' => [
+        'foo' => 'bar',
+        'baz' => 0,
+      ],
+    ]);
+
+    $this->assertArrayHasKey('value', $element);
+    $this->assertSame('ui_icon_autocomplete', $element['value']['#type']);
+    $this->assertSame(NULL, $element['value']['#default_value']);
+    $this->assertSame(['foo' => 'bar'], $element['value']['#allowed_iconset']);
+    $this->assertSame(TRUE, $element['value']['#show_settings']);
+    $this->assertSame(FALSE, $element['value']['#required']);
   }
 
   /**

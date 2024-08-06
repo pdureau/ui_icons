@@ -2,22 +2,22 @@
 
 declare(strict_types=1);
 
-namespace Drupal\ui_icons_field\Unit\Plugin;
+namespace Drupal\Tests\ui_icons_field\Unit\Plugin;
 
-use Drupal\Core\Form\FormStateInterface;
-use Drupal\ui_icons\Plugin\UiIconsetManagerInterface;
-use Drupal\Core\Field\FieldDefinitionInterface;
-use Drupal\ui_icons_field\Plugin\Field\FieldWidget\UiIconWidget;
-use Drupal\Tests\UnitTestCase;
 use Drupal\Core\DependencyInjection\ContainerBuilder;
+use Drupal\Core\Field\FieldDefinitionInterface;
+use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\StringTranslation\TranslationInterface;
+use Drupal\ui_icons_field\Plugin\Field\FieldWidget\UiIconWidget;
+use Drupal\ui_icons\Plugin\UiIconsetManagerInterface;
+use Drupal\Tests\ui_icons\Unit\UiIconsUnitTestCase;
 
 /**
  * Tests the UiIconWidget field class.
  *
  * @group ui_icons
  */
-class UiIconWidgetTest extends UnitTestCase {
+class UiIconWidgetTest extends UiIconsUnitTestCase {
 
   /**
    * The field widget under test.
@@ -76,7 +76,7 @@ class UiIconWidgetTest extends UnitTestCase {
   public function testDefaultSettings(): void {
     $expected = [
       'allowed_iconset' => [],
-      'icon_settings' => FALSE,
+      'show_settings' => FALSE,
     ];
     $this->assertEquals($expected, $this->widget->defaultSettings());
   }
@@ -91,7 +91,7 @@ class UiIconWidgetTest extends UnitTestCase {
     $form = $this->widget->settingsForm($form, $form_state);
 
     $this->assertArrayHasKey('allowed_iconset', $form);
-    $this->assertArrayHasKey('icon_settings', $form);
+    $this->assertArrayHasKey('show_settings', $form);
   }
 
   /**
@@ -99,7 +99,7 @@ class UiIconWidgetTest extends UnitTestCase {
    */
   public function testSettingsSummary(): void {
     $this->widget->setSetting('allowed_iconset', ['iconset1' => 'iconset1']);
-    $this->widget->setSetting('icon_settings', TRUE);
+    $this->widget->setSetting('show_settings', TRUE);
 
     $summary = $this->widget->settingsSummary();
 
@@ -114,71 +114,48 @@ class UiIconWidgetTest extends UnitTestCase {
   }
 
   /**
-   * Data provider for testMassageFormValues.
-   */
-  public static function providerMassageFormValues(): array {
-    return [
-      'case 1' => [
-        'values' => [
-          0 => ['icon' => 'iconset1:icon1', 'settings' => ['setting1' => 'value1']],
-          1 => ['icon' => 'iconset2:icon2', 'settings' => []],
-        ],
-        'expected' => [
-          0 => [
-            'icon' => 'iconset1:icon1',
-            'settings' => serialize(['setting1' => 'value1']),
-            'delta' => 0,
-            'iconset_id' => 'iconset1',
-            'icon_id' => 'icon1',
-          ],
-          1 => [
-            'icon' => 'iconset2:icon2',
-            'settings' => serialize([]),
-            'delta' => 1,
-            'iconset_id' => 'iconset2',
-            'icon_id' => 'icon2',
-          ],
-        ],
-      ],
-      'case 2' => [
-        'values' => [
-          0 => ['icon' => 'iconset3:icon3', 'settings' => ['setting3' => 'value3']],
-        ],
-        'expected' => [
-          0 => [
-            'icon' => 'iconset3:icon3',
-            'settings' => serialize(['setting3' => 'value3']),
-            'delta' => 0,
-            'iconset_id' => 'iconset3',
-            'icon_id' => 'icon3',
-          ],
-        ],
-      ],
-      'case invalid icon' => [
-        'values' => [
-          0 => ['icon' => 'icon3', 'settings' => ['setting3' => 'value3']],
-        ],
-        'expected' => [],
-      ],
-    ];
-  }
-
-  /**
    * Tests the massageFormValues method.
-   *
-   * @dataProvider providerMassageFormValues
-   *
-   * @param array $values
-   *   The data values.
-   * @param array $expected
-   *   The data expected.
    */
-  public function testMassageFormValues(array $values, array $expected): void {
+  public function testMassageFormValues(): void {
     $form_state = $this->createMock(FormStateInterface::class);
+    $values = [];
 
-    $result = $this->widget->massageFormValues($values, [], $form_state);
+    // Invalid icon.
+    $values[]['value'] = [
+      'icon' => NULL,
+    ];
 
-    $this->assertEquals($expected, $result);
+    // Icon without settings.
+    $values[]['value'] = [
+      'icon' => $this->createMockIcon([
+        'iconset_id' => 'foo',
+        'icon_id' => 'bar',
+      ]),
+      'settings' => [],
+    ];
+
+    // Icon with settings.
+    $values[]['value'] = [
+      'icon' => $this->createMockIcon([
+        'iconset_id' => 'foo',
+        'icon_id' => 'bar',
+      ]),
+      'settings' => ['baz' => 'qux'],
+    ];
+
+    $actual = $this->widget->massageFormValues($values, [], $form_state);
+
+    foreach ($actual as $delta => $value) {
+      if (NULL === $values[$delta]['value']['icon']) {
+        $this->assertNull($value['target_id']);
+        $this->assertEmpty($value['settings']);
+      }
+      else {
+        $this->assertInstanceOf('Drupal\ui_icons\IconDefinitionInterface', $value['value']['icon']);
+        $this->assertEquals('foo:bar', $value['target_id']);
+        $this->assertEquals($values[$delta]['value']['settings'], $value['settings']);
+      }
+    }
   }
 
 }

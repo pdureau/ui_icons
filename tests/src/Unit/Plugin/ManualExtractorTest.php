@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Drupal\ui_icons\Unit;
+namespace Drupal\Tests\ui_icons\Unit;
 
 use Drupal\Core\Form\FormState;
 use Drupal\Core\Form\FormStateInterface;

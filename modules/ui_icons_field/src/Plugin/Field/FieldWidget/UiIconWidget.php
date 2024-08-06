@@ -151,7 +151,7 @@ class UiIconWidget extends WidgetBase implements ContainerFactoryPluginInterface
       '#required' => $element['#required'] ?? FALSE,
     ];
 
-    if ($item->target_id) {
+    if ($item && $item->target_id) {
       $element['value']['#default_value'] = $item->target_id;
       if (TRUE == $settings['show_settings'] && $item->settings) {
         // @todo default from formatter before definition?
@@ -167,15 +167,20 @@ class UiIconWidget extends WidgetBase implements ContainerFactoryPluginInterface
    */
   public function massageFormValues(array $values, array $form, FormStateInterface $form_state): array {
     foreach ($values as &$item) {
-      if (!empty($item['value']['icon']) && $item['value']['icon'] instanceof IconDefinitionInterface) {
-        $icon = $item['value']['icon'];
-        $item['target_id'] = $icon->getId();
-        $settings = [];
-        if (isset($item['value']['settings'])) {
-          $settings = $item['value']['settings'];
-        }
-        $item['settings'] = $settings;
+      if (empty($item['value']['icon']) || !$item['value']['icon'] instanceof IconDefinitionInterface) {
+        // @todo null or unset?
+        $item['target_id'] = NULL;
+        $item['settings'] = [];
+        continue;
       }
+
+      $icon = $item['value']['icon'];
+      $item['target_id'] = $icon->getId();
+      $settings = [];
+      if (isset($item['value']['settings'])) {
+        $settings = $item['value']['settings'];
+      }
+      $item['settings'] = $settings;
     }
 
     return $values;

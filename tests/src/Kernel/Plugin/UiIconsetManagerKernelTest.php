@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Drupal\ui_icons\Kernel\Plugin;
+namespace Drupal\Tests\ui_icons\Kernel\Plugin;
 
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\KernelTests\KernelTestBase;
