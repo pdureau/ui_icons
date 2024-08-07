@@ -9,16 +9,18 @@
 {% apply spaceless %}
 
 {{ attach_library('ui_icons/ui_icons.autocomplete') }}
-{# {{dump(element)}} #}
+
 {% if element['#default_value'] %}
   {% set icon = element['#default_value']|split(':') %}
+{% elseif element['#value']['icon_id'] %}
+  {% set icon = element['#value']['icon_id']|split(':') %}
 {% endif %}
 
 <div class="ui-icons-wrapper">
   <div class="ui-icons-input-wrapper">
     <div class="ui-icons-preview form-item">
+
     {% if icon %}
-    {# {{dump(icon)}} #}
       {{ icon(icon.0, icon.1) }}
     {% endif %}
     </div>
