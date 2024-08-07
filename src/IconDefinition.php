@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Drupal\ui_icons;
 
+use Drupal\Component\Render\FormattableMarkup;
 use Drupal\ui_icons\Exception\IconDefinitionInvalidDataException;
 
 /**
@@ -97,7 +98,10 @@ class IconDefinition implements IconDefinitionInterface {
     $context = [
       'icon_id' => $this->name,
       'source' => $this->source,
-      'content' => $this->getContent(),
+      // 'content' => new FormattableMarkup('@content', ['@content' => $this->getContent()]),
+      // 'content' => ['#markup' => new FormattableMarkup('<b>yolo</b>@content', ['@content' => $this->getContent()])],
+      // 'content' => ['#markup' => new FormattableMarkup($this->getContent(), [])],
+      'content' => new FormattableMarkup($this->getContent(), []),
       'iconset_label' => $this->getIconsetLabel(),
     ];
 

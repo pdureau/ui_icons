@@ -32,14 +32,14 @@ iconset_example_drupal_core:
       title: "Width"
       description: "Set a width for this icon."
       type: "integer"
-      default: 50
+      default: 32
       required: true
       suffix: "px"
     height:
       title: "Height"
       description: "Set a height for this icon."
       type: "integer"
-      default: 50
+      default: 32
       required: true
       suffix: "px"
     title:
@@ -111,9 +111,8 @@ iconset_example_svg:
       title: "Alt text"
       description: "Accessibility alternative text, leave empty for decorative icon."
   template: >
-    <svg xmlns="http://www.w3.org/2000/svg" width="{{ width }}" height="{{ height }}" fill="currentColor" viewBox="0 0 {{ width }} {{ height }}" aria-label="{{ alt|default(icon_id|capitalize) }}">
-      <title>{{ title|default(icon_id) }}</title>
-      {{ content|raw }}
+    <svg xmlns="http://www.w3.org/2000/svg" width="{{ width|default(32) }}" height="{{ height|default(32) }}" fill="currentColor" viewBox="0 0 163.83 124.92" aria-label="{{ alt|default(icon_id|capitalize) }}">
+      {{ content }}
     </svg>
 
 iconset_example_svg_sprite:
@@ -174,7 +173,7 @@ iconset_example_svg_sprite:
       suffix: 100
       step: 10
   template: >
-    <svg width="{{ width }}" height="{{ height }}" fill="currentColor" aria-label="{{ alt|default(icon_id|capitalize) }}">
+    <svg width="{{ width|default(32) }}" height="{{ height|default(32) }}" fill="currentColor" aria-label="{{ alt|default(icon_id|capitalize) }}">
       <title>{{ title|default(icon_id|capitalize) }}</title>
       <use xlink:href="{{ source }}#{{ icon_id }}"/>
     </svg>

@@ -27,7 +27,10 @@ test_local_svg:
       - icons/local_svg/{icon_id}.svg
       - icons/local_svg_group/{group}/{icon_id}.svg
     options: {}
-  template: '<svg xmlns="http://www.w3.org/2000/svg" width="{{ width }}" height="{{ height }}" fill="currentColor" viewBox="0 0 {{ width }} {{ height }}">{{ content|raw }}</svg>'
+  template: >
+    <svg xmlns="http://www.w3.org/2000/svg" width="{{ width }}" height="{{ height }}" fill="currentColor" viewBox="0 0 {{ width }} {{ height }}">
+      {{ content }}
+    </svg>
 
 test_local_svg_sprite:
   label: Small sprite

@@ -37,11 +37,11 @@ ui_icons_heroicons_solid:
       viewBox="0 0 24 24"
       stroke="currentColor"
       stroke-width="{{ stroke_width|default(1.5) }}"
-      width="{{ width|default(32) }}"
-      height="{{ height|default(32) }}"
+      width="{{ width|default(24) }}"
+      height="{{ height|default(24) }}"
     >
       <title>{{ title|default(icon_id|capitalize) }}</title>
-      {{ content | raw }}
+      {{ content }}
     </svg>
 
 ui_icons_heroicons_outline:
@@ -86,9 +86,9 @@ ui_icons_heroicons_outline:
       viewBox="0 0 24 24"
       stroke="currentColor"
       stroke-width="{{ stroke_width|default(1.5) }}"
-      width="{{ width|default(32) }}"
-      height="{{ height|default(32) }}"
+      width="{{ width|default(24) }}"
+      height="{{ height|default(24) }}"
     >
       <title>{{ title|default(icon_id|capitalize) }}</title>
-      {{ content | raw }}
+      {{ content }}
     </svg>
