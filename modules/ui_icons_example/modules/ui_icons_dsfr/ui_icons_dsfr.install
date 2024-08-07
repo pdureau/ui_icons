@@ -1,0 +1,32 @@
+<?php
+
+/**
+ * @file
+ * Install, update and uninstall functions for the ui_icons_DSFR module.
+ */
+
+/**
+ * Implements hook_requirements().
+ */
+function ui_icons_DSFR_requirements(string $phase): array {
+  if ($phase != 'runtime') {
+    return [];
+  }
+
+  $link = 'https://www.npmjs.com/package/@gouvfr/dsfr';
+  $pattern = '/libraries/dsfr/node_modules/@gouvfr/dsfr/dist/icons/**/*.svg';
+
+  $requirements = [];
+  $library_exists = count(glob(DRUPAL_ROOT . $pattern));
+  $requirements['ui_icons_DSFR'] = [
+    'title' => t('Icons DSFR'),
+    'value' => $library_exists ? t('Found @num DSFR icons', ['@num' => $library_exists]) : t('Missing icons in libraries folder.'),
+    'description' => $library_exists ? '' : t('Install <a href=":link">DSFR icons</a> with <code>npm i @gouvfr/dsfr</code> under Drupal web directory as <code>@path</code>.', [
+      ':link' => $link,
+      '@path' => $pattern,
+    ]),
+    'severity' => $library_exists ? REQUIREMENT_OK : REQUIREMENT_WARNING,
+  ];
+
+  return $requirements;
+}

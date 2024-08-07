@@ -98,6 +98,7 @@ final class LibrarySearchForm extends FormBase {
         $group_id = $icon->getGroup();
         $group_options[$group_id] = ucfirst($group_id);
       }
+      ksort($group_options);
 
       $form['group'] = [
         '#type' => 'select',

@@ -1,0 +1,43 @@
+ui_icons_octicons_svg:
+  label: Octicons
+  description: Octicons icons from SVG sources.
+  extractor: svg
+  config:
+    sources:
+      - /libraries/octicons/node_modules/@primer/octicons/build/svg/{icon_id}-24.svg
+  options:
+    width:
+      title: "Width"
+      description: "Set a width for this icon."
+      type: "integer"
+      default: 24
+      required: true
+      suffix: "px"
+    height:
+      title: "Height"
+      description: "Set a height for this icon."
+      type: "integer"
+      default: 24
+      required: true
+      suffix: "px"
+    title:
+      title: "Title"
+      placeholder: "Set a title on hover for this icon"
+      description: "Default fallback to the Icon ID."
+    alt:
+      title: "Alt text"
+      placeholder: "Alternative text for this icon"
+      description: "Accessibility alternative text, leave empty for decorative icon."
+
+  template: >
+    <svg xmlns="http://www.w3.org/2000/svg"
+      width="{{ width|default(24) }}"
+      height="{{ height|default(24) }}"
+      viewBox="0 0 24 24"
+      fill="currentColor"
+      class="octicon octicon-{{ icon_id }}"
+      {% if alt %}aria-label="{{ alt }}"{% endif %}
+    >
+      <title>{{ title|default(icon_id|capitalize) }}</title>
+      {{ content }}
+    </svg>

@@ -1,0 +1,144 @@
+ui_icons_material_svg_filled:
+  label: Material Symbols filled
+  description: Material Symbols icons from SVG files.
+  extractor: svg
+  config:
+    sources:
+      - /libraries/material/node_modules/@material-design-icons/svg/filled/{icon_id}.svg
+  options:
+    width:
+      title: "Width"
+      description: "Set a width for this icon."
+      type: "integer"
+      default: 32
+      required: true
+      suffix: "px"
+    height:
+      title: "Height"
+      description: "Set a height for this icon."
+      type: "integer"
+      default: 32
+      required: true
+      suffix: "px"
+    title:
+      title: "Title"
+      description: "Set a title on hover for this icon."
+    alt:
+      title: "Alt text"
+      description: "Accessibility alternative text, leave empty for decorative icon."
+
+ui_icons_material_svg_outlined:
+  label: Material Symbols outlined
+  description: Material Symbols icons from SVG files.
+  extractor: svg
+  config:
+    sources:
+      - /libraries/material/node_modules/@material-design-icons/svg/outlined/{icon_id}.svg
+  options:
+    width:
+      title: "Width"
+      description: "Set a width for this icon."
+      type: "integer"
+      default: 32
+      required: true
+      suffix: "px"
+    height:
+      title: "Height"
+      description: "Set a height for this icon."
+      type: "integer"
+      default: 32
+      required: true
+      suffix: "px"
+    title:
+      title: "Title"
+      description: "Set a title on hover for this icon."
+    alt:
+      title: "Alt text"
+      description: "Accessibility alternative text, leave empty for decorative icon."
+
+ui_icons_material_svg_round:
+  label: Material Symbols round
+  description: Material Symbols icons from SVG files.
+  extractor: svg
+  config:
+    sources:
+      - /libraries/material/node_modules/@material-design-icons/svg/round/{icon_id}.svg
+  options:
+    width:
+      title: "Width"
+      description: "Set a width for this icon."
+      type: "integer"
+      default: 32
+      required: true
+      suffix: "px"
+    height:
+      title: "Height"
+      description: "Set a height for this icon."
+      type: "integer"
+      default: 32
+      required: true
+      suffix: "px"
+    title:
+      title: "Title"
+      description: "Set a title on hover for this icon."
+    alt:
+      title: "Alt text"
+      description: "Accessibility alternative text, leave empty for decorative icon."
+
+ui_icons_material_svg_sharp:
+  label: Material Symbols sharp
+  description: Material Symbols icons from SVG files.
+  extractor: svg
+  config:
+    sources:
+      - /libraries/material/node_modules/@material-design-icons/svg/sharp/{icon_id}.svg
+  options:
+    width:
+      title: "Width"
+      description: "Set a width for this icon."
+      type: "integer"
+      default: 32
+      required: true
+      suffix: "px"
+    height:
+      title: "Height"
+      description: "Set a height for this icon."
+      type: "integer"
+      default: 32
+      required: true
+      suffix: "px"
+    title:
+      title: "Title"
+      description: "Set a title on hover for this icon."
+    alt:
+      title: "Alt text"
+      description: "Accessibility alternative text, leave empty for decorative icon."
+
+ui_icons_material_svg_two_tone:
+  label: Material Symbols two-tone
+  description: Material Symbols icons from SVG files.
+  extractor: svg
+  config:
+    sources:
+      - /libraries/material/node_modules/@material-design-icons/svg/two-tone/{icon_id}.svg
+  options:
+    width:
+      title: "Width"
+      description: "Set a width for this icon."
+      type: "integer"
+      default: 32
+      required: true
+      suffix: "px"
+    height:
+      title: "Height"
+      description: "Set a height for this icon."
+      type: "integer"
+      default: 32
+      required: true
+      suffix: "px"
+    title:
+      title: "Title"
+      description: "Set a title on hover for this icon."
+    alt:
+      title: "Alt text"
+      description: "Accessibility alternative text, leave empty for decorative icon."

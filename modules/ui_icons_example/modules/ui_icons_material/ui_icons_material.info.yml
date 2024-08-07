@@ -1,0 +1,7 @@
+name: 'Ui Icons Material Symbols'
+type: module
+description: 'Material Symbols icons provider for UI Icons.'
+package: User interface Example
+core_version_requirement: ^10 || ^11
+dependencies:
+  - ui_icons:ui_icons

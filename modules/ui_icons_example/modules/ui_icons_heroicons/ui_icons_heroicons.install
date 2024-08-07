@@ -13,7 +13,7 @@ function ui_icons_heroicons_requirements(string $phase): array {
     return [];
   }
 
-  $link = 'https://heroicons.com/';
+  $link = 'https://heroicons.com';
   $pattern = '/libraries/heroicons/node_modules/heroicons/24/solid/*.svg';
 
   $requirements = [];

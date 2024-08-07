@@ -1,0 +1,32 @@
+<?php
+
+/**
+ * @file
+ * Install, update and uninstall functions for the ui_icons_octicons module.
+ */
+
+/**
+ * Implements hook_requirements().
+ */
+function ui_icons_octicons_requirements(string $phase): array {
+  if ($phase != 'runtime') {
+    return [];
+  }
+
+  $link = 'https://www.npmjs.com/package/@primer/octicons';
+  $pattern = '/libraries/octicons/node_modules/@primer/octicons/build/svg/*.svg';
+
+  $requirements = [];
+  $library_exists = count(glob(DRUPAL_ROOT . $pattern));
+  $requirements['ui_icons_octicons'] = [
+    'title' => t('Icons Octicons'),
+    'value' => $library_exists ? t('Found @num Octicons icons', ['@num' => $library_exists]) : t('Missing icons in libraries folder.'),
+    'description' => $library_exists ? '' : t('Install <a href=":link">Octicons icons</a> with <code>npm i @primer/octicons</code> under Drupal web directory as <code>@path</code>.', [
+      ':link' => $link,
+      '@path' => $pattern,
+    ]),
+    'severity' => $library_exists ? REQUIREMENT_OK : REQUIREMENT_WARNING,
+  ];
+
+  return $requirements;
+}

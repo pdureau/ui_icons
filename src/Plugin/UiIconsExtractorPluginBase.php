@@ -99,7 +99,6 @@ abstract class UiIconsExtractorPluginBase extends PluginBase implements UiIconsE
    */
   public static function createIcon(string $name, string $path, array $data, ?string $group = NULL): IconDefinition {
     $data = self::filterDataFromDefinition($data);
-    // @todo cleanup $data from configuration to have a lighter class.
     return IconDefinition::create($name, $path, $data, $group);
   }
 

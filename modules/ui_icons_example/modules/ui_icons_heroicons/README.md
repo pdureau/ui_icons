@@ -1,13 +1,13 @@
 ## INTRODUCTION
 
-The UI Icons Bootstrap module provide icons for UI Icons.
+The UI Icons Heroicons module provider for UI Icons.
 
 ## INSTALLATION
 
 Install as you would normally install a contributed Drupal module.
 See: https://www.drupal.org/node/895232 for further information.
 
-Install [Bootstrap icons](https://icons.getbootstrap.com) in your libraries folder under Drupal web directory.
+Install [Heroicons](https://www.npmjs.com/package/heroicons) in your libraries folder under Drupal web directory.
 
 ```shell
 mkdir -p libraries/heroicons

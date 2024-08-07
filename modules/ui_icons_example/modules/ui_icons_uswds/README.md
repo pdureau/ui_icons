@@ -1,28 +1,30 @@
 ## INTRODUCTION
 
-The UI Icons Bootstrap module provider for UI Icons.
+The UI Icons USWDS module provider for UI Icons.
 
 ## INSTALLATION
 
 Install as you would normally install a contributed Drupal module.
 See: https://www.drupal.org/node/895232 for further information.
 
-Install [Bootstrap icons](https://icons.getbootstrap.com) in your libraries folder under Drupal web directory.
+Install [USWDS](https://www.npmjs.com/package/@uswds/uswds) in your libraries folder under Drupal web directory.
 
 ```shell
-mkdir -p libraries/bootstrap-icons
-cd libraries/bootstrap-icons
+mkdir -p libraries/uswds
+cd libraries/uswds
 npm init -y
-npm i bootstrap-icons
+npm i @uswds/uswds
 ```
 
 So your folder structure is:
 
 libraries
-  └── bootstrap-icons
+  └── uswds
       └── node_modules
-          └── bootstrap-icons
-              └── icons
+          └── @uswds
+              └── uswds
+                  └── dist
+                      └── img
 
 ## MAINTAINERS
 

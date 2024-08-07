@@ -1,6 +1,6 @@
 ## INTRODUCTION
 
-The UI Icons IcoMoon module provide icons for UI Icons.
+The UI Icons IcoMoon module provider for UI Icons.
 
 ## INSTALLATION
 

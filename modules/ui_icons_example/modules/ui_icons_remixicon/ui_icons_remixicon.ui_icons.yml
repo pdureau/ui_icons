@@ -1,0 +1,30 @@
+ui_icons_remixicon_svg:
+  label: Remix icon
+  description: Remix icons from SVG sources.
+  extractor: svg
+  config:
+    sources:
+      - /libraries/remixicon/node_modules/remixicon/icons/{group}/{icon_id}.svg
+  options:
+    width:
+      title: "Width"
+      description: "Set a width for this icon."
+      type: "integer"
+      default: 24
+      required: true
+      suffix: "px"
+    height:
+      title: "Height"
+      description: "Set a height for this icon."
+      type: "integer"
+      default: 24
+      required: true
+      suffix: "px"
+    title:
+      title: "Title"
+      placeholder: "Set a title on hover for this icon"
+      description: "Default fallback to the Icon ID."
+    alt:
+      title: "Alt text"
+      placeholder: "Alternative text for this icon"
+      description: "Accessibility alternative text, leave empty for decorative icon."

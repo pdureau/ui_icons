@@ -1,6 +1,6 @@
 ui_icons_bootstrap_svg:
-  label: Bootstrap SVG
-  description: Bootstrap icons from all SVG sources.
+  label: Bootstrap
+  description: Bootstrap icons from SVG files.
   extractor: svg
   config:
     sources:
