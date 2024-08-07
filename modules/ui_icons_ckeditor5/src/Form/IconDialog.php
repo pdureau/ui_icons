@@ -12,32 +12,12 @@ use Drupal\Core\Form\FormStateInterface;
 use Drupal\editor\Ajax\EditorDialogSave;
 use Drupal\filter\FilterFormatInterface;
 use Drupal\ui_icons\IconDefinitionInterface;
-use Drupal\ui_icons\Plugin\UiIconsetManagerInterface;
-use Drupal\ui_icons\Plugin\UiIconsExtractorPluginManager;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
  * Provides a UI Icons Ckeditor5 form.
  */
 final class IconDialog extends FormBase {
-
-  public function __construct(
-    protected UiIconsetManagerInterface $pluginManagerUiIconset,
-    protected UiIconsExtractorPluginManager $iconsetExtractorManager,
-  ) {
-    $this->pluginManagerUiIconset = $pluginManagerUiIconset;
-    $this->iconsetExtractorManager = $iconsetExtractorManager;
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public static function create(ContainerInterface $container): self {
-    return new static(
-      $container->get('plugin.manager.ui_iconset'),
-      $container->get('plugin.manager.ui_icons_extractor'),
-    );
-  }
 
   /**
    * {@inheritdoc}
