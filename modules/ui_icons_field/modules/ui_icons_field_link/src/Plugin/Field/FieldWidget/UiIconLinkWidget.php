@@ -100,6 +100,7 @@ class UiIconLinkWidget extends LinkWidget implements ContainerFactoryPluginInter
       '#type' => 'checkboxes',
       '#title' => $this->t('Limit Icon set'),
       '#description' => $this->t('Select Icons set to make available. If no selection, all will be made available.'),
+      // @todo is there a way to have this without DI?
       '#options' => $this->pluginManagerUiIconset->listIconsetWithDescriptionOptions(),
       '#default_value' => $this->getSetting('allowed_iconset'),
       '#multiple' => TRUE,
@@ -140,6 +141,7 @@ class UiIconLinkWidget extends LinkWidget implements ContainerFactoryPluginInter
     $allowed_iconset = array_filter($settings['allowed_iconset']);
 
     if (!empty($allowed_iconset)) {
+      // @todo is there a way to have this without DI?
       $labels = $this->pluginManagerUiIconset->listIconsetOptions();
       $list = array_intersect_key($labels, $allowed_iconset);
       $summary[] = $this->t('With Icon set: @set', ['@set' => implode(', ', $list)]);

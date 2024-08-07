@@ -92,6 +92,7 @@ class UiIconWidget extends WidgetBase implements ContainerFactoryPluginInterface
       '#type' => 'checkboxes',
       '#title' => $this->t('Icon set selection'),
       '#description' => $this->t('Select iconset to make available. Default to all if none selected.'),
+      // @todo is there a way to have this without DI?
       '#options' => $this->pluginManagerUiIconset->listIconsetWithDescriptionOptions(),
       '#default_value' => $this->getSetting('allowed_iconset'),
       '#multiple' => TRUE,
@@ -117,6 +118,7 @@ class UiIconWidget extends WidgetBase implements ContainerFactoryPluginInterface
     $allowed_iconset = array_filter($settings['allowed_iconset']);
 
     if (!empty($allowed_iconset)) {
+      // @todo is there a way to have this without DI?
       $labels = $this->pluginManagerUiIconset->listIconsetOptions();
       $list = array_intersect_key($labels, $allowed_iconset);
       $summary[] = $this->t('With Icon set: @set', ['@set' => implode(', ', $list)]);

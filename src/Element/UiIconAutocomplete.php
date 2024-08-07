@@ -17,21 +17,23 @@ use Drupal\ui_icons\IconDefinitionInterface;
  *
  * Properties:
  * - #size: The size of the input element in characters.
- * - #default_value: Default icon id as iconset_id:icon_id.
- * - #allowed_iconset: Array of iconset to limit the selection.
- * - #show_settings: Boolean to enable extractor settings.
- * - #default_settings: Array of settings for the extractor settings.
- * - #settings_title: Details extractor settings title.
+ * - #default_value: Optional default icon id as iconset_id:icon_id.
+ * - #allowed_iconset: Optional array of iconset to limit the selection.
+ * - #show_settings: Boolean to enable extractor settings, default FALSE.
+ * - #default_settings: Optional array of settings for the extractor settings.
+ * - #settings_title: Optional extractor settings title.
  *
  * Usage example:
  * @code
  * $form['ui_icon_autocomplete'] = [
  *   '#type' => 'ui_icon_autocomplete',
  *   '#title' => $this->t('Select icon'),
+ *   '#default_value' => 'my_iconset:my_default_icon',
  *   '#allowed_iconset' => [
  *     'my_iconset,
  *     'other_iconset',
  *   ],
+ *   '#show_settings' => TRUE,
  * ];
  * @endcode
  *
