@@ -211,8 +211,14 @@ class UiIconsFinder implements ContainerInjectionInterface {
       $filename = $icon_id = $file->name;
       $icon_id = $this->extractIconId($path_info['filename'], $filename);
 
+      if (!$icon_id) {
+        continue;
+      }
+
+      // @todo better name?
       $result[$filename] = [
-        'name' => $filename,
+        // 'name' => ucfirst(str_replace(['-', '_'], '', $icon_id)),
+        'name' => $icon_id,
         'icon_id' => $icon_id,
         'relative_path' => $uri,
         'absolute_path' => $file->uri,
@@ -234,13 +240,20 @@ class UiIconsFinder implements ContainerInjectionInterface {
    * @return string
    *   The extracted icon ID or the original filename.
    */
-  private function extractIconId(string $path_filename, string $filename): string {
+  private function extractIconId(string $path_filename, string $filename): ?string {
     if ($path_filename !== self::ICON_ID_PATTERN) {
       $pattern = str_replace(self::ICON_ID_PATTERN, '(?<icon_id>.+?)', $path_filename);
       if (preg_match('@' . $pattern . '@', $filename, $matches)) {
-        return $matches['icon_id'] ?? $filename;
+        // @todo should return null? add test to know.
+        if (isset($matches['icon_id'])) {
+          return $matches['icon_id'];
+        }
+      }
+      else {
+        return NULL;
       }
     }
+
     return $filename;
   }
 

@@ -73,14 +73,12 @@ class UiIconsFinderTest extends TestCase {
    */
   public static function providerFilesFromSource(): array {
     return [
-      // Test no files.
-      [
+      'no files' => [
         'foo/{icon_id}.svg',
         [],
         [],
       ],
-      // Test file relative to definition without icon_id.
-      [
+      'file relative to definition without icon_id' => [
         'foo/BAR.svg',
         [
           [
@@ -99,8 +97,7 @@ class UiIconsFinderTest extends TestCase {
           ],
         ],
       ],
-      // Test file relative to definition.
-      [
+      'file relative to definition' => [
         'foo/{icon_id}.svg',
         [
           [
@@ -131,8 +128,7 @@ class UiIconsFinderTest extends TestCase {
           ],
         ],
       ],
-      // Test file with group relative to definition.
-      [
+      'file with group relative to definition' => [
         'foo/{group}/{icon_id}.svg',
         [
           [
@@ -163,8 +159,7 @@ class UiIconsFinderTest extends TestCase {
           ],
         ],
       ],
-      // Test file relative to drupal root.
-      [
+      'file relative to drupal root' => [
         '/foo/{icon_id}.svg',
         [
           [
@@ -183,8 +178,7 @@ class UiIconsFinderTest extends TestCase {
           ],
         ],
       ],
-      // Test file with group relative to drupal root.
-      [
+      'file with group relative to drupal root' => [
         '/foo/{group}/{icon_id}.svg',
         [
           [
@@ -203,28 +197,26 @@ class UiIconsFinderTest extends TestCase {
           ],
         ],
       ],
-      // Test file with name prefix and suffix.
-      [
-        'foo/prefix_{icon_id}_suffix.svg',
+      'file with name suffix' => [
+        'foo/{icon_id}-24.svg',
         [
           [
-            '/_ROOT_/web/modules/my_module/foo/prefix_FOO_suffix.svg',
-            'prefix_FOO_suffix.svg',
-            'FOO',
+            '/_ROOT_/web/modules/my_module/foo/bar-24.svg',
+            'bar-24.svg',
+            'bar-24',
           ],
         ],
         [
-          'FOO' => [
-            'name' => 'FOO',
-            'icon_id' => 'FOO',
-            'relative_path' => 'modules/my_module/foo/prefix_FOO_suffix.svg',
-            'absolute_path' => '/_ROOT_/web/modules/my_module/foo/prefix_FOO_suffix.svg',
+          'bar-24' => [
+            'name' => 'bar',
+            'icon_id' => 'bar',
+            'relative_path' => 'modules/my_module/foo/bar-24.svg',
+            'absolute_path' => '/_ROOT_/web/modules/my_module/foo/bar-24.svg',
             'group' => NULL,
           ],
         ],
       ],
-      // Test file with group higher in parent.
-      [
+      'file with group higher in parent' => [
         'foo/{group}/bar/{icon_id}.svg',
         [
           [
