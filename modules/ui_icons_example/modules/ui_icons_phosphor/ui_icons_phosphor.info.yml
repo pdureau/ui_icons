@@ -1,7 +1,7 @@
 name: 'Ui Icons Phosphor Icons'
 type: module
 description: 'Phosphor Icons provider for UI Icons.'
-package: User interface Example
+package: User interface Icon packs
 core_version_requirement: ^10 || ^11
 dependencies:
   - ui_icons:ui_icons
