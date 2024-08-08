@@ -61,6 +61,11 @@ function template_preprocess_input__icon(array &$variables): void {
     $variables['iconset_id'] = $iconset_id;
     $variables['icon_id'] = $icon_id;
   }
+  elseif (isset($variables['element']['#value']['icon_id'])) {
+    [$iconset_id, $icon_id] = explode(':', $variables['element']['#value']['icon_id']);
+    $variables['iconset_id'] = $iconset_id;
+    $variables['icon_id'] = $icon_id;
+  }
   elseif (isset($variables['element']['#value']['object']) && $variables['element']['#value']['object'] instanceof IconDefinitionInterface) {
     $variables['iconset_id'] = $variables['element']['#value']['object']->getIconsetId();
     $variables['icon_id'] = $variables['element']['#value']['object']->getId();
