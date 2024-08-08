@@ -3,35 +3,32 @@
  * @file
  * Theme for an 'ui_icon_autocomplete' #type form element.
  *
- * @todo preprocess to split element and get icon.
- */
+ * Variables:
+ * - iconset_id: The icon set id.
+ * - icon_id: The icon id.
+ * - icon_form: The icon input form.
+ * - has_settings: Boolean flag if settings is enabled.
+ * - settings_form: The icon settings form.
 #}
 {% apply spaceless %}
 
 {{ attach_library('ui_icons/ui_icons.autocomplete') }}
 
-{% if element['#default_value'] %}
-  {% set icon = element['#default_value']|split(':') %}
-{% elseif element['#value']['icon_id'] %}
-  {% set icon = element['#value']['icon_id']|split(':') %}
-{% endif %}
-
 <div class="ui-icons-wrapper">
   <div class="ui-icons-input-wrapper">
     <div class="ui-icons-preview form-item">
-
-    {% if icon %}
-      {{ icon(icon.0, icon.1) }}
-    {% endif %}
+      {% if iconset_id and icon_id %}
+        {{ icon(iconset_id, icon_id) }}
+      {% endif %}
     </div>
     <div class="ui-icons-select">
-      {{ element.icon_id }}
+      {{ icon_form }}
     </div>
   </div>
 
-  {% if element.icon_settings %}
-    <div class="ui-icons-settings-wrapper {% if not icon %}hidden{% endif %}">
-      {{ element.icon_settings }}
+  {% if has_settings %}
+    <div class="ui-icons-settings-wrapper {% if not icon_id %}hidden{% endif %}">
+      {{ settings_form }}
     </div>
   {% endif %}
 </div>

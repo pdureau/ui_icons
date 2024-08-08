@@ -9,6 +9,7 @@ declare(strict_types=1);
 
 use Drupal\Core\Routing\RouteMatchInterface;
 use Drupal\Core\StringTranslation\TranslatableMarkup;
+use Drupal\ui_icons\IconDefinitionInterface;
 
 /**
  * Implements hook_help().
@@ -40,4 +41,36 @@ function ui_icons_theme(array $existing, string $type, string $theme, string $pa
       'render element' => 'element',
     ],
   ];
+}
+
+/**
+ * Prepares variables for input icon template.
+ *
+ * @param array $variables
+ *   An associative array containing:
+ *   - element: An associative array containing the properties of the element.
+ *
+ * @see src/Element/UiIconAutocomplete.php
+ */
+function template_preprocess_input__icon(array &$variables): void {
+  $variables['has_settings'] = $variables['element']['#show_settings'];
+  $variables['icon_form'] = $variables['element']['icon_id'];
+
+  if (isset($variables['element']['#default_value'])) {
+    [$iconset_id, $icon_id] = explode(':', $variables['element']['#default_value']);
+    $variables['iconset_id'] = $iconset_id;
+    $variables['icon_id'] = $icon_id;
+  }
+  elseif (isset($variables['element']['#value']['object']) && $variables['element']['#value']['object'] instanceof IconDefinitionInterface) {
+    $variables['iconset_id'] = $variables['element']['#value']['object']->getIconsetId();
+    $variables['icon_id'] = $variables['element']['#value']['object']->getId();
+  }
+
+  if (isset($variables['element']['icon_settings'])) {
+    $variables['settings_form'] = $variables['element']['icon_settings'];
+  }
+  elseif (isset($variables['element']['#default_settings'])) {
+    $variables['settings_form'] = $variables['element']['#default_settings'];
+  }
+
 }
