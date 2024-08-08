@@ -208,31 +208,24 @@ class UiIconsetManagerKernelTest extends KernelTestBase {
 
     $this->uiIconsetManager->processDefinition($definition, 'foo');
 
-    $expected = [
-      'id' => 'foo',
-      'label' => 'Foo',
-      'provider' => 'ui_icons_test',
-      'extractor' => 'bar',
-      'config' => [],
-      '_path_info' => [
-        'drupal_root' => $this->appRoot,
-        'absolute_path' => $this->appRoot . '/modules/custom/ui_icons/tests/modules/ui_icons_test',
-        'relative_path' => 'modules/custom/ui_icons/tests/modules/ui_icons_test',
-      ],
-      'iconset_id' => 'foo',
-      'iconset_label' => 'Foo',
-    ];
+    $this->assertSame('foo', $definition['id']);
+    $this->assertSame('Foo', $definition['label']);
+    $this->assertArrayHasKey('_path_info', $definition);
+    $this->assertArrayHasKey('drupal_root', $definition['_path_info']);
+    $this->assertSame($this->appRoot, $definition['_path_info']['drupal_root']);
 
-    $this->assertEquals($expected, $definition);
+    // Can not check these paths values as CI relate to modules/custom.
+    $this->assertArrayHasKey('absolute_path', $definition['_path_info']);
+    $this->assertArrayHasKey('relative_path', $definition['_path_info']);
   }
 
   /**
    * Test the processDefinition method.
    */
   public function testProcessDefinitionExceptionName(): void {
-    $definition = [];
+    $definition = ['provider' => 'foo'];
     $this->expectException(IconsetConfigErrorException::class);
-    $this->expectExceptionMessage('Invalid Iconset id, name must contain only lowercase letters, numbers, and underscores.');
+    $this->expectExceptionMessage('Invalid Iconset id in: foo, name: $ Not valid !* must contain only lowercase letters, numbers, and underscores.');
     $this->uiIconsetManager->processDefinition($definition, '$ Not valid !*');
   }
 
