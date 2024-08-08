@@ -115,22 +115,31 @@ final class UiIconsExampleForm extends FormBase {
       '#placeholder' => $this->t('Start typing icon name'),
     ];
 
+    $form['icons']['icons_autocomplete_settings'] = [
+      '#type' => 'ui_icon_autocomplete',
+      '#title' => $this->t('Icon selector with settings'),
+      '#placeholder' => $this->t('Start typing icon name'),
+      '#show_settings' => TRUE,
+    ];
+
+    $allowed = array_slice(array_keys($iconset), 0, 1);
+    $names = $this->pluginManagerUiIconset->listIconsetOptions();
     $form['icons']['icons_autocomplete_limit'] = [
       '#type' => 'ui_icon_autocomplete',
       '#title' => $this->t('Icon selector limited'),
-      '#description' => $this->t('Limited to iconset.'),
+      '#description' => $this->t('Limited to: @name.', ['@name' => $names[$allowed[0]]]),
       '#placeholder' => $this->t('Start typing icon name'),
-      '#allowed_iconset' => array_slice(array_keys($iconset), 0, 1),
+      '#allowed_iconset' => $allowed,
     ];
 
     // No full select as we could have thousands of icons.
     $options = ['' => $this->t('- Select -')];
-    $options += $this->pluginManagerUiIconset->listOptions(array_slice(array_keys($iconset), 2, 3));
+    $options += $this->pluginManagerUiIconset->listOptions($allowed);
     $form['icons']['icons_select_limited'] = [
       '#type' => 'select',
       '#title' => $this->t('Icon select limited'),
-      '#description' => $this->t('Limited to iconset.'),
-      '#options' => $options,
+      '#description' => $this->t('Limited to 20 first: @name.', ['@name' => $names[$allowed[0]]]),
+      '#options' => array_slice($options, 0, 20),
       '#sort_options' => TRUE,
     ];
 
@@ -168,6 +177,7 @@ final class UiIconsExampleForm extends FormBase {
   public function validateForm(array &$form, FormStateInterface $form_state): void {
     // Example to run all form extractor plugin validate methods.
     $iconset = $this->pluginManagerUiIconset->getDefinitions();
+    unset($iconset['_icons_loaded']);
     $extractor_forms = $this->iconsetExtractorManager->getExtractorForms($iconset);
 
     $message = [];
@@ -196,6 +206,7 @@ final class UiIconsExampleForm extends FormBase {
   public function submitForm(array &$form, FormStateInterface $form_state): void {
     // Example to run all form extractor plugin submit methods.
     $iconset = $this->pluginManagerUiIconset->getDefinitions();
+    unset($iconset['_icons_loaded']);
     $extractor_forms = $this->iconsetExtractorManager->getExtractorForms($iconset);
 
     $message = [];

@@ -1,14 +1,10 @@
 .ck .drupal-icon {
   display: inline-block;
-  /* width: 40px; */
-  /* height: 40px; */
   margin: 0.2rem;
-  /* border: var(--input-border-size) solid var(--input-border-color); */
-  /* border-radius: 0.2rem; */
-  /* position: relative; */
-  /* display: table; */
-  /* clear: both; */
-  /* min-width: 20px; */
-  /* min-height: 20px; */
-  /* background-color: var(--color-gray-050); */
+}
+
+.text-content .drupal-icon > img,
+.text-content .drupal-icon > svg {
+  display: inline-block;
+  margin: 0.2rem;
 }

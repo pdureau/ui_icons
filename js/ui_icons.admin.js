@@ -89,17 +89,23 @@
       return;
     }
 
+    let found = false;
     iconsetSettings.forEach((iconsetSetting) => {
       if (
         `icon-settings--${iconSetID}` === iconsetSetting.getAttribute('name')
       ) {
-        iconsetSetting.style.display = 'block';
+        found = true;
+        iconsetSetting.classList.remove('hidden');
       } else {
-        iconsetSetting.style.display = 'none';
+        iconsetSetting.classList.add('hidden');
       }
     });
 
-    iconSettingsWrapper.classList.remove('hidden');
+    if (found === true) {
+      iconSettingsWrapper.classList.remove('hidden');
+    } else {
+      iconSettingsWrapper.classList.add('hidden');
+    }
   }
 
   /**

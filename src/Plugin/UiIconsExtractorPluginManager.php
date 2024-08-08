@@ -46,6 +46,9 @@ class UiIconsExtractorPluginManager extends DefaultPluginManager {
   public function getExtractorForms(array $iconset_configurations): array {
     $extractor_forms = [];
     foreach ($iconset_configurations as $iconset_configuration) {
+      if (!isset($iconset_configuration['extractor'])) {
+        continue;
+      }
       $extractor_id = $iconset_configuration['extractor'];
       $extractor_forms[$extractor_id] = $this->getExtractorForm($iconset_configuration);
     }
