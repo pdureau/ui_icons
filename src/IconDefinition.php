@@ -12,7 +12,7 @@ use Drupal\ui_icons\Exception\IconDefinitionInvalidDataException;
  */
 class IconDefinition implements IconDefinitionInterface {
 
-  protected const DEFAULT_TEMPLATE = '<img src="{{ source }}" title="{{ title|default(icon_id|capitalize) }}" alt="{{ alt|default(icon_id|capitalize) }}" width="{{ width }}" height="{{ height }}">';
+  protected const DEFAULT_TEMPLATE = '<img src="{{ source }}" title="{{ title|default(icon_id|capitalize) }}" alt="{{ alt|default(icon_id|capitalize) }}" width="{{ width|default(24) }}" height="{{ height|default(24) }}">';
 
   /**
    * Constructor for IconDefinition.
