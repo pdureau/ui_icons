@@ -23,9 +23,9 @@ libraries
       └── node_modules
           └── @gouvfr
               └── dsfr
-                └── dist
+                  └── dist
                     └── icons
-                      └── _GROUP_
+                        └── _GROUP_
 
 ## MAINTAINERS
 

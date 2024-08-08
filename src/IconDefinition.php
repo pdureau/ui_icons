@@ -98,9 +98,6 @@ class IconDefinition implements IconDefinitionInterface {
     $context = [
       'icon_id' => $this->name,
       'source' => $this->source,
-      // 'content' => new FormattableMarkup('@content', ['@content' => $this->getContent()]),
-      // 'content' => ['#markup' => new FormattableMarkup('<b>yolo</b>@content', ['@content' => $this->getContent()])],
-      // 'content' => ['#markup' => new FormattableMarkup($this->getContent(), [])],
       'content' => new FormattableMarkup($this->getContent(), []),
       'iconset_label' => $this->getIconsetLabel(),
     ];

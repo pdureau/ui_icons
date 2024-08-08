@@ -7,6 +7,7 @@ parameters:
       - */node_modules/*
       - */vendor/*
       - */tests/*
+      - */ui_icons_field_link_attributes/src/Plugin/Field/FieldWidget/UiIconLinkWithAttributesWidget.php
   fileExtensions:
     - php
     - module
