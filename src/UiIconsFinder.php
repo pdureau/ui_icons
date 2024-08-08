@@ -85,10 +85,6 @@ use Drupal\Core\File\FileUrlGeneratorInterface;
  *   'group' => 'other_group',
  * ]
  * @endcode
- *
- * @todo better handling with a URI standard in like
- *   - https://github.com/rize/UriTemplate
- *   - https://github.com/guzzle/uri-template
  */
 class UiIconsFinder implements ContainerInjectionInterface {
 
@@ -215,9 +211,7 @@ class UiIconsFinder implements ContainerInjectionInterface {
         continue;
       }
 
-      // @todo better name?
       $result[$filename] = [
-        // 'name' => ucfirst(str_replace(['-', '_'], '', $icon_id)),
         'name' => $icon_id,
         'icon_id' => $icon_id,
         'relative_path' => $uri,

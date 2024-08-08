@@ -15,8 +15,6 @@ use PHPUnit\Framework\TestCase;
  * Tests UiIconsFinder class used by extractor plugin.
  *
  * @group ui_icons
- *
- * @todo test with vfs if possible?
  */
 class UiIconsFinderTest extends TestCase {
 

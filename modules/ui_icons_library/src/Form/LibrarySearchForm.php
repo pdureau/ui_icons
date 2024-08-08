@@ -41,8 +41,6 @@ final class LibrarySearchForm extends FormBase {
 
   /**
    * {@inheritdoc}
-   *
-   * @todo add filter group?
    */
   public function buildForm(array $form, FormStateInterface $form_state): array {
     $session = $this->getRequest()->getSession();

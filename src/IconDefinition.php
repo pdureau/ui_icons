@@ -94,7 +94,6 @@ class IconDefinition implements IconDefinitionInterface {
    * {@inheritdoc}
    */
   public function getRenderable(array $options = []): array {
-    // @todo should we pass the whole icon object? The data?
     $context = [
       'icon_id' => $this->name,
       'source' => $this->source,

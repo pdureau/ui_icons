@@ -300,7 +300,7 @@ class UiIconsetManager extends DefaultPluginManager implements UiIconsetManagerI
     if (!isset($definition['extractor'])) {
       throw new IconsetConfigErrorException('Missing `extractor:` key in your definition!');
     }
-    // @todo is it needed as a extractor plugin can exist without config key.
+    // @todo is it needed as an extractor plugin can exist without config key?
     if (!isset($definition['config'])) {
       throw new IconsetConfigErrorException('Missing `config:` key in your definition extractor!');
     }
