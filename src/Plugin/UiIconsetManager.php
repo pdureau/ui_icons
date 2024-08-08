@@ -293,7 +293,7 @@ class UiIconsetManager extends DefaultPluginManager implements UiIconsetManagerI
    */
   public function processDefinition(&$definition, $plugin_id): void {
     if (preg_match('@[^a-z0-9_]@', $plugin_id)) {
-      throw new IconsetConfigErrorException('Invalid Iconset id, name must contain only lowercase letters, numbers, and underscores.');
+      throw new IconsetConfigErrorException(sprintf('Invalid Iconset id in: %s, name: %s must contain only lowercase letters, numbers, and underscores.', $definition['provider'], $plugin_id));
     }
 
     // @todo replace with json validation.
