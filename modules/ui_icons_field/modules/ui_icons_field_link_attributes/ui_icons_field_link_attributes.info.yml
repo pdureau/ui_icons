@@ -2,7 +2,7 @@ name: 'UI Icons Field Link Attributes'
 type: module
 description: 'Provide field of type link with attributes integration for icon selection.'
 package: User interface
-core_version_requirement: ^10 || ^11
+core_version_requirement: ^10.3 || ^11
 dependencies:
   - drupal:link_attributes
   - link_attributes:link_attributes
