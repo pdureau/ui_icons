@@ -111,12 +111,10 @@ class IconEmbed extends FilterBase implements ContainerFactoryPluginInterface {
    * {@inheritdoc}
    */
   public function settingsForm(array $form, FormStateInterface $form_state): array {
-    $iconPack = $this->pluginManagerIconPack->listIconPackWithDescriptionOptions();
-
     $form['allowed_icon_pack'] = [
       '#title' => $this->t('Icon Pack selectable'),
       '#type' => 'checkboxes',
-      '#options' => $iconPack,
+      '#options' => $this->pluginManagerIconPack->listIconPackWithDescriptionOptions(),
       '#default_value' => $this->settings['allowed_icon_pack'],
       '#description' => $this->t('If none are selected, all will be allowed.'),
       '#element_validate' => [[static::class, 'validateOptions']],

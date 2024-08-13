@@ -22,9 +22,11 @@
   </div>
 
   <div class="ui-icons-grid">
-    {% for icon_id, icon in icons %}
-      {% set icon_pack_id = icon_id | split(':') | first %}
-      {% set icon_name = icon_id | split(':') | last %}
+    {% for icon_full_id, icon in icons %}
+      {% set icon_pack_id = icon_full_id | split(':') | first %}
+      {% set icon_id = icon_full_id | split(':') | last %}
+      {% set icon_data = icon['#context'] %}
+
       <div class="ui-icons-item ui-icons-item--grid">
         <div class="ui-icons-item__preview">
           <div class="thumbnail">
@@ -32,9 +34,19 @@
           </div>
         </div>
         <div class="ui-icons-item__name">
-          <b>{{ icon_name }}</b>
-          {% if icon['#context']['icon_pack_label'] %}<br>{{ icon['#context']['icon_pack_label'] }}{% endif %}
-          {% if icon['#group'] %}<br><em>{{ icon['#group']|capitalize }}</em>{% endif %}
+          <b>
+          {% if icon_data['icon_label'] %}
+            {{ icon_data['icon_label'] }}
+          {% else %}
+            {{ icon_id }}
+          {% endif %}
+          </b>
+          {% if icon_data['icon_pack_label'] %}
+            <br>{{ icon_data['icon_pack_label'] }}
+          {% endif %}
+          {% if icon['#group'] %}
+            <br><em>{{ icon['#group']|capitalize }}</em>
+          {% endif %}
         </div>
       </div>
     {% endfor %}

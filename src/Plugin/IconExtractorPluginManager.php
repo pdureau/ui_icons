@@ -37,17 +37,17 @@ class IconExtractorPluginManager extends DefaultPluginManager {
   /**
    * Get multiple extractor settings form.
    *
-   * @param array $iconPack_configurations
+   * @param array $icon_pack_configurations
    *   All the icon pack configurations containing the extractor.
    *
    * @return \Drupal\Core\Plugin\PluginFormInterface[]
    *   The extractor form indexed by extractor id.
    */
-  public function getExtractorForms(array $iconPack_configurations): array {
+  public function getExtractorForms(array $icon_pack_configurations): array {
     $extractor_forms = [];
-    foreach ($iconPack_configurations as $iconPack_configuration) {
-      $icon_pack_id = $iconPack_configuration['id'];
-      $extractor_forms[$icon_pack_id] = $this->getExtractorForm($iconPack_configuration);
+    foreach ($icon_pack_configurations as $icon_pack_configuration) {
+      $icon_pack_id = $icon_pack_configuration['id'];
+      $extractor_forms[$icon_pack_id] = $this->getExtractorForm($icon_pack_configuration);
     }
 
     return $extractor_forms;

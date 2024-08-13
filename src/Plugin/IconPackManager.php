@@ -170,11 +170,11 @@ class IconPackManager extends DefaultPluginManager implements IconPackManagerInt
     foreach ($icons as $icon_id => $icon) {
       if ($allowed_icon_pack) {
         if (in_array($icon->getIconPackId(), $allowed_icon_pack)) {
-          $result[$icon_id] = sprintf('%s (%s)', $icon->getName(), $icon->getIconPackLabel());
+          $result[$icon_id] = sprintf('%s (%s)', $icon->getLabel(), $icon->getIconPackLabel());
         }
       }
       else {
-        $result[$icon_id] = sprintf('%s (%s)', $icon->getName(), $icon->getIconPackLabel());
+        $result[$icon_id] = sprintf('%s (%s)', $icon->getLabel(), $icon->getIconPackLabel());
       }
     }
 

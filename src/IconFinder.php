@@ -33,7 +33,6 @@ use Drupal\Core\File\FileUrlGeneratorInterface;
  * /DRUPAL_ROOT/web/themes/my_theme/icons/my_icon.svg
  * @code
  * [
- *   'name' => 'my_icon.svg',
  *   'icon_id' => 'my_icon',
  *   'relative_path' => '/themes/my_theme/icons/my_icon.svg',
  *   'absolute_path' => '/DRUPAL_ROOT/web/themes/my_theme/icons/my_icon.svg',
@@ -48,7 +47,6 @@ use Drupal\Core\File\FileUrlGeneratorInterface;
  * /DRUPAL_ROOT/web/themes/my_theme/icons/prefix-icon.svg
  * @code
  * [
- *   'name' => 'prefix-icon.svg',
  *   'icon_id' => 'icon',
  *   'relative_path' => '/themes/my_theme/icons/prefix-icon.svg',
  *   'absolute_path' => '/DRUPAL_ROOT/web/themes/my_theme/icons/prefix-icon.svg',
@@ -63,7 +61,6 @@ use Drupal\Core\File\FileUrlGeneratorInterface;
  * /DRUPAL_ROOT/web/themes/my_theme/icons/some_group/my_icon.svg
  * @code
  * [
- *   'name' => 'my_icon.svg',
  *   'icon_id' => 'my_icon',
  *   'relative_path' => '/themes/my_theme/icons/some_group/my_icon.svg',
  *   'absolute_path' => '/DRUPAL_ROOT/web/themes/my_theme/icons/some_group/my_icon.svg',
@@ -78,7 +75,6 @@ use Drupal\Core\File\FileUrlGeneratorInterface;
  * /DRUPAL_ROOT/web/libraries/my_library/icons/other_group/lib_icon.svg
  * @code
  * [
- *   'name' => 'lib_icon.svg',
  *   'icon_id' => 'lib_icon',
  *   'relative_path' => '/libraries/my_library/icons/other_group/lib_icon.svg',
  *   'absolute_path' => '/DRUPAL_ROOT/web/libraries/my_library/icons/other_group/lib_icon.svg',
@@ -212,7 +208,6 @@ class IconFinder implements ContainerInjectionInterface {
       }
 
       $result[$filename] = [
-        'name' => $icon_id,
         'icon_id' => $icon_id,
         'relative_path' => $uri,
         'absolute_path' => $file->uri,

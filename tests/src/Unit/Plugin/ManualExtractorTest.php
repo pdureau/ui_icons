@@ -75,7 +75,6 @@ class ManualExtractorTest extends UnitTestCase {
   public function testGetIcons(): void {
     $icons_list = [
       'baz' => [
-        'name' => 'baz',
         'icon_id' => 'baz',
         'relative_path' => 'web/modules/my_module/foo/bar/baz.svg',
         'absolute_path' => '/_ROOT_/web/modules/my_module/foo/bar/baz.svg',
@@ -121,7 +120,7 @@ class ManualExtractorTest extends UnitTestCase {
     $this->assertIsArray($icons);
     $this->assertArrayHasKey('manual:baz', $icons);
 
-    $this->assertSame('baz', $icons['manual:baz']->getName());
+    $this->assertSame('baz', $icons['manual:baz']->getIconId());
     $this->assertSame('foo/bar/baz.svg', $icons['manual:baz']->getSource());
     $this->assertSame('foo', $icons['manual:baz']->getGroup());
   }

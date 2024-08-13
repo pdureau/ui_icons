@@ -123,8 +123,7 @@ class IconTest extends UnitTestCase {
    */
   public static function providerPreRenderIcon(): array {
     return [
-      // Minimum icon definition.
-      [
+      'minimum icon definition' => [
         [
           'icon_pack_id' => 'icon_pack_id',
           'icon_id' => 'icon_id',
@@ -139,11 +138,11 @@ class IconTest extends UnitTestCase {
             'source' => '/foo/bar',
             'content' => '',
             'icon_pack_label' => '',
+            'icon_label' => 'Icon id',
           ],
         ],
       ],
-      // Full icon definition.
-      [
+      'full icon definition.' => [
         [
           'icon_pack_id' => 'icon_pack_id',
           'icon_pack_label' => 'Baz',
@@ -165,6 +164,7 @@ class IconTest extends UnitTestCase {
             'content' => 'test_content',
             'foo' => 'bar',
             'icon_pack_label' => 'Baz',
+            'icon_label' => 'Icon id',
           ],
         ],
       ],

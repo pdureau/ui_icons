@@ -4,13 +4,10 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\ui_icons\Unit\Element;
 
-use Drupal\Component\Render\FormattableMarkup;
 use Drupal\Core\DependencyInjection\ContainerBuilder;
 use Drupal\Core\Render\RendererInterface;
-use Drupal\Tests\UnitTestCase;
+use Drupal\Tests\ui_icons\Unit\IconUnitTestCase;
 use Drupal\ui_icons\Controller\IconAutocompleteController;
-use Drupal\ui_icons\IconDefinition;
-use Drupal\ui_icons\IconDefinitionInterface;
 use Drupal\ui_icons\Plugin\IconPackManagerInterface;
 use Prophecy\Argument;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -24,7 +21,7 @@ use Symfony\Component\HttpFoundation\Response;
  *
  * @cspell:ignore tri OME
  */
-class IconAutocompleteControllerTest extends UnitTestCase {
+class IconAutocompleteControllerTest extends IconUnitTestCase {
 
   /**
    * The container.
@@ -118,7 +115,7 @@ class IconAutocompleteControllerTest extends UnitTestCase {
         'iconId' => 'foo:bar',
         'hasResult' => TRUE,
         'queryParams' => ['q' => 'foo:bar', 'width' => 100, 'height' => 100],
-        'iconData' => ['iconId' => 'foo:bar', 'width' => 100, 'height' => 100],
+        'iconData' => ['icon_pack_id' => 'foo', 'icon_id' => 'bar', 'width' => 100, 'height' => 100],
         'expectedContent' => '_rendered_',
         'expectedStatusCode' => 200,
       ],
@@ -126,7 +123,7 @@ class IconAutocompleteControllerTest extends UnitTestCase {
         'iconId' => 'foo:bar',
         'hasResult' => TRUE,
         'queryParams' => ['q' => 'foo:bar', 'width' => 200, 'height' => 200],
-        'iconData' => ['iconId' => 'foo:bar', 'width' => 200, 'height' => 200],
+        'iconData' => ['icon_pack_id' => 'foo', 'icon_id' => 'bar', 'width' => 200, 'height' => 200],
         'expectedContent' => '_rendered_',
         'expectedStatusCode' => 200,
       ],
@@ -211,25 +208,25 @@ class IconAutocompleteControllerTest extends UnitTestCase {
         'expectedData' => [],
       ],
       'query foo with max_result 2 for 3 valid icons' => [
-        'iconsData' => self::createIconData(NULL, 'foo-qux') + self::createIconData('quux', 'qux-foo') + self::createIconData('corge', 'baz-foo'),
+        'iconsData' => self::createIconData('foo', 'foo-qux') + self::createIconData('quux', 'qux-foo') + self::createIconData('corge', 'baz-foo'),
         'queryParams' => ['q' => 'foo', 'max_result' => 2],
         'expectedData' => [
-          self::createIconResultData(NULL, 'foo-qux'),
+          self::createIconResultData('foo', 'foo-qux'),
           self::createIconResultData('quux', 'qux-foo'),
         ],
       ],
       'query string part name' => [
-        'iconsData' => self::createIconData(NULL, NULL, 'Some Name String'),
+        'iconsData' => self::createIconData(NULL, 'some-name-string'),
         'queryParams' => ['q' => 'tri'],
         'expectedData' => [
-          self::createIconResultData(NULL, NULL, 'Some Name String'),
+          self::createIconResultData(NULL, 'some-name-string'),
         ],
       ],
       'query string part name with non ascii chars' => [
-        'iconsData' => self::createIconData(NULL, NULL, 'Some Name String'),
+        'iconsData' => self::createIconData(NULL, 'Some Name String'),
         'queryParams' => ['q' => '%!?OME*$$'],
         'expectedData' => [
-          self::createIconResultData(NULL, NULL, 'Some Name String'),
+          self::createIconResultData(NULL, 'Some Name String'),
         ],
       ],
       'query string icon_id' => [
@@ -267,92 +264,6 @@ class IconAutocompleteControllerTest extends UnitTestCase {
         'expectedData' => NULL,
       ],
     ];
-  }
-
-  /**
-   * Creates icon data array.
-   *
-   * @param string|null $icon_pack_id
-   *   The ID of the icon set.
-   * @param string|null $icon_id
-   *   The ID of the icon.
-   * @param string|null $icon_name
-   *   The name of the icon.
-   * @param string|null $iconPack_label
-   *   The label of the icon set.
-   *
-   * @return array
-   *   The icon data array.
-   */
-  private static function createIconData(?string $icon_pack_id = NULL, ?string $icon_id = NULL, ?string $icon_name = NULL, ?string $iconPack_label = NULL): array {
-    return [
-      ($icon_pack_id ?? 'foo') . ':' . ($icon_id ?? 'bar') => [
-        'name' => $icon_name ?? 'Bar',
-        'source' => 'qux/corge',
-        'icon_pack_id' => $icon_pack_id ?? 'foo',
-        'icon_pack_label' => $iconPack_label ?? 'Baz',
-      ],
-    ];
-  }
-
-  /**
-   * Creates icon data result array.
-   *
-   * @param string|null $icon_pack_id
-   *   The ID of the icon set.
-   * @param string|null $icon_id
-   *   The ID of the icon.
-   * @param string|null $icon_name
-   *   The name of the icon.
-   * @param string|null $iconPack_label
-   *   The label of the icon set.
-   *
-   * @return array
-   *   The icon data array.
-   */
-  private static function createIconResultData(?string $icon_pack_id = NULL, ?string $icon_id = NULL, ?string $icon_name = NULL, ?string $iconPack_label = NULL): array {
-    return [
-      'value' => ($icon_pack_id ?? 'foo') . ':' . ($icon_id ?? 'bar'),
-      'label' => new FormattableMarkup('<span class="ui-menu-icon">@icon</span> @name', [
-        '@icon' => '_rendered_',
-        '@name' => ($icon_name ?? 'Bar') . ' (' . ($iconPack_label ?? 'Baz') . ')',
-      ]),
-    ];
-  }
-
-  /**
-   * Create a mock icon.
-   *
-   * @param array $iconData
-   *   The icon data to create.
-   *
-   * @return \Drupal\ui_icons\IconDefinitionInterface
-   *   The icon mocked.
-   */
-  private function createMockIcon(array $iconData): IconDefinitionInterface {
-    $icon = $this->prophesize(IconDefinitionInterface::class);
-    $icon->getRenderable(['width' => $iconData['width'], 'height' => $iconData['height']])->willReturn(['#markup' => '<svg></svg>']);
-    return $icon->reveal();
-  }
-
-  /**
-   * Create an icon.
-   *
-   * @param array $iconData
-   *   The icon data to create.
-   *
-   * @return \Drupal\ui_icons\IconDefinitionInterface
-   *   The icon mocked.
-   */
-  private function createIcon(array $iconData): IconDefinitionInterface {
-    return IconDefinition::create(
-      $iconData['name'],
-      $iconData['source'],
-      [
-        'icon_pack_id' => $iconData['icon_pack_id'],
-        'icon_pack_label' => $iconData['icon_pack_label'],
-      ]
-    );
   }
 
 }

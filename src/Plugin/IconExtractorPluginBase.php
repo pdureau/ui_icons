@@ -97,9 +97,9 @@ abstract class IconExtractorPluginBase extends PluginBase implements IconExtract
   /**
    * {@inheritdoc}
    */
-  public static function createIcon(string $name, string $path, array $data, ?string $group = NULL): IconDefinition {
+  public static function createIcon(string $icon_id, string $path, array $data, ?string $group = NULL): IconDefinition {
     $data = self::filterDataFromDefinition($data);
-    return IconDefinition::create($name, $path, $data, $group);
+    return IconDefinition::create($icon_id, $path, $data, $group);
   }
 
   /**

@@ -138,20 +138,19 @@ class IconAutocompleteController extends ControllerBase {
       }
 
       if ($allowed_icon_pack) {
-        $iconPack_match = FALSE;
-        foreach ($allowed_icon_pack as $iconPack) {
-          if (str_starts_with($icon_id, $iconPack . ':')) {
-            $iconPack_match = TRUE;
+        $icon_pack_match = FALSE;
+        foreach ($allowed_icon_pack as $icon_pack) {
+          if (str_starts_with($icon_id, $icon_pack . ':')) {
+            $icon_pack_match = TRUE;
             break;
           }
         }
-        if (!$iconPack_match) {
+        if (!$icon_pack_match) {
           continue;
         }
       }
 
-      // @todo better explode
-      $icon_name = $icon->getName() . ' ' . explode(':', $icon_id)[1];
+      $icon_name = $icon->getLabel() . ' ' . $icon->getIconId();
 
       if (preg_match($search_pattern, $icon_name)) {
         $result[] = $this->createResultEntry($icon_id, $icon);
@@ -174,7 +173,7 @@ class IconAutocompleteController extends ControllerBase {
    *   The icon result with keys 'value' and 'label'.
    */
   private function createResultEntry(string $icon_id, IconDefinitionInterface $icon): array {
-    $label = sprintf('%s (%s)', $icon->getName(), $icon->getIconPackLabel());
+    $label = sprintf('%s (%s)', $icon->getIconId(), $icon->getIconPackLabel());
     $icon_renderable = $icon->getRenderable(['width' => 20, 'height' => 20]);
     $renderable = $this->renderer->renderInIsolation($icon_renderable);
     $param = ['@icon' => $renderable, '@name' => $label];

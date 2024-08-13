@@ -12,6 +12,8 @@ use Drupal\ui_icons\PluginForm\IconPackExtractorForm;
 
 /**
  * Plugin implementation of the ui_icons_extractor.
+ *
+ * @todo used for tests, but not well defined for real case usage.
  */
 #[IconExtractor(
   id: 'manual',

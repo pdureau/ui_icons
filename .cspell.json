@@ -4,6 +4,7 @@
     "allowCompoundWords": false,
     "globRoot": ".",
     "ignorePaths": [
+      "**/node_modules/**",
       "*.svg",
       "**/build/icon.js",
       "*.json",

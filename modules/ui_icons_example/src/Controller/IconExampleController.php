@@ -60,7 +60,7 @@ final class IconExampleController extends ControllerBase {
     ];
 
     foreach ($icons as $icon) {
-      $template = '{{ icon("' . $icon->getIconPackId() . '", "' . $icon->getName() . '", { width: 100, height: 100 }) }}';
+      $template = '{{ icon("' . $icon->getIconPackId() . '", "' . $icon->getIconId() . '", { width: 100, height: 100 }) }}';
       $build['twig'][]['code'] = [
         '#markup' => '<pre><code>' . $template . '</code></pre>',
       ];
@@ -69,12 +69,12 @@ final class IconExampleController extends ControllerBase {
         '#template' => $template,
       ];
 
-      $build['element'][] = ['#markup' => '<h3>' . $icon->getName() . ' - ' . $icon->getIconPackLabel() . '</h3>'];
+      $build['element'][] = ['#markup' => '<h3>' . $icon->getLabel() . ' - ' . $icon->getIconPackLabel() . '</h3>'];
       $base = [
         '#type' => 'ui_icon',
         '#icon_pack' => $icon->getIconPackId(),
-        '#icon' => $icon->getName(),
-        '#options' => [
+        '#icon' => $icon->getIconId(),
+        '#context' => [
           'width' => 50,
           'height' => 50,
         ],
@@ -82,17 +82,17 @@ final class IconExampleController extends ControllerBase {
         '#suffix' => '</div>&nbsp;&nbsp;',
       ];
       $build['element'][] = $base;
-      $base['#options'] = [
+      $base['#context'] = [
         'width' => 100,
         'height' => 100,
       ];
       $build['element'][] = $base;
-      $base['#options'] = [
+      $base['#context'] = [
         'width' => 150,
         'height' => 150,
       ];
       $build['element'][] = $base;
-      $base['#options'] = [
+      $base['#context'] = [
         'width' => 200,
         'height' => 200,
       ];

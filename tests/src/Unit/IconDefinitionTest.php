@@ -43,6 +43,7 @@ class IconDefinitionTest extends TestCase {
         'content' => 'test_content',
         'icon_pack_label' => 'Baz',
         'foo' => 'bar',
+        'icon_label' => 'Test icon pack:test',
       ],
     ];
 
@@ -61,7 +62,7 @@ class IconDefinitionTest extends TestCase {
    */
   public function testCreateIcon(array $icon_data): void {
     $actual = IconDefinition::create(
-      $icon_data['name'] ?? '',
+      $icon_data['icon_id'] ?? '',
       $icon_data['source'] ?? '',
       $icon_data['data'] ?? [],
       $icon_data['group'] ?? NULL,
@@ -69,11 +70,11 @@ class IconDefinitionTest extends TestCase {
 
     $this->assertInstanceOf(IconDefinitionInterface::class, $actual);
 
-    $this->assertEquals($icon_data['data']['icon_pack_id'] . ':' . $icon_data['name'], $actual->getId());
+    $this->assertEquals($icon_data['data']['icon_pack_id'] . ':' . $icon_data['icon_id'], $actual->getId());
     $this->assertEquals($icon_data['data']['icon_pack_id'], $actual->getIconPackId());
     $this->assertEquals($icon_data['data']['icon_pack_label'] ?? '', $actual->getIconPackLabel());
     $this->assertEquals($icon_data['data']['content'], $actual->getContent());
-    $this->assertEquals($icon_data['name'], $actual->getName());
+    $this->assertEquals($icon_data['icon_id'], $actual->getIconId());
     $this->assertEquals($icon_data['source'], $actual->getSource());
     $this->assertEquals($icon_data['group'], $actual->getGroup());
   }
@@ -88,7 +89,7 @@ class IconDefinitionTest extends TestCase {
     return [
       [
         [
-          'name' => 'foo',
+          'icon_id' => 'foo',
           'source' => 'foo/bar',
           'data' => [
             'icon_pack_id' => 'baz',
@@ -99,7 +100,7 @@ class IconDefinitionTest extends TestCase {
       ],
       [
         [
-          'name' => 'foo',
+          'icon_id' => 'foo',
           'source' => 'foo/bar',
           'data' => [
             'icon_pack_id' => 'baz',
@@ -127,7 +128,7 @@ class IconDefinitionTest extends TestCase {
     $this->expectExceptionMessage(implode('. ', $errors));
 
     IconDefinition::create(
-      $icon_data['name'] ?? '',
+      $icon_data['icon_id'] ?? '',
       $icon_data['source'] ?? '',
       $icon_data['data'] ?? [],
       $icon_data['group'] ?? NULL,
@@ -144,12 +145,12 @@ class IconDefinitionTest extends TestCase {
     return [
       [
         [
-          'name' => '',
+          'icon_id' => '',
           'source' => '',
           'data' => [],
         ],
         [
-          'Empty name provided',
+          'Empty icon_id provided',
           'Empty source provided',
           'Missing Icon Pack Id in data',
         ],

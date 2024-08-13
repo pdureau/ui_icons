@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\ui_icons\Unit;
 
+use Drupal\Component\Render\FormattableMarkup;
 use Drupal\Tests\UnitTestCase;
 use Drupal\ui_icons\IconDefinition;
 use Drupal\ui_icons\IconDefinitionInterface;
@@ -14,27 +15,48 @@ use Drupal\ui_icons\IconDefinitionInterface;
 abstract class IconUnitTestCase extends UnitTestCase {
 
   /**
+   * Creates icon data result array.
+   *
+   * @param string|null $icon_pack_id
+   *   The ID of the icon set.
+   * @param string|null $icon_id
+   *   The ID of the icon.
+   * @param string|null $icon_pack_label
+   *   The label of the icon set.
+   *
+   * @return array
+   *   The icon data array.
+   */
+  protected static function createIconResultData(?string $icon_pack_id = NULL, ?string $icon_id = NULL, ?string $icon_pack_label = NULL): array {
+    return [
+      'value' => ($icon_pack_id ?? 'foo') . ':' . ($icon_id ?? 'bar'),
+      'label' => new FormattableMarkup('<span class="ui-menu-icon">@icon</span> @name', [
+        '@icon' => '_rendered_',
+        '@name' => ($icon_id ?? 'bar') . ' (' . ($icon_pack_label ?? 'Baz') . ')',
+      ]),
+    ];
+  }
+
+  /**
    * Creates icon data array.
    *
    * @param string|null $icon_pack_id
    *   The ID of the icon set.
    * @param string|null $icon_id
    *   The ID of the icon.
-   * @param string|null $icon_name
-   *   The name of the icon.
-   * @param string|null $iconPack_label
+   * @param string|null $icon_pack_label
    *   The label of the icon set.
    *
    * @return array
    *   The icon data array.
    */
-  protected static function createIconData(?string $icon_pack_id = NULL, ?string $icon_id = NULL, ?string $icon_name = NULL, ?string $iconPack_label = NULL): array {
+  protected static function createIconData(?string $icon_pack_id = NULL, ?string $icon_id = NULL, ?string $icon_pack_label = NULL): array {
     return [
       ($icon_pack_id ?? 'foo') . ':' . ($icon_id ?? 'bar') => [
-        'name' => $icon_name ?? 'Bar',
+        'icon_id' => $icon_id ?? 'bar',
         'source' => 'qux/corge',
         'icon_pack_id' => $icon_pack_id ?? 'foo',
-        'icon_pack_label' => $iconPack_label ?? 'Baz',
+        'icon_pack_label' => $icon_pack_label ?? 'Baz',
       ],
     ];
   }
@@ -80,7 +102,7 @@ abstract class IconUnitTestCase extends UnitTestCase {
    */
   protected function createIcon(array $iconData): IconDefinitionInterface {
     return IconDefinition::create(
-      $iconData['name'],
+      $iconData['icon_id'],
       $iconData['source'],
       [
         'icon_pack_id' => $iconData['icon_pack_id'],

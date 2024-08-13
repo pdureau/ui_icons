@@ -195,7 +195,7 @@ class SvgSpriteExtractorTest extends UnitTestCase {
     $this->assertInstanceOf(IconDefinitionInterface::class, $icons['svg_sprite:foo']);
     $this->assertInstanceOf(IconDefinitionInterface::class, $icons['svg_sprite:bar']);
 
-    $this->assertSame('foo', $icons['svg_sprite:foo']->getName());
+    $this->assertSame('foo', $icons['svg_sprite:foo']->getIconId());
     $this->assertSame('web/modules/my_module/foo/bar/baz.svg', $icons['svg_sprite:foo']->getSource());
   }
 

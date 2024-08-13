@@ -87,7 +87,6 @@ class IconFinderTest extends TestCase {
         ],
         [
           'BAR' => [
-            'name' => 'BAR',
             'icon_id' => 'BAR',
             'relative_path' => 'modules/my_module/foo/BAR.svg',
             'absolute_path' => '/_ROOT_/web/modules/my_module/foo/BAR.svg',
@@ -111,14 +110,12 @@ class IconFinderTest extends TestCase {
         ],
         [
           'BAR' => [
-            'name' => 'BAR',
             'icon_id' => 'BAR',
             'relative_path' => 'modules/my_module/foo/BAR.svg',
             'absolute_path' => '/_ROOT_/web/modules/my_module/foo/BAR.svg',
             'group' => NULL,
           ],
           'BAZ' => [
-            'name' => 'BAZ',
             'icon_id' => 'BAZ',
             'relative_path' => 'modules/my_module/foo/BAZ.svg',
             'absolute_path' => '/_ROOT_/web/modules/my_module/foo/BAZ.svg',
@@ -142,14 +139,12 @@ class IconFinderTest extends TestCase {
         ],
         [
           'BAR' => [
-            'name' => 'BAR',
             'icon_id' => 'BAR',
             'relative_path' => 'modules/my_module/foo/GROUP/BAR.svg',
             'absolute_path' => '/_ROOT_/web/modules/my_module/foo/GROUP/BAR.svg',
             'group' => 'GROUP',
           ],
           'BAZ' => [
-            'name' => 'BAZ',
             'icon_id' => 'BAZ',
             'relative_path' => 'modules/my_module/foo/GROUP/BAZ.svg',
             'absolute_path' => '/_ROOT_/web/modules/my_module/foo/GROUP/BAZ.svg',
@@ -168,7 +163,6 @@ class IconFinderTest extends TestCase {
         ],
         [
           'BAR' => [
-            'name' => 'BAR',
             'icon_id' => 'BAR',
             'relative_path' => '/foo/BAR.svg',
             'absolute_path' => '/_ROOT_/web/foo/BAR.svg',
@@ -187,7 +181,6 @@ class IconFinderTest extends TestCase {
         ],
         [
           'BAR' => [
-            'name' => 'BAR',
             'icon_id' => 'BAR',
             'relative_path' => '/foo/GROUP/BAR.svg',
             'absolute_path' => '/_ROOT_/web/foo/GROUP/BAR.svg',
@@ -206,7 +199,6 @@ class IconFinderTest extends TestCase {
         ],
         [
           'bar-24' => [
-            'name' => 'bar',
             'icon_id' => 'bar',
             'relative_path' => 'modules/my_module/foo/bar-24.svg',
             'absolute_path' => '/_ROOT_/web/modules/my_module/foo/bar-24.svg',
@@ -230,14 +222,12 @@ class IconFinderTest extends TestCase {
         ],
         [
           'BAR' => [
-            'name' => 'BAR',
             'icon_id' => 'BAR',
             'relative_path' => 'modules/my_module/foo/GROUP/bar/BAR.svg',
             'absolute_path' => '/_ROOT_/web/modules/my_module/foo/GROUP/bar/BAR.svg',
             'group' => 'GROUP',
           ],
           'BAZ' => [
-            'name' => 'BAZ',
             'icon_id' => 'BAZ',
             'relative_path' => 'modules/my_module/foo/GROUP/bar/BAZ.svg',
             'absolute_path' => '/_ROOT_/web/modules/my_module/foo/GROUP/bar/BAZ.svg',

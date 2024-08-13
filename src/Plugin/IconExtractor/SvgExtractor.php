@@ -41,7 +41,7 @@ class SvgExtractor extends IconExtractorPluginBase {
     foreach ($files as $file) {
       $this->configuration['content'] = $this->extractSvg($file['absolute_path']);
       $icon_full_id = $this->configuration['icon_pack_id'] . ':' . $file['icon_id'];
-      $icons[$icon_full_id] = $this->createIcon($file['name'], $file['relative_path'], $this->configuration, $file['group']);
+      $icons[$icon_full_id] = $this->createIcon($file['icon_id'], $file['relative_path'], $this->configuration, $file['group']);
     }
 
     return $icons;
