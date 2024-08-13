@@ -74,7 +74,7 @@
       iconSelector,
       // @see ui_icons/templates/input--icon.html.twig
       '.ui-icons-settings-wrapper',
-      'form-type--ui-icon-autocomplete',
+      'form-type--icon-autocomplete',
     );
 
     if (!iconSettingsWrapper) {
@@ -86,6 +86,7 @@
     );
 
     if (!iconPackSettings) {
+      iconSettingsWrapper.classList.add('hidden');
       return;
     }
 
@@ -124,7 +125,7 @@
     const iconPreviewElement = findNearest(
       iconSelector,
       '.ui-icons-preview',
-      'form-type--ui-icon-autocomplete',
+      'form-type--icon-autocomplete',
     );
     const [iconPackId, iconID] = iconSelector.value.split(':');
 
