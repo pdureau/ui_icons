@@ -159,21 +159,21 @@ class IconEmbed extends FilterBase implements ContainerFactoryPluginInterface {
       $node->removeAttribute('data-icon-id');
 
       // Because of Ckeditor attributes system, we use a single attribute with
-      // serialized options.
-      $options = [];
+      // serialized settings.
+      $settings = [];
       /** @var \DOMElement $node */
-      $data_options = $node->getAttribute('data-icon-options');
-      if ($data_options && json_validate($data_options)) {
-        $options = json_decode($data_options, TRUE);
+      $data_settings = $node->getAttribute('data-icon-settings');
+      if ($data_settings && json_validate($data_settings)) {
+        $settings = json_decode($data_settings, TRUE);
       }
 
       $icon = $this->pluginManagerUiIconset->getIcon($icon_id);
       assert($icon === NULL || $icon instanceof IconDefinitionInterface);
 
-      // Use default options if none set.
-      if (empty($options)) {
+      // Use default settings if none set.
+      if (empty($settings)) {
         [$iconset_id] = explode(':', $icon_id);
-        $options = $this->pluginManagerUiIconset->getExtractorFormDefaults($iconset_id);
+        $settings = $this->pluginManagerUiIconset->getExtractorFormDefaults($iconset_id);
       }
 
       if (!$icon) {
@@ -181,7 +181,7 @@ class IconEmbed extends FilterBase implements ContainerFactoryPluginInterface {
       }
 
       $build = $icon
-        ? $this->getWrappedRenderable($icon, $options)
+        ? $this->getWrappedRenderable($icon, $settings)
         : $this->renderMissingIconIndicator($icon_id);
 
       $this->renderIntoDomNode($build, $node, $result);
@@ -201,7 +201,7 @@ class IconEmbed extends FilterBase implements ContainerFactoryPluginInterface {
       <p>You can embed icon:</p>
       <ul>
         <li>Choose which icon item to embed: <code>&lt;drupal-icon data-icon-id="iconset:icon_id" /&gt;</code></li>
-        <li>Optionally also pass options with data-options: <code>data-options="{\'width\':100}"</code>, otherwise the default options from the Iconset definition are used.</li>
+        <li>Optionally also pass settings with data-icon-settings: <code>data-icon-settings="{\'width\':100}"</code>, otherwise the default settings from the Iconset definition are used.</li>
       </ul>');
     }
     else {
@@ -214,16 +214,16 @@ class IconEmbed extends FilterBase implements ContainerFactoryPluginInterface {
    *
    * @param \Drupal\ui_icons\IconDefinitionInterface $icon
    *   The icon to render.
-   * @param array $options
-   *   Options to pass as context to the rendered icon.
+   * @param array $settings
+   *   Settings to pass as context to the rendered icon.
    *
    * @return array
    *   Renderable array.
    *
    * @todo wrapping, class and library as filter settings?
    */
-  protected function getWrappedRenderable(IconDefinitionInterface $icon, array $options): array {
-    $build = $icon->getRenderable($options);
+  protected function getWrappedRenderable(IconDefinitionInterface $icon, array $settings): array {
+    $build = $icon->getRenderable($settings);
     $build['#prefix'] = '<span class="drupal-icon">';
     $build['#suffix'] = '</span>';
     $build['#attached']['library'][] = 'ui_icons_text/icon.content';

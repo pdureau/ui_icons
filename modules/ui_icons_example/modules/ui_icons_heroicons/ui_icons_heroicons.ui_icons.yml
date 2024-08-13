@@ -5,7 +5,7 @@ ui_icons_heroicons_solid:
   config:
     sources:
       - /libraries/heroicons/node_modules/heroicons/24/solid/{icon_id}.svg
-  options:
+  settings:
     title:
       title: "Title"
       placeholder: "Set a title on hover for this icon."
@@ -29,6 +29,7 @@ ui_icons_heroicons_solid:
       description: "Set a stroke width for this icon."
       type: "number"
       default: 1.5
+      step: 0.1
   template: >
     <svg
       class="heroicon"
@@ -51,7 +52,7 @@ ui_icons_heroicons_outline:
   config:
     sources:
       - /libraries/heroicons/node_modules/heroicons/24/outline/{icon_id}.svg
-  options:
+  settings:
     title:
       title: "Title"
       placeholder: "Set a title on hover for this icon."

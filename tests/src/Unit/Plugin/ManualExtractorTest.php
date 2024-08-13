@@ -139,7 +139,7 @@ class ManualExtractorTest extends UnitTestCase {
 
     $this->assertInstanceOf(UiIconsExtractorPluginInterface::class, $manualExtractorPlugin);
 
-    // Test buildConfigurationForm with no change because of no 'options';.
+    // Test buildConfigurationForm with no change because of no 'settings';.
     $form = ['foo'];
     $this->assertSame($form, $manualExtractorPlugin->buildConfigurationForm($form, new FormState()));
 
@@ -148,10 +148,10 @@ class ManualExtractorTest extends UnitTestCase {
     $manualExtractorPlugin->submitConfigurationForm($form, new FormState());
     $this->assertSame(['foo'], $form);
 
-    // Test buildConfigurationForm with options.
+    // Test buildConfigurationForm with settings.
     $manualExtractorPlugin = new ManualExtractor(
       [
-        'options' => [
+        'settings' => [
           'foo' => [
             'type' => 'string',
           ],
@@ -173,8 +173,6 @@ class ManualExtractorTest extends UnitTestCase {
       'foo' => [
         '#type' => 'textfield',
         '#title' => 'foo',
-        '#description' => '',
-        '#size' => 60,
         '#default_value' => [
           '#default_value' => 'bar',
         ],

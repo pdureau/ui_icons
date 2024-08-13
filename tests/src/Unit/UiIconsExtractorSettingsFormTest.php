@@ -18,15 +18,15 @@ class UiIconsExtractorSettingsFormTest extends UnitTestCase {
   /**
    * Test the generateSettingsForm method.
    *
-   * @param array $options
-   *   The options to test.
+   * @param array $settings
+   *   The settings to test.
    * @param array $expected
    *   The expected result.
    *
    * @dataProvider settingsFormDataProvider
    */
-  public function testGenerateSettingsForm(array $options, array $expected): void {
-    $actual = UiIconsExtractorSettingsForm::generateSettingsForm($options);
+  public function testGenerateSettingsForm(array $settings, array $expected): void {
+    $actual = UiIconsExtractorSettingsForm::generateSettingsForm($settings);
     $this->assertSame($expected, $actual);
   }
 
@@ -34,14 +34,14 @@ class UiIconsExtractorSettingsFormTest extends UnitTestCase {
    * Provide data for testGenerateSettingsForm.
    *
    * @return array
-   *   The data for options and expected.
+   *   The data for settings and expected.
    *
    * @phpcs:disable 
    */
   public static function settingsFormDataProvider(): array {
     return [
       'default case for string field' => [
-        'options' => [
+        'settings' => [
           'test_string_default' => [
             'title' => 'Test String',
             'description' => 'Form test string',
@@ -56,7 +56,7 @@ class UiIconsExtractorSettingsFormTest extends UnitTestCase {
         ],
       ],
       'case for string field' => [
-        'options' => [
+        'settings' => [
           'test_string' => [
             'title' => 'Test String',
             'description' => 'Form test string',
@@ -86,7 +86,7 @@ class UiIconsExtractorSettingsFormTest extends UnitTestCase {
         ],
       ],
       'case for number field' => [
-        'options' => [
+        'settings' => [
           'test_number' => [
             'title' => 'Test Number',
             'description' => 'Form test number',
@@ -108,7 +108,7 @@ class UiIconsExtractorSettingsFormTest extends UnitTestCase {
         ],
       ],
       'case for boolean field' => [
-        'options' => [
+        'settings' => [
           'test_boolean' => [
             'title' => 'Test Boolean',
             'description' => 'Form test boolean',
@@ -124,7 +124,7 @@ class UiIconsExtractorSettingsFormTest extends UnitTestCase {
         ],
       ],
       'case for color field' => [
-        'options' => [
+        'settings' => [
           'test_color' => [
             'title' => 'Test Color',
             'description' => 'Form test color',
@@ -140,7 +140,7 @@ class UiIconsExtractorSettingsFormTest extends UnitTestCase {
         ],
       ],
       'case for range field' => [
-        'options' => [
+        'settings' => [
           'test_range' => [
             'title' => 'Test Range',
             'description' => 'Form test range',
@@ -162,7 +162,7 @@ class UiIconsExtractorSettingsFormTest extends UnitTestCase {
         ],
       ],
       'case for field with enum' => [
-        'options' => [
+        'settings' => [
           'test_enum' => [
             'title' => 'Test Enum',
             'description' => 'Form test enum',
@@ -180,7 +180,7 @@ class UiIconsExtractorSettingsFormTest extends UnitTestCase {
         ],
       ],
       'case for field with default value' => [
-        'options' => [
+        'settings' => [
           'test_default' => [
             'title' => 'Test Default',
             'description' => 'Form test default',
@@ -200,7 +200,7 @@ class UiIconsExtractorSettingsFormTest extends UnitTestCase {
         ],
       ],
       'case for float field' => [
-        'options' => [
+        'settings' => [
           'test_number' => [
             'title' => 'Test float',
             'description' => 'Form test float',
@@ -247,7 +247,6 @@ class UiIconsExtractorSettingsFormTest extends UnitTestCase {
         '#type' => 'textfield',
         '#title' => $options['test_saved']['title'],
         '#description' => $options['test_saved']['description'],
-        '#size' => 60,
         '#default_value' => 'saved value',
       ],
     ];

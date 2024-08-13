@@ -5,7 +5,7 @@ ui_icons_font_awesome_svg:
   config:
     sources:
       - /libraries/fontawesome/svgs/{group}/{icon_id}.svg
-  options:
+  settings:
     width:
       title: "Width"
       description: "Set a width for this icon."

@@ -76,18 +76,8 @@ interface UiIconsetManagerInterface extends PluginManagerInterface {
    *   The settings for the forms (optional).
    * @param array $allowed_iconset
    *   The list of icon set (optional).
-   * @param bool $details
-   *   Render form in details instead of container.
    */
-  public function getExtractorPluginForms(array &$form, FormStateInterface $form_state, array $default_settings = [], array $allowed_iconset = [], bool $details = FALSE): void;
-
-  /**
-   * Retrieve all extractor default options.
-   *
-   * @return array
-   *   The extractor defaults options, keyed by extractor.
-   */
-  public function getExtractorAllFormDefaults(): array;
+  public function getExtractorPluginForms(array &$form, FormStateInterface $form_state, array $default_settings = [], array $allowed_iconset = []): void;
 
   /**
    * Retrieve extractor default options.

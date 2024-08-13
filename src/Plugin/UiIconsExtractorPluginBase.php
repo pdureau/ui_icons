@@ -75,11 +75,11 @@ abstract class UiIconsExtractorPluginBase extends PluginBase implements UiIconsE
    * {@inheritdoc}
    */
   public function buildConfigurationForm(array $form, FormStateInterface $form_state): array {
-    if (!isset($this->configuration['options'])) {
+    if (!isset($this->configuration['settings'])) {
       return $form;
     }
 
-    return UiIconsExtractorSettingsForm::generateSettingsForm($this->configuration['options'], $form_state);
+    return UiIconsExtractorSettingsForm::generateSettingsForm($this->configuration['settings'], $form_state);
   }
 
   /**

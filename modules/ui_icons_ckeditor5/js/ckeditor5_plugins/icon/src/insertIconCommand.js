@@ -22,7 +22,7 @@ function createDrupalIcon(writer, attributes) {
  * @example
  *    editor.execute('InsertIconCommand', {
  *      'data-icon-id': 'iconset_id:icon_id',
- *      'data-option-{option_name}': '{option_value}',
+ *      'data-icon-settings': '{key: value, key_2: value_2}',
  *    });
  *
  * @private
@@ -34,7 +34,7 @@ export default class InsertIconCommand extends Command {
     }
     const modelAttributes = {
       drupalIconId: settings.icon,
-      drupalIconOptions: JSON.stringify(settings.icon_settings),
+      drupalIconSettings: JSON.stringify(settings.icon_settings),
     };
 
     this.editor.model.change((writer) => {

@@ -123,7 +123,7 @@ class UiIconFormatter extends FormatterBase implements ContainerFactoryPluginInt
 
     $icon_settings = $this->getSetting('icon_settings') ?? [];
 
-    $this->pluginManagerUiIconset->getExtractorPluginForms($elements, $form_state, $icon_settings, [], TRUE);
+    $this->pluginManagerUiIconset->getExtractorPluginForms($elements, $form_state, $icon_settings);
 
     // Placeholder to get all settings serialized as the form keys are dynamic
     // and based on iconset definition options.
@@ -189,13 +189,13 @@ class UiIconFormatter extends FormatterBase implements ContainerFactoryPluginInt
       // Priority is to look for widget settings, then formatter, then defaults
       // from definition.
       $settings = $item->get('settings')->getValue();
-      if (!empty($settings)) {
-        $settings = reset($settings[$iconset_id]);
+      if (!empty($settings) && isset($settings[$iconset_id]) && !empty($settings[$iconset_id])) {
+        $settings = $settings[$iconset_id];
       }
       else {
         $formatter_settings = $this->getSetting('icon_settings') ?? [];
-        if (isset($formatter_settings[$iconset_id])) {
-          $settings = reset($formatter_settings[$iconset_id]);
+        if (isset($formatter_settings[$iconset_id]) && !empty($formatter_settings[$iconset_id])) {
+          $settings = $formatter_settings[$iconset_id];
         }
         else {
           // If the settings form has never been saved, we need to get extractor

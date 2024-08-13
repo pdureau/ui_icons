@@ -43,10 +43,10 @@ class UiIconTest extends UnitTestCase {
     $this->assertArrayHasKey('#pre_render', $info);
     $this->assertArrayHasKey('#iconset', $info);
     $this->assertArrayHasKey('#icon', $info);
-    $this->assertArrayHasKey('#options', $info);
+    $this->assertArrayHasKey('#context', $info);
 
     $this->assertSame([['Drupal\ui_icons\Element\UiIcon', 'preRenderUiIcon']], $info['#pre_render']);
-    $this->assertSame([], $info['#options']);
+    $this->assertSame([], $info['#context']);
   }
 
   /**
@@ -84,7 +84,7 @@ class UiIconTest extends UnitTestCase {
       '#type' => 'ui_icon',
       '#iconset' => $data['iconset_id'],
       '#icon' => $data['icon_id'],
-      '#options' => $data['ui_icon_options'] ?? [],
+      '#context' => $data['ui_icon_options'] ?? [],
     ];
 
     $actual = UiIcon::preRenderUiIcon($element);

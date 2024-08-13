@@ -5,7 +5,7 @@ ui_icons_dsfr_svg:
   config:
     sources:
       - /libraries/dsfr/node_modules/@gouvfr/dsfr/dist/icons/{group}/{icon_id}.svg
-  options:
+  settings:
     width:
       title: "Width"
       description: "Set a width for this icon."

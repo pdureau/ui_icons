@@ -85,12 +85,12 @@ interface IconDefinitionInterface {
   /**
    * Get the Icon renderable array.
    *
-   * @param array $options
-   *   Options to pass to the renderable for context.
+   * @param array $settings
+   *   Settings to pass to the renderable for context.
    *
    * @return array
    *   The Icon renderable.
    */
-  public function getRenderable(array $options = []): array;
+  public function getRenderable(array $settings = []): array;
 
 }

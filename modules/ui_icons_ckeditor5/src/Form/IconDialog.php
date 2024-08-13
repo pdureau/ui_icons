@@ -91,13 +91,13 @@ final class IconDialog extends FormBase {
     else {
       $values = [];
       $value = $form_state->getValue('icon');
-      $icon = $value['icon'];
+      $icon = $value['icon'] ?? NULL;
+
       if ($icon instanceof IconDefinitionInterface) {
-        $settings = $value['settings'] ?? [];
         $values = [
           'settings' => [
             'icon' => $icon->getId(),
-            'icon_settings' => reset($settings[$icon->getIconsetId()]),
+            'icon_settings' => $value['settings'][$icon->getIconsetId()] ?? [],
           ],
         ];
       }

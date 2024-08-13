@@ -46,11 +46,8 @@ class UiIconsExtractorPluginManager extends DefaultPluginManager {
   public function getExtractorForms(array $iconset_configurations): array {
     $extractor_forms = [];
     foreach ($iconset_configurations as $iconset_configuration) {
-      if (!isset($iconset_configuration['extractor'])) {
-        continue;
-      }
-      $extractor_id = $iconset_configuration['extractor'];
-      $extractor_forms[$extractor_id] = $this->getExtractorForm($iconset_configuration);
+      $iconset_id = $iconset_configuration['id'];
+      $extractor_forms[$iconset_id] = $this->getExtractorForm($iconset_configuration);
     }
 
     return $extractor_forms;
@@ -66,7 +63,7 @@ class UiIconsExtractorPluginManager extends DefaultPluginManager {
    *   The extractor form or null.
    */
   public function getExtractorForm(array $extractor_configuration): ?PluginFormInterface {
-    if (!isset($extractor_configuration['options'])) {
+    if (!isset($extractor_configuration['settings'])) {
       return NULL;
     }
     /** @var \Drupal\ui_icons\Plugin\UiIconsExtractorPluginInterface $plugin */

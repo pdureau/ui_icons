@@ -166,9 +166,7 @@
       }
 
       iconSelectors.forEach((iconSelector) => {
-        // console.log(iconSelector.value);
         // Form is loaded with an existing value.
-        // if (iconSelector.value) {
         if (iconSelector.value && iconSelector.value.indexOf(':') > -1) {
           const [iconSetID] = iconSelector.value.split(':');
           processAutocompleteSettings(iconSetID, iconSelector);

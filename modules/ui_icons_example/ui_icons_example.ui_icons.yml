@@ -1,5 +1,5 @@
 iconset_example_drupal_core:
-  label: Drupal core by UI Icons example
+  label: Drupal core Icons
   description: Drupal core icons available within Drupal.
   extractor: path
   config:
@@ -27,21 +27,17 @@ iconset_example_drupal_core:
       # - /core/node_modules/nightwatch/lib/reporter/reporters/html/assets/images/{icon_id}.svg
       # # Some sprites seems included
       # - /core/node_modules/jquery-ui/dist/themes/{group}/images/{icon_id}.png
-  options:
+  settings:
     width:
       title: "Width"
       description: "Set a width for this icon."
       type: "integer"
-      default: 32
-      required: true
-      suffix: "px"
+      default: 40
     height:
       title: "Height"
       description: "Set a height for this icon."
       type: "integer"
-      default: 32
-      required: true
-      suffix: "px"
+      default: 40
     title:
       title: "Title"
       description: "Set a title on hover for this icon."
@@ -57,21 +53,17 @@ iconset_example_local:
     sources:
       - assets/icons/local_png/{icon_id}.png
       - assets/icons/local_png_group/{group}/{icon_id}.png
-  options:
+  settings:
     width:
       title: "Width"
       description: "Set a width for this icon."
       type: "integer"
       default: 32
-      required: true
-      suffix: "px"
     height:
       title: "Height"
       description: "Set a height for this icon."
       type: "integer"
       default: 32
-      required: true
-      suffix: "px"
     title:
       title: "Title"
       description: "Set a title on hover for this icon."
@@ -80,7 +72,7 @@ iconset_example_local:
       description: "Accessibility alternative text, leave empty for decorative icon."
 
 iconset_example_svg:
-  label: SVG
+  label: Example SVG
   description: SVG files, relative to UI Icons example.
   extractor: svg
   config:
@@ -89,21 +81,46 @@ iconset_example_svg:
       - assets/icons/local_svg/prefix_{icon_id}_suffix.svg
       - assets/icons/local_svg_group/{group}/{icon_id}.svg
       - assets/icons/local_svg_group/{group}/sub_group/{icon_id}.svg
-  options:
+  settings:
     width:
       title: "Width"
       description: "Set a width for this icon."
       type: "integer"
       default: 32
-      required: true
-      suffix: "px"
     height:
       title: "Height"
       description: "Set a height for this icon."
       type: "integer"
       default: 32
-      required: true
-      suffix: "px"
+    title:
+      title: "Title"
+      placeholder: "Set a title on hover for this icon."
+    alt:
+      title: "Alt text"
+      placeholder: "Accessibility alternative text, leave empty for decorative icon."
+  template: >
+    <svg xmlns="http://www.w3.org/2000/svg" width="{{ width|default(32) }}" height="{{ height|default(32) }}" fill="currentColor" viewBox="0 0 163.83 124.92" aria-label="{{ alt|default(icon_id|capitalize) }}">
+      {{ content }}
+    </svg>
+
+iconset_example_svg_sprite:
+  label: Example SVG sprite
+  description: SVG from a sprite, relative to UI Icons example.
+  extractor: svg_sprite
+  config:
+    sources:
+      - assets/icons/sprite/sprite_icons.svg
+  settings:
+    width:
+      title: "Width"
+      description: "Set a width for this icon."
+      type: "integer"
+      default: 32
+    height:
+      title: "Height"
+      description: "Set a height for this icon."
+      type: "integer"
+      default: 32
     title:
       title: "Title"
       description: "Set a title on hover for this icon."
@@ -111,18 +128,19 @@ iconset_example_svg:
       title: "Alt text"
       description: "Accessibility alternative text, leave empty for decorative icon."
   template: >
-    <svg xmlns="http://www.w3.org/2000/svg" width="{{ width|default(32) }}" height="{{ height|default(32) }}" fill="currentColor" viewBox="0 0 163.83 124.92" aria-label="{{ alt|default(icon_id|capitalize) }}">
-      {{ content }}
+    <svg width="{{ width|default(32) }}" height="{{ height|default(32) }}" fill="currentColor" aria-label="{{ alt|default(icon_id|capitalize) }}">
+      <title>{{ title|default(icon_id|capitalize) }}</title>
+      <use xlink:href="{{ source }}#{{ icon_id }}"/>
     </svg>
 
-iconset_example_svg_sprite:
-  label: SVG sprite
-  description: SVG from a sprite, relative to UI Icons example.
-  extractor: svg_sprite
+iconset_example_settings:
+  label: Icon with all settings type
+  description: Provide a single icon with all settings types.
+  extractor: path
   config:
     sources:
-      - assets/icons/sprite/sprite_icons.svg
-  options:
+      - assets/icons/local_svg_group/group_3/sub_group/local_svg_group_3_10.0_{icon_id}.svg
+  settings:
     width:
       title: "Width"
       description: "Set a width for this icon."
@@ -140,26 +158,29 @@ iconset_example_svg_sprite:
     title:
       title: "Title"
       description: "Set a title on hover for this icon."
+      placeholder: "Start typing a title, default Icon id"
     alt:
       title: "Alt text"
       description: "Accessibility alternative text, leave empty for decorative icon."
+      placeholder: "Accessibility alternative text"
     select:
       title: "Test select"
       description: "Test for a select with enum property."
       type: "integer"
       enum: [100, 200, 300, 400, 500, 600, 700, 800, 900]
-      default: 400,
+      default: 400
     boolean:
       title: "Test boolean"
       description: "Test for a boolean property."
       type: "boolean"
     color:
       title: "Test color"
-      description: "Test for a color property."
+      description: "Test for a color property with default."
       type: "color"
+      default: "#8FA2DC"
     decimal:
       title: "Test decimal"
-      description: "Test for a decimal property."
+      description: "Test for a decimal property with default."
       type: "decimal"
       default: 66.66
     range:
@@ -172,11 +193,14 @@ iconset_example_svg_sprite:
       max: 100
       suffix: 100
       step: 10
-  template: >
-    <svg width="{{ width|default(32) }}" height="{{ height|default(32) }}" fill="currentColor" aria-label="{{ alt|default(icon_id|capitalize) }}">
-      <title>{{ title|default(icon_id|capitalize) }}</title>
-      <use xlink:href="{{ source }}#{{ icon_id }}"/>
-    </svg>
+
+iconset_example_no_settings:
+  label: Icon with no settings
+  description: Provide a single icon with no settings.
+  extractor: path
+  config:
+    sources:
+      - assets/icons/local_svg_group/group_3/sub_group/local_svg_group_3_10.0_{icon_id}.svg
 
 # iconset_example_drupal_core_sprite:
 #   label: Drupal core sprite
@@ -187,18 +211,3 @@ iconset_example_svg_sprite:
 #       - /core/modules/views_ui/images/{icon_id}.png
 #       - /core/profiles/demo_umami/themes/umami/images/classy/icons/forum-icons.png
 #       - /core/themes/claro/images/core/stable/views_ui/{icon_id}.png
-#   options:
-#     width:
-#       title: "Width"
-#       description: "Set a width for this icon."
-#       type: "integer"
-#       default: 32
-#       required: true
-#       suffix: "px"
-#     height:
-#       title: "Height"
-#       description: "Set a height for this icon."
-#       type: "integer"
-#       default: 32
-#       required: true
-#       suffix: "px"

@@ -31,34 +31,32 @@ use Drupal\ui_icons\IconDefinitionInterface;
  *     extractor: MACHINE_NAME
  *     config:
  *       sources: ARRAY
- *       icons: ARRAY
- *     options:
- *       FORM_KEY: OBJECT
- *       ...
+ *     settings:
+ *       FORM_KEY:
+ *         KEY: VALUE
+ *         ...
  *     template: STRING
  *     library: STRING
  * @endcode
  * For example:
  * @code
  * my_iconset:
- *   label: "My icons"
- *   description: "My UI Icons set to use everywhere."
+ *   label: 'My icons'
+ *   description: 'My UI Icons set to use everywhere.'
  *   extractor: svg
  *   config:
  *     sources:
- *       - icons/local_svg/{icon_id}.svg
- *       - icons/local_svg_group/{group}/{icon_id}.svg
- *   options:
- *     width: {
- *       title: 'Please set width'
- *       type: "integer"
- *     }
- *     height: {
- *       title: 'Please set height'
- *       type: "integer"
- *     }
- *   template: '<img src={{ source }} title="{{ title }}" width="{{ width }}" height="{{ height }}"/>'
- *   library: "my_theme/my_lib"
+ *       - icons/{icon_id}.svg
+ *       - icons_grouped/{group}/{icon_id}.svg
+ *   settings:
+ *     width:
+ *       title: 'Width'
+ *       type: 'integer'
+ *     height:
+ *       title: 'Height'
+ *       type: 'integer'
+ *   template: '<img src={{ source }} title='{{ title }}' width='{{ width|default(32) }}' height='{{ height|default(32) }}'/>'
+ *   library: 'my_theme/my_lib'
  * @endcode
  *
  * @see plugin_api
@@ -186,36 +184,15 @@ class UiIconsetManager extends DefaultPluginManager implements UiIconsetManagerI
   /**
    * {@inheritdoc}
    */
-  public function getExtractorAllFormDefaults(): array {
-    $all_iconset = $this->getCleanDefinitions();
-
-    $default = [];
-    foreach ($all_iconset as $iconset_id => $iconset_definition) {
-      if (!isset($iconset_definition['options'])) {
-        continue;
-      }
-      foreach ($iconset_definition['options'] as $name => $definition) {
-        if (isset($definition['default'])) {
-          $default[$iconset_id][$name] = $definition['default'];
-        }
-      }
-    }
-
-    return $default;
-  }
-
-  /**
-   * {@inheritdoc}
-   */
   public function getExtractorFormDefaults(string $iconset): array {
     $all_iconset = $this->getCleanDefinitions();
 
-    if (!isset($all_iconset[$iconset]) || !isset($all_iconset[$iconset]['options'])) {
+    if (!isset($all_iconset[$iconset]) || !isset($all_iconset[$iconset]['settings'])) {
       return [];
     }
 
     $default = [];
-    foreach ($all_iconset[$iconset]['options'] as $name => $definition) {
+    foreach ($all_iconset[$iconset]['settings'] as $name => $definition) {
       if (isset($definition['default'])) {
         $default[$name] = $definition['default'];
       }
@@ -244,7 +221,7 @@ class UiIconsetManager extends DefaultPluginManager implements UiIconsetManagerI
   /**
    * {@inheritdoc}
    */
-  public function getExtractorPluginForms(array &$form, FormStateInterface $form_state, array $default_settings = [], array $allowed_iconset = [], bool $details = FALSE): void {
+  public function getExtractorPluginForms(array &$form, FormStateInterface $form_state, array $default_settings = [], array $allowed_iconset = []): void {
     $iconset = $this->getCleanDefinitions();
     if (!empty($allowed_iconset)) {
       $iconset = array_intersect_key($iconset, $allowed_iconset);
@@ -256,13 +233,15 @@ class UiIconsetManager extends DefaultPluginManager implements UiIconsetManagerI
     }
 
     foreach ($iconset as $iconset_id => $plugin) {
-      $extractor_id = $plugin['extractor'];
+      // Simply skip if no settings declared in definition.
+      if (!isset($plugin['settings']) || empty($plugin['settings'])) {
+        continue;
+      }
 
       // Create the container for each extractor settings used to have the
       // extractor form.
       $form[$iconset_id] = [
-        '#type' => $details ? 'details' : 'container',
-        '#title' => $plugin['label'],
+        '#type' => 'container',
         // Name is used for js hide/show settings.
         // @see web/modules/ui_icons/js/ui_icons.admin.js
         '#attributes' => ['name' => 'icon-settings--' . $iconset_id],
@@ -270,9 +249,9 @@ class UiIconsetManager extends DefaultPluginManager implements UiIconsetManagerI
 
       // Create the extractor form and set settings so we can build with values.
       $subform_state = SubformState::createForSubform($form[$iconset_id], $form, $form_state);
-      $subform_state->getCompleteFormState()->setValue('saved_values', $default_settings[$iconset_id][$extractor_id] ?? []);
-      if (is_a($extractor_forms[$extractor_id], '\Drupal\Core\Plugin\PluginFormInterface')) {
-        $form[$iconset_id][$extractor_id] = $extractor_forms[$extractor_id]->buildConfigurationForm($form[$iconset_id], $subform_state);
+      $subform_state->getCompleteFormState()->setValue('saved_values', $default_settings[$iconset_id] ?? []);
+      if (is_a($extractor_forms[$iconset_id], '\Drupal\Core\Plugin\PluginFormInterface')) {
+        $form[$iconset_id] += $extractor_forms[$iconset_id]->buildConfigurationForm($form[$iconset_id], $subform_state);
       }
     }
   }

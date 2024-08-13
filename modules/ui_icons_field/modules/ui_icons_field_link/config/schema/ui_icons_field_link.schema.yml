@@ -2,16 +2,13 @@ field.formatter.settings.ui_icon_link_formatter:
   type: mapping
   label: 'UI icon formatter link settings'
   mapping:
-    # @todo define a custom schema?
     icon_settings:
       type: sequence
       label: 'Icon extractor settings'
-      sequence:
-        type: sequence
-        sequence:
-          type: sequence
-          sequence:
-            type: string
+      # sequence:
+      #   type: sequence
+      #   sequence:
+      #     type: string
     icon_display:
       type: string
       label: 'Icon display position'

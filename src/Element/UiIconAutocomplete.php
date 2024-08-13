@@ -146,6 +146,7 @@ class UiIconAutocomplete extends FormElementBase {
       return $element;
     }
 
+    // @todo settings as ajax to avoid validation errors on hidden fields.
     $element['icon_settings'] = [
       '#type' => 'details',
       '#title' => $element['#settings_title'] ?? new TranslatableMarkup('Settings'),

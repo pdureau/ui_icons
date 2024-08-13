@@ -5,7 +5,7 @@ ui_icons_octicons_svg:
   config:
     sources:
       - /libraries/octicons/node_modules/@primer/octicons/build/svg/{icon_id}-24.svg
-  options:
+  settings:
     width:
       title: "Width"
       description: "Set a width for this icon."

@@ -13,7 +13,7 @@ use Drupal\Core\Render\Element\RenderElementBase;
  * Properties:
  * - #iconset: Iconset provider plugin id.
  * - #icon: Name of the icon.
- * - #options: Optional, values sent to the inline Twig template.
+ * - #context: Optional, values sent to the inline Twig template.
  *
  * Usage Example:
  * @code
@@ -21,7 +21,7 @@ use Drupal\Core\Render\Element\RenderElementBase;
  *   '#type' => 'ui_icon',
  *   '#iconset' => 'material_symbols',
  *   '#icon' => 'home',
- *   '#options' => [],
+ *   '#context' => [],
  * ];
  * @endcode
  */
@@ -38,7 +38,7 @@ class UiIcon extends RenderElementBase {
       ],
       '#iconset' => '',
       '#icon' => '',
-      '#options' => [],
+      '#context' => [],
     ];
   }
 
@@ -59,7 +59,7 @@ class UiIcon extends RenderElementBase {
     if (!$icon) {
       return $element;
     }
-    $element['inline-template'] = $icon->getRenderable($element['#options'] ?? []);
+    $element['inline-template'] = $icon->getRenderable($element['#context'] ?? []);
 
     return $element;
   }

@@ -5,7 +5,7 @@ ui_icons_material_svg_filled:
   config:
     sources:
       - /libraries/material/node_modules/@material-design-icons/svg/filled/{icon_id}.svg
-  options:
+  settings:
     width:
       title: "Width"
       description: "Set a width for this icon."
@@ -34,7 +34,7 @@ ui_icons_material_svg_outlined:
   config:
     sources:
       - /libraries/material/node_modules/@material-design-icons/svg/outlined/{icon_id}.svg
-  options:
+  settings:
     width:
       title: "Width"
       description: "Set a width for this icon."
@@ -63,7 +63,7 @@ ui_icons_material_svg_round:
   config:
     sources:
       - /libraries/material/node_modules/@material-design-icons/svg/round/{icon_id}.svg
-  options:
+  settings:
     width:
       title: "Width"
       description: "Set a width for this icon."
@@ -92,7 +92,7 @@ ui_icons_material_svg_sharp:
   config:
     sources:
       - /libraries/material/node_modules/@material-design-icons/svg/sharp/{icon_id}.svg
-  options:
+  settings:
     width:
       title: "Width"
       description: "Set a width for this icon."
@@ -121,7 +121,7 @@ ui_icons_material_svg_two_tone:
   config:
     sources:
       - /libraries/material/node_modules/@material-design-icons/svg/two-tone/{icon_id}.svg
-  options:
+  settings:
     width:
       title: "Width"
       description: "Set a width for this icon."

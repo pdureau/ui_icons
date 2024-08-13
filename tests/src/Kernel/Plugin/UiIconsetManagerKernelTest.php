@@ -14,6 +14,10 @@ use Drupal\ui_icons\Plugin\UiIconsetManagerInterface;
 /**
  * Tests the UiIconsetManager class.
  *
+ * Tests values are from test module.
+ *
+ * @see ui_icons/tests/modules/ui_icons_test/ui_icons_test.ui_icons.yml
+ *
  * @group ui_icons
  */
 class UiIconsetManagerKernelTest extends KernelTestBase {
@@ -75,7 +79,6 @@ class UiIconsetManagerKernelTest extends KernelTestBase {
   public function testGetIcons(): void {
     $icons = $this->uiIconsetManager->getIcons();
     $this->assertIsArray($icons);
-
     $this->assertArrayHasKey('test_local_files:local__9.0_black', $icons);
   }
 
@@ -100,6 +103,7 @@ class UiIconsetManagerKernelTest extends KernelTestBase {
       'test_local_svg' => 'SVG manual',
       'test_local_svg_sprite' => 'Small sprite',
       'test_no_icons' => 'No Icons',
+      'test_no_settings' => 'No Settings',
     ];
     $this->assertSame($expected, $actual);
   }
@@ -114,6 +118,7 @@ class UiIconsetManagerKernelTest extends KernelTestBase {
       'test_local_svg' => 'SVG manual - Local svg files.',
       'test_local_svg_sprite' => 'Small sprite - Local svg sprite file.',
       'test_no_icons' => 'No Icons',
+      'test_no_settings' => 'No Settings',
     ];
     $this->assertSame($expected, $actual);
   }
@@ -123,7 +128,7 @@ class UiIconsetManagerKernelTest extends KernelTestBase {
    */
   public function testListOptions(): void {
     $actual = $this->uiIconsetManager->listOptions();
-    $this->assertCount(20, $actual);
+    $this->assertCount(25, $actual);
 
     $actual = $this->uiIconsetManager->listOptions(['test_local_svg']);
     $this->assertCount(7, $actual);
@@ -136,31 +141,19 @@ class UiIconsetManagerKernelTest extends KernelTestBase {
   }
 
   /**
-   * Test the getExtractorAllFormDefaults method.
-   */
-  public function testGetExtractorAllFormDefaults(): void {
-    $actual = $this->uiIconsetManager->getExtractorAllFormDefaults();
-    $expected = [
-      'test_local_files' => [
-        'foo' => 50,
-        'bar' => 'baz',
-      ],
-    ];
-    $this->assertSame($expected, $actual);
-  }
-
-  /**
    * Test the getExtractorFormDefault method.
    */
   public function testGetExtractorFormDefaults(): void {
     $actual = $this->uiIconsetManager->getExtractorFormDefaults('test_local_files');
+    // @see ui_icons/tests/modules/ui_icons_test/ui_icons_test.ui_icons.yml
     $expected = [
-      'foo' => 50,
-      'bar' => 'baz',
+      'width' => 32,
+      'height' => 33,
+      'title' => 'default title',
     ];
     $this->assertSame($expected, $actual);
 
-    $actual = $this->uiIconsetManager->getExtractorFormDefaults('test_no_icons');
+    $actual = $this->uiIconsetManager->getExtractorFormDefaults('test_no_settings');
     $this->assertSame([], $actual);
   }
 
@@ -169,29 +162,99 @@ class UiIconsetManagerKernelTest extends KernelTestBase {
    */
   public function testGetExtractorPluginForms(): void {
     $form_state = $this->createMock(FormStateInterface::class);
-
-    $form = [
-      'test_local_files' => ['path' => []],
-      'test_local_svg' => ['svg' => []],
-    ];
+    $form = [];
 
     $this->uiIconsetManager->getExtractorPluginForms($form, $form_state);
-    $this->assertSame('Local files', $form['test_local_files']['#title']);
-    $this->assertSame('SVG manual', $form['test_local_svg']['#title']);
 
+    // @see ui_icons/tests/modules/ui_icons_test/ui_icons_test.ui_icons.yml
+    $this->assertCount(4, array_keys($form));
+    $expected = ['test_local_files', 'test_local_svg', 'test_local_svg_sprite', 'test_no_icons'];
+    $this->assertSame($expected, array_keys($form));
+
+    // Attributes is important, used by js for hidden/show.
+    $this->assertSame(['name' => 'icon-settings--test_local_files'], $form['test_local_files']['#attributes']);
+    $this->assertSame(['name' => 'icon-settings--test_local_svg'], $form['test_local_svg']['#attributes']);
+    $this->assertSame(['name' => 'icon-settings--test_local_svg_sprite'], $form['test_local_svg_sprite']['#attributes']);
+    $this->assertSame(['name' => 'icon-settings--test_no_icons'], $form['test_no_icons']['#attributes']);
+
+    // Check under settings form key.
+    $this->assertArrayHasKey('width', $form['test_local_files']);
+    $this->assertArrayHasKey('height', $form['test_local_files']);
+    $this->assertArrayHasKey('title', $form['test_local_files']);
+
+    $this->assertArrayHasKey('width', $form['test_local_svg']);
+    $this->assertArrayHasKey('height', $form['test_local_svg']);
+
+    $this->assertArrayHasKey('width', $form['test_local_svg_sprite']);
+    $this->assertArrayHasKey('height', $form['test_local_svg_sprite']);
+
+    $this->assertArrayHasKey('title', $form['test_no_icons']);
+
+    // No form if no settings.
+    $this->assertArrayNotHasKey('test_no_settings', $form);
+  }
+
+  /**
+   * Test the getExtractorPluginForms method.
+   */
+  public function testGetExtractorPluginFormsWithAllowed(): void {
+    $form_state = $this->createMock(FormStateInterface::class);
+    $form = [];
+
+    $allowed_iconset['test_local_svg'] = '';
+
+    $this->uiIconsetManager->getExtractorPluginForms($form, $form_state, [], $allowed_iconset);
+
+    $this->assertArrayHasKey('test_local_svg', $form);
+
+    $this->assertArrayNotHasKey('test_local_files', $form);
+    $this->assertArrayNotHasKey('test_local_svg_sprite', $form);
+    $this->assertArrayNotHasKey('test_no_icons', $form);
+  }
+
+  /**
+   * Test the getExtractorPluginForms method.
+   */
+  public function testGetExtractorPluginFormsWithDefault(): void {
     $form = [
-      'test_local_files' => ['path' => []],
-      'test_local_svg' => ['svg' => []],
-
-    ];
-    $default_settings = [
+      '#parents' => [],
       'test_local_files' => [
-        'path' => [],
+        '#parents' => ['test_local_files'],
+        '#array_parents' => ['test_local_files'],
       ],
     ];
-    $original_form = $form;
-    $this->uiIconsetManager->getExtractorPluginForms($form, $form_state, $default_settings, ['foo' => 'bar']);
-    $this->assertSame($original_form, $form);
+
+    $form_state = $this->createMock(FormStateInterface::class);
+    $this->uiIconsetManager->getExtractorPluginForms($form, $form_state);
+
+    // Without default, values are from definition.
+    $this->assertSame(32, $form['test_local_files']['width']['#default_value']);
+    $this->assertSame(33, $form['test_local_files']['height']['#default_value']);
+    $this->assertSame('default title', $form['test_local_files']['title']['#default_value']);
+
+    // Test definition without value.
+    $this->assertArrayNotHasKey('#default_value', $form['test_local_svg']['width']);
+    $this->assertArrayNotHasKey('#default_value', $form['test_local_svg']['height']);
+    $this->assertArrayNotHasKey('#default_value', $form['test_local_svg']['title']);
+
+    $default_settings = ['test_local_files' => ['width' => 100, 'height' => 110, 'title' => 'Test']];
+
+    // Test the set/get of default values as 'saved_values'.
+    $form_state->expects($this->once())
+      ->method('setValue')
+      ->with('saved_values', $default_settings['test_local_files']);
+
+    $form_state->expects($this->once())
+      ->method('getValue')
+      ->with('saved_values')
+      ->willReturn($default_settings['test_local_files']);
+
+    // Test with only one iconset test_local_files.
+    $this->uiIconsetManager->getExtractorPluginForms($form, $form_state, $default_settings, ['test_local_files' => '']);
+
+    $this->assertSame($default_settings['test_local_files']['width'], $form['test_local_files']['width']['#default_value']);
+    $this->assertSame($default_settings['test_local_files']['height'], $form['test_local_files']['height']['#default_value']);
+    $this->assertSame($default_settings['test_local_files']['title'], $form['test_local_files']['title']['#default_value']);
   }
 
   /**

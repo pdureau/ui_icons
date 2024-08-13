@@ -34,33 +34,19 @@ class UiIconsExtractorSettingsForm {
     $form = [];
     foreach ($options as $key => $definition) {
       $type = $definition['type'] ?? NULL;
-      $extra = [];
       switch ($type) {
         case 'string':
           $type = 'textfield';
-          $extra = [
-            '#size' => $definition['size'] ?? 60,
-          ];
           break;
 
         case 'number':
         case 'integer':
           $type = 'number';
-          $extra = [
-            '#min' => $definition['min'] ?? 1,
-            '#max' => $definition['max'] ?? 9999,
-            '#step' => $definition['step'] ?? 1,
-          ];
           break;
 
         case 'float':
         case 'decimal':
           $type = 'number';
-          $extra = [
-            '#min' => $definition['min'] ?? 1,
-            '#max' => $definition['max'] ?? 9999,
-            '#step' => $definition['step'] ?? 0.01,
-          ];
           break;
 
         case 'boolean':
@@ -71,13 +57,10 @@ class UiIconsExtractorSettingsForm {
           $type = 'color';
           break;
 
+        // @todo create datalist to have ticker
+        // @see https://developer.mozilla.org/en-US/docs/Web/HTML/Element/input/range#adding_tick_marks
         case 'range':
           $type = 'range';
-          $extra = [
-            '#min' => $definition['min'] ?? 1,
-            '#max' => $definition['max'] ?? 100,
-            '#step' => $definition['step'] ?? 1,
-          ];
           break;
 
         default:
@@ -88,10 +71,12 @@ class UiIconsExtractorSettingsForm {
       $form[$key] = [
         '#type' => isset($definition['enum']) ? 'select' : $type,
         '#title' => $definition['title'] ?? $key,
-        '#description' => $definition['description'] ?? '',
-      ] + $extra;
+      ];
 
       // Specific properties that should not be set empty.
+      if (isset($definition['description'])) {
+        $form[$key]['#description'] = $definition['description'];
+      }
       if (isset($definition['enum'])) {
         $form[$key]['#options'] = array_combine($definition['enum'], $definition['enum']);
         unset($form[$key]['#size']);
@@ -123,6 +108,23 @@ class UiIconsExtractorSettingsForm {
       }
       elseif (isset($definition['default'])) {
         $form[$key]['#default_value'] = $definition['default'];
+      }
+
+      if ('number' === $type || 'range' === $type) {
+        if (isset($definition['min'])) {
+          $form[$key]['#min'] = $definition['min'];
+        }
+        if (isset($definition['max'])) {
+          $form[$key]['#max'] = $definition['max'];
+        }
+
+        if (isset($definition['step'])) {
+          $form[$key]['#step'] = $definition['step'];
+        }
+        // Default step will be set to 1, check for float number.
+        elseif (isset($definition['default']) && 'double' === gettype($definition['default'])) {
+          $form[$key]['#step'] = 0.1;
+        }
       }
     }
 

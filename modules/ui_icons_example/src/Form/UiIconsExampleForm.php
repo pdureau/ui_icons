@@ -7,6 +7,7 @@ namespace Drupal\ui_icons_example\Form;
 use Drupal\Core\Form\FormBase;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Form\SubformState;
+use Drupal\Core\Render\Element;
 use Drupal\ui_icons\Plugin\UiIconsetManagerInterface;
 use Drupal\ui_icons\Plugin\UiIconsExtractorPluginManager;
 use Symfony\Component\DependencyInjection\ContainerInterface;
@@ -158,7 +159,11 @@ final class UiIconsExampleForm extends FormBase {
     ];
 
     // Add our extractor forms.
-    $this->pluginManagerUiIconset->getExtractorPluginForms($form['settings'], $form_state, [], [], TRUE);
+    $this->pluginManagerUiIconset->getExtractorPluginForms($form['settings'], $form_state);
+    foreach (Element::children($form['settings']) as $iconset_id) {
+      $form['settings'][$iconset_id]['#type'] = 'details';
+      $form['settings'][$iconset_id]['#title'] = $iconset_id;
+    }
 
     $form['actions'] = [
       '#type' => 'actions',

@@ -11,14 +11,14 @@ import icon from '../../../../icons/icon.svg';
 export default class IconUi extends Plugin {
   init() {
     const editor = this.editor;
-    const options = this.editor.config.get('icon');
-    if (!options) {
+    const config = this.editor.config.get('icon');
+    if (!config) {
       return;
     }
 
-    this.dialogURL = options.dialogURL;
+    this.dialogURL = config.dialogURL;
 
-    const { openDialog, dialogSettings = {} } = options;
+    const { openDialog, dialogSettings = {} } = config;
     if (typeof openDialog !== 'function') {
       return;
     }

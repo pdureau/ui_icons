@@ -5,7 +5,7 @@ ui_icons_bootstrap_svg:
   config:
     sources:
       - /libraries/bootstrap-icons/node_modules/bootstrap-icons/icons/{icon_id}.svg
-  options:
+  settings:
     width:
       title: "Width"
       description: "Set a width for this icon."
@@ -39,7 +39,7 @@ ui_icons_bootstrap_svg_sprite:
   config:
     sources:
       - /libraries/bootstrap-icons/node_modules/bootstrap-icons/bootstrap-icons.svg
-  options:
+  settings:
     width:
       title: "Width"
       description: "Set a width for this icon."

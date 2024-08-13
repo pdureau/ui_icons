@@ -49,20 +49,21 @@ final class IconFilterController implements ContainerInjectionInterface {
     if ($icon_id == '') {
       throw new NotFoundHttpException();
     }
-    $options = [];
-    $query_options = (string) $request->query->get('options');
-    if ($query_options !== '' && json_validate($query_options)) {
-      $options = json_decode($query_options, TRUE);
+
+    $settings = [];
+    $query_settings = (string) $request->query->get('settings');
+    if ($query_settings !== '' && json_validate($query_settings)) {
+      $settings = json_decode($query_settings, TRUE);
     }
 
     $icon = $this->pluginManagerUiIconset->getIcon($icon_id);
-    // Use default options if none set.
-    if (empty($options)) {
+    // Use default settings if none set.
+    if (empty($settings)) {
       [$iconset_id] = explode(':', $icon_id);
-      $options = $this->pluginManagerUiIconset->getExtractorFormDefaults($iconset_id);
+      $settings = $this->pluginManagerUiIconset->getExtractorFormDefaults($iconset_id);
     }
 
-    $build = $icon->getRenderable($options);
+    $build = $icon->getRenderable($settings);
     $html = $this->renderer->renderInIsolation($build);
 
     return (new Response((string) $html, 200))

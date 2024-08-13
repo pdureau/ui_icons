@@ -24,20 +24,15 @@ export default class IconEditing extends Plugin {
 
     this.attrs = {
       drupalIconId: 'data-icon-id',
-      drupalIconOptions: 'data-icon-options',
+      drupalIconSettings: 'data-icon-settings',
     };
-    this.converterAttributes = ['drupalIconId', 'drupalIconOptions'];
+    this.converterAttributes = ['drupalIconId', 'drupalIconSettings'];
   }
 
   /**
    * @inheritdoc
    */
   init() {
-    const options = this.editor.config.get('icon');
-    if (!options) {
-      return;
-    }
-
     this._defineSchema();
     this._defineConverters();
 
@@ -190,13 +185,13 @@ export default class IconEditing extends Plugin {
    * @private
    */
   static async _fetchIcon(modelElement) {
-    let options = modelElement.getAttribute('drupalIconOptions');
-    if (typeof options === 'undefined') {
-      options = '';
+    let settings = modelElement.getAttribute('drupalIconSettings');
+    if (typeof settings === 'undefined') {
+      settings = '';
     }
     const query = {
       icon_id: modelElement.getAttribute('drupalIconId'),
-      options,
+      settings,
     };
 
     const response = await fetch(

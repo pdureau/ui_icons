@@ -6,17 +6,19 @@ test_local_files:
     sources:
       - icons/local_png/{icon_id}.png
       - icons/local_png_group/{group}/{icon_id}.png
-  options:
-    foo:
-      {
-        title: 'Test',
-        description: 'Test.',
-        type: 'integer',
-        default: 50,
-        required: true,
-        suffix: 'px',
-      }
-    bar: { title: 'Test', type: 'string', default: 'baz' }
+  # Default are used for tests.
+  settings:
+    width:
+      title: 'Width'
+      type: 'integer'
+      default: 32
+    height:
+      title: 'Height'
+      type: 'integer'
+      default: 33
+    title:
+      title: 'Title'
+      default: 'default title'
 
 test_local_svg:
   label: SVG manual
@@ -26,7 +28,16 @@ test_local_svg:
     sources:
       - icons/local_svg/{icon_id}.svg
       - icons/local_svg_group/{group}/{icon_id}.svg
-    options: {}
+  # No default for tests.
+  settings:
+    width:
+      title: 'Width'
+      type: 'integer'
+    height:
+      title: 'Height'
+      type: 'integer'
+    title:
+      title: 'Title'
   template: >
     <svg xmlns="http://www.w3.org/2000/svg" width="{{ width }}" height="{{ height }}" fill="currentColor" viewBox="0 0 {{ width }} {{ height }}">
       {{ content }}
@@ -36,6 +47,13 @@ test_local_svg_sprite:
   label: Small sprite
   description: Local svg sprite file.
   extractor: svg_sprite
+  settings:
+    width:
+      title: 'Width'
+      type: 'integer'
+    height:
+      title: 'Height'
+      type: 'integer'
   config:
     sources:
       - icons/sprite/{icon_id}.svg
@@ -48,6 +66,10 @@ test_disabled_iconset:
   config:
     sources:
       - icons/local_png/{icon_id}.png
+  settings:
+    title:
+      title: 'Title'
+      default: 'default title'
 
 test_no_icons:
   label: No Icons
@@ -55,3 +77,14 @@ test_no_icons:
   config:
     sources:
       - invalid_path/{icon_id}.png
+  settings:
+    title:
+      title: 'Title'
+      default: 'default title'
+
+test_no_settings:
+  label: No Settings
+  extractor: path
+  config:
+    sources:
+      - icons/local_png/{icon_id}.png
