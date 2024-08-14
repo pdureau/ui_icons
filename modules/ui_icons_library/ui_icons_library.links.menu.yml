@@ -1,5 +1,11 @@
-ui_icons_library.index:
-  title: 'Ui Icons Library'
-  description: 'Library of icons.'
-  route_name: ui_icons_library.index
+ui_suite.index:
+  title: "UI libraries"
+  description: "Design system libraries."
+  route_name: ui_suite.index
   parent: system.themes_page
+
+ui_icons_library.index:
+  title: 'Icons'
+  description: 'Browse icons by packs.'
+  route_name: ui_icons_library.index
+  parent: ui_suite.index

@@ -1,7 +1,15 @@
-ui_icons_library.index:
-  path: '/admin/appearance/ui-icons'
+ui_suite.index:
+  path: "/admin/appearance/ui-libraries"
   defaults:
-    _title: 'UI Icons Library'
+    _controller: '\Drupal\system\Controller\SystemController::systemAdminMenuBlockPage'
+    _title: "UI libraries"
+  requirements:
+    _permission: "access patterns page+access_ui_styles_library+access_ui_examples_library"
+
+ui_icons_library.index:
+  path: '/admin/appearance/ui-libraries/icons'
+  defaults:
+    _title: 'Icons library'
     _form: 'Drupal\ui_icons_library\Form\LibrarySearchForm'
   requirements:
     _permission: 'access ui icons library'
