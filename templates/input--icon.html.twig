@@ -18,7 +18,7 @@
   <div class="ui-icons-input-wrapper">
     <div class="ui-icons-preview form-item">
       {% if icon_pack_id and icon_id %}
-        {{ icon(icon_pack_id, icon_id) }}
+        <div class="ui-icons-preview-icon">{{ icon(icon_pack_id, icon_id, { width: 48, height: 48 }) }}</div>
       {% endif %}
     </div>
     <div class="ui-icons-select">
@@ -27,7 +27,7 @@
   </div>
 
   {% if has_settings %}
-    <div class="ui-icons-settings-wrapper {% if not icon_id %}hidden{% endif %}">
+    <div class="ui-icons-settings-wrapper">
       {{ settings_form }}
     </div>
   {% endif %}

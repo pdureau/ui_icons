@@ -1,7 +1,7 @@
 ui_icons.autocomplete:
   version: VERSION
   js:
-    js/ui_icons.admin.js: {}
+    js/icon.autocomplete.js: {}
   css:
     component:
-      css/ui_icons.admin.css: {}
+      css/icon.autocomplete.css: {}

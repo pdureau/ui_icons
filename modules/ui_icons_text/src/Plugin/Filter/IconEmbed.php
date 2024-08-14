@@ -169,6 +169,7 @@ class IconEmbed extends FilterBase implements ContainerFactoryPluginInterface {
       assert($icon === NULL || $icon instanceof IconDefinitionInterface);
 
       // Use default settings if none set.
+      // @todo getRenderable should fallback to definition settings.
       if (empty($settings)) {
         [$icon_pack_id] = explode(':', $icon_id);
         $settings = $this->pluginManagerIconPack->getExtractorFormDefaults($icon_pack_id);

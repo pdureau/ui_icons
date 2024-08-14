@@ -53,15 +53,15 @@ function ui_icons_theme(array $existing, string $type, string $theme, string $pa
  * @see src/Element/IconAutocomplete.php
  */
 function template_preprocess_input__icon(array &$variables): void {
-  $variables['has_settings'] = $variables['element']['#show_settings'];
-  $variables['icon_form'] = $variables['element']['icon_id'];
+  $variables['has_settings'] = $variables['element']['#show_settings'] ?? FALSE;
+  $variables['icon_form'] = $variables['element']['icon_id'] ?? '';
 
   if (isset($variables['element']['#default_value'])) {
     [$icon_pack_id, $icon_id] = explode(':', $variables['element']['#default_value']);
     $variables['icon_pack_id'] = $icon_pack_id;
     $variables['icon_id'] = $icon_id;
   }
-  elseif (isset($variables['element']['#value']['icon_id'])) {
+  elseif (isset($variables['element']['#value']['icon_id']) && FALSE !== strpos($variables['element']['#value']['icon_id'], ':')) {
     [$icon_pack_id, $icon_id] = explode(':', $variables['element']['#value']['icon_id']);
     $variables['icon_pack_id'] = $icon_pack_id;
     $variables['icon_id'] = $icon_id;

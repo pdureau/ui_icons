@@ -111,11 +111,11 @@ final class LibrarySearchForm extends FormBase {
     if (!empty($search)) {
       $icons_list = array_filter($icons_list, fn($id) => str_contains($id, $search), ARRAY_FILTER_USE_KEY);
     }
-    $display_options = [
+    $display_settings = [
       'width' => 50,
       'height' => 50,
     ];
-    $icons = $this->filterIcons($icons_list, $iconPack, $group, $display_options);
+    $icons = $this->filterIcons($icons_list, $iconPack, $group, $display_settings);
 
     $total = count($icons);
     if ($total > 200) {
@@ -185,13 +185,13 @@ final class LibrarySearchForm extends FormBase {
    *   The icon set to filter by.
    * @param string $group
    *   The group to filter by.
-   * @param array $display_options
+   * @param array $display_settings
    *   The display options for the icons.
    *
    * @return array
    *   The filtered list of icons.
    */
-  private function filterIcons(array $icons_list, string $iconPack, string $group, array $display_options): array {
+  private function filterIcons(array $icons_list, string $iconPack, string $group, array $display_settings): array {
     $icons = [];
     foreach ($icons_list as $id => $icon) {
       if (!empty($iconPack) && $iconPack !== $icon->getIconPackId()) {
@@ -200,7 +200,7 @@ final class LibrarySearchForm extends FormBase {
       if (!empty($group) && $group !== $icon->getGroup()) {
         continue;
       }
-      $icons[$id] = $icon->getRenderable($display_options);
+      $icons[$id] = $icon->getRenderable($display_settings);
       $icons[$id]['#group'] = $icon->getGroup();
     }
     return $icons;

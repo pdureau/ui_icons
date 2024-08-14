@@ -6,7 +6,6 @@ namespace Drupal\ui_icons_example\Form;
 
 use Drupal\Core\Form\FormBase;
 use Drupal\Core\Form\FormStateInterface;
-use Drupal\Core\Form\SubformState;
 use Drupal\Core\Render\Element;
 use Drupal\ui_icons\Plugin\IconExtractorPluginManager;
 use Drupal\ui_icons\Plugin\IconPackManagerInterface;
@@ -113,23 +112,21 @@ final class IconExampleForm extends FormBase {
     $form['icons']['icons_autocomplete'] = [
       '#type' => 'icon_autocomplete',
       '#title' => $this->t('Icon selector'),
-      '#placeholder' => $this->t('Start typing icon name'),
+      '#placeholder' => $this->t('Test me'),
     ];
 
     $form['icons']['icons_autocomplete_settings'] = [
       '#type' => 'icon_autocomplete',
       '#title' => $this->t('Icon selector with settings'),
-      '#placeholder' => $this->t('Start typing icon name'),
       '#show_settings' => TRUE,
     ];
-
+    
     $allowed = array_slice(array_keys($iconPack), 0, 1);
     $names = $this->pluginManagerIconPack->listIconPackOptions();
     $form['icons']['icons_autocomplete_limit'] = [
       '#type' => 'icon_autocomplete',
       '#title' => $this->t('Icon selector limited'),
       '#description' => $this->t('Limited to: @name.', ['@name' => $names[$allowed[0]]]),
-      '#placeholder' => $this->t('Start typing icon name'),
       '#allowed_icon_pack' => $allowed,
     ];
 
@@ -139,8 +136,8 @@ final class IconExampleForm extends FormBase {
     $form['icons']['icons_select_limited'] = [
       '#type' => 'select',
       '#title' => $this->t('Icon select limited'),
-      '#description' => $this->t('Limited to 20 first: @name.', ['@name' => $names[$allowed[0]]]),
-      '#options' => array_slice($options, 0, 20),
+      '#description' => $this->t('Limited to 30 first: @name.', ['@name' => $names[$allowed[0]]]),
+      '#options' => array_slice($options, 0, 30),
       '#sort_options' => TRUE,
     ];
 
@@ -191,15 +188,12 @@ final class IconExampleForm extends FormBase {
       if (!isset($plugin['label']) || !isset($plugin['extractor'])) {
         continue;
       }
-
-      $extractor_id = $plugin['extractor'];
-
-      $params = ['@icon_pack_id' => $icon_pack_id, '@extractor_id' => $extractor_id];
-      $message[] = $this->t('Run validate extractor for: @icon_pack_id:@extractor_id', $params);
+      $params = ['@icon_pack_id' => $icon_pack_id];
+      $message[] = $this->t('Run validate extractor for: @icon_pack_id:', $params);
 
       // Isolate the form part of the extractor to validate.
-      $subform = $form['settings'][$icon_pack_id][$extractor_id];
-      $extractor_forms[$extractor_id]->validateConfigurationForm($subform, SubformState::createForSubform($subform, $form, $form_state));
+      // $subform = $form['settings'][$icon_pack_id][$extractor_id];
+      // $extractor_forms[$extractor_id]->validateConfigurationForm($subform, SubformState::createForSubform($subform, $form, $form_state));
     }
     
     $this->messenger()->addStatus(implode("<br>", $message));
@@ -227,8 +221,8 @@ final class IconExampleForm extends FormBase {
       $message[] = $this->t('Run submit extractor for: @icon_pack_id:@extractor_id', $params);
 
       // Isolate the form part of the extractor to validate.
-      $subform = $form['settings'][$icon_pack_id][$extractor_id];
-      $extractor_forms[$extractor_id]->submitConfigurationForm($subform, SubformState::createForSubform($subform, $form, $form_state));
+      // $subform = $form['settings'][$icon_pack_id][$extractor_id];
+      // $extractor_forms[$extractor_id]->submitConfigurationForm($subform, SubformState::createForSubform($subform, $form, $form_state));
     }
     
     $this->messenger()->addStatus(implode("<br>", $message));

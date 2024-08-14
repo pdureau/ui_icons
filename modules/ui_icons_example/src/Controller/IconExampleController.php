@@ -40,8 +40,9 @@ final class IconExampleController extends ControllerBase {
   public function __invoke(): array {
     $build = [];
 
-    $icons = $this->pluginManagerIconPack->getIcons();
-    $icons = array_splice($icons, 3, 10);
+    $all_icons = $this->pluginManagerIconPack->getIcons();
+    $rand_keys = array_rand($all_icons, 10);
+    $icons = array_intersect_key($all_icons, array_flip($rand_keys));
 
     $build['twig'] = [
       '#type' => 'fieldset',
@@ -60,7 +61,7 @@ final class IconExampleController extends ControllerBase {
     ];
 
     foreach ($icons as $icon) {
-      $template = '{{ icon("' . $icon->getIconPackId() . '", "' . $icon->getIconId() . '", { width: 100, height: 100 }) }}';
+      $template = '{{ icon("' . $icon->getIconPackId() . '", "' . $icon->getIconId() . '", { width: 64, height: 64 }) }}';
       $build['twig'][]['code'] = [
         '#markup' => '<pre><code>' . $template . '</code></pre>',
       ];
@@ -75,26 +76,26 @@ final class IconExampleController extends ControllerBase {
         '#icon_pack' => $icon->getIconPackId(),
         '#icon' => $icon->getIconId(),
         '#context' => [
-          'width' => 50,
-          'height' => 50,
+          'width' => 24,
+          'height' => 24,
         ],
         '#prefix' => '<div class="form-item">',
         '#suffix' => '</div>&nbsp;&nbsp;',
       ];
       $build['element'][] = $base;
       $base['#context'] = [
-        'width' => 100,
-        'height' => 100,
+        'width' => 48,
+        'height' => 48,
       ];
       $build['element'][] = $base;
       $base['#context'] = [
-        'width' => 150,
-        'height' => 150,
+        'width' => 96,
+        'height' => 96,
       ];
       $build['element'][] = $base;
       $base['#context'] = [
-        'width' => 200,
-        'height' => 200,
+        'width' => 128,
+        'height' => 128,
       ];
       $build['element'][] = $base;
       $build['element'][] = ['#markup' => '<hr>'];

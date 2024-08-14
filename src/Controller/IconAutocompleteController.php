@@ -12,7 +12,6 @@ use Drupal\ui_icons\Plugin\IconPackManagerInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpFoundation\Response;
 
 /**
  * Returns responses for UI Icons routes.
@@ -37,35 +36,6 @@ class IconAutocompleteController extends ControllerBase {
       $container->get('plugin.manager.ui_icons_pack'),
       $container->get('renderer'),
     );
-  }
-
-  /**
-   * Menu callback for UI Icons icon request.
-   *
-   * This function inspects the 'q' query parameter for the icon ID.
-   * Optional width and height parameters can be set.
-   *
-   * @return \Symfony\Component\HttpFoundation\Response
-   *   A response containing the rendered icon.
-   */
-  public function handleRenderIcon(Request $request): Response {
-    $icon_id = $request->query->get('q', NULL);
-    if (empty($icon_id)) {
-      return new Response();
-    }
-
-    $width = $request->query->get('width', 32);
-    $height = $request->query->get('height', 32);
-
-    $icon = $this->pluginManagerIconPack->getIcon((string) $icon_id);
-    if (!$icon) {
-      return new Response();
-    }
-    $icon_renderable = $icon->getRenderable(['width' => $width, 'height' => $height]);
-    $renderable = $this->renderer->renderInIsolation($icon_renderable);
-
-    $response = new Response((string) $renderable, 200);
-    return $response;
   }
 
   /**
@@ -174,7 +144,8 @@ class IconAutocompleteController extends ControllerBase {
    */
   private function createResultEntry(string $icon_id, IconDefinitionInterface $icon): array {
     $label = sprintf('%s (%s)', $icon->getIconId(), $icon->getIconPackLabel());
-    $icon_renderable = $icon->getRenderable(['width' => 20, 'height' => 20]);
+    // @todo width and height could not be used in definition.
+    $icon_renderable = $icon->getRenderable(['width' => 24, 'height' => 24]);
     $renderable = $this->renderer->renderInIsolation($icon_renderable);
     $param = ['@icon' => $renderable, '@name' => $label];
     $label = new FormattableMarkup('<span class="ui-menu-icon">@icon</span> @name', $param);

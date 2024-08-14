@@ -7,7 +7,7 @@ namespace Drupal\Tests\ui_icons\Unit\Element;
 use Drupal\Core\DependencyInjection\ContainerBuilder;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\StringTranslation\TranslatableMarkup;
-use Drupal\Tests\UnitTestCase;
+use Drupal\Tests\ui_icons\Unit\IconUnitTestCase;
 use Drupal\ui_icons\Element\IconAutocomplete;
 use Drupal\ui_icons\IconDefinition;
 use Drupal\ui_icons\Plugin\IconPackManagerInterface;
@@ -17,7 +17,7 @@ use Drupal\ui_icons\Plugin\IconPackManagerInterface;
  *
  * @group ui_icons
  */
-class IconAutocompleteTest extends UnitTestCase {
+class IconAutocompleteTest extends IconUnitTestCase {
 
   /**
    * The container.
@@ -62,6 +62,12 @@ class IconAutocompleteTest extends UnitTestCase {
 
     $this->assertArrayHasKey('#show_settings', $info);
     $this->assertFalse($info['#show_settings']);
+
+    $this->assertArrayHasKey('#default_settings', $info);
+    $this->assertSame([], $info['#default_settings']);
+
+    $this->assertArrayHasKey('#settings_title', $info);
+    $this->assertEquals(new TranslatableMarkup('Settings'), $info['#settings_title']);
   }
 
   /**
@@ -71,7 +77,10 @@ class IconAutocompleteTest extends UnitTestCase {
     $form_state = $this->createMock(FormStateInterface::class);
     $complete_form = [];
 
-    $element = [];
+    $element = [
+      '#parents' => ['foo'],
+      '#array_parents' => ['bar/foo'],
+    ];
     IconAutocomplete::processIcon($element, $form_state, $complete_form);
     $this->assertTrue($element['#tree']);
 
@@ -86,6 +95,8 @@ class IconAutocompleteTest extends UnitTestCase {
 
     // Test empty allowed.
     $element = [
+      '#parents' => ['foo'],
+      '#array_parents' => ['bar/foo'],
       '#allowed_icon_pack' => [],
     ];
     IconAutocomplete::processIcon($element, $form_state, $complete_form);
@@ -100,10 +111,14 @@ class IconAutocompleteTest extends UnitTestCase {
     $complete_form = [];
 
     $ui_icons_pack_plugin_manager = $this->createMock(IconPackManagerInterface::class);
+    $ui_icons_pack_plugin_manager->expects($this->once())->method('getIcon')->willReturn($this->createMockIcon());
+    // @todo test with added values to the icon_settings form.
     $ui_icons_pack_plugin_manager->expects($this->once())->method('getExtractorPluginForms');
     $this->container->set('plugin.manager.ui_icons_pack', $ui_icons_pack_plugin_manager);
 
     $element = [
+      '#parents' => ['foo'],
+      '#array_parents' => ['bar', 'foo'],
       '#size' => 20,
       '#default_value' => 'test:icon',
       '#allowed_icon_pack' => ['foo', 'bar', 'baz'],
@@ -116,22 +131,19 @@ class IconAutocompleteTest extends UnitTestCase {
     ];
     IconAutocomplete::processIcon($element, $form_state, $complete_form);
 
-    $expected_icon = [
-      '#type' => 'textfield',
-      '#title' => new TranslatableMarkup('Icon'),
-      '#placeholder' => $element['#placeholder'],
-      '#title_display' => 'invisible',
-      '#autocomplete_route_name' => 'ui_icons.autocomplete',
-      '#attributes' => $element['#attributes'],
-      '#required' => $element['#required'],
-      '#size' => $element['#size'],
-      '#maxlength' => 128,
-      '#error_no_message' => TRUE,
-      '#autocomplete_query_parameters' => ['allowed_icon_pack' => 'foo+bar+baz'],
-    ];
-    $this->assertEquals($expected_icon, $element['icon_id']);
+    $this->assertArrayHasKey('icon_id', $element);
+    $this->assertEquals($element['#size'], $element['icon_id']['#size']);
+    $this->assertEquals($element['#placeholder'], $element['icon_id']['#placeholder']);
+    $this->assertEquals($element['#default_value'], $element['icon_id']['#value']);
+    $this->assertEquals([$element['#parents']], $element['icon_id']['#limit_validation_errors']);
+
+    $this->assertArrayHasKey('#ajax', $element['icon_id']);
+    $this->assertEquals('bar/foo', $element['icon_id']['#ajax']['options']['query']['element_parents']);
+    $this->assertEquals('foo+bar+baz', $element['icon_id']['#autocomplete_query_parameters']['allowed_icon_pack']);
 
     $this->assertArrayHasKey('icon_settings', $element);
+    $this->assertEquals('icon[foo]', $element['icon_settings']['#name']);
+    $this->assertEquals($element['#settings_title'], $element['icon_settings']['#title']);
   }
 
   /**

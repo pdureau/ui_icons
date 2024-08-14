@@ -11,24 +11,19 @@ parameters:
 			path: modules/ui_icons_field/src/Plugin/Field/FieldWidget/IconWidget.php
 
 		-
-			message: "#^Access to an undefined property Drupal\\\\Core\\\\Entity\\\\EntityInterface\\:\\:\\$icon\\.$#"
-			count: 1
-			path: modules/ui_icons_field/tests/src/Kernel/IconWidgetTest.php
-
-		-
-			message: "#^Property Drupal\\\\ui_icons_field\\\\Kernel\\\\Plugin\\\\IconWidgetTest\\:\\:\\$widget is never read, only written\\.$#"
-			count: 1
-			path: modules/ui_icons_field/tests/src/Kernel/IconWidgetTest.php
-
-		-
-			message: "#^Cannot call method getUntranslatedString\\(\\) on string\\|Stringable\\.$#"
-			count: 1
-			path: modules/ui_icons_field/tests/src/Unit/IconFormatterTest.php
-
-		-
 			message: "#^Method Drupal\\\\ui_icons_text\\\\Plugin\\\\Filter\\\\IconEmbed\\:\\:tips\\(\\) should return string\\|null but returns Drupal\\\\Core\\\\StringTranslation\\\\TranslatableMarkup\\.$#"
 			count: 2
 			path: modules/ui_icons_text/src/Plugin/Filter/IconEmbed.php
+
+		-
+			message: "#^Parameter \\#1 \\$selector of class Drupal\\\\Core\\\\Ajax\\\\ReplaceCommand constructor expects string, null given\\.$#"
+			count: 1
+			path: src/Element/IconAutocomplete.php
+
+		-
+			message: "#^Parameter \\#2 \\$content of class Drupal\\\\Core\\\\Ajax\\\\ReplaceCommand constructor expects array\\|string, Drupal\\\\Component\\\\Render\\\\MarkupInterface given\\.$#"
+			count: 1
+			path: src/Element/IconAutocomplete.php
 
 		-
 			message: "#^Call to an undefined method Drupal\\\\Core\\\\Form\\\\FormStateInterface\\:\\:getCompleteFormState\\(\\)\\.$#"
@@ -49,13 +44,3 @@ parameters:
 			message: "#^Call to an undefined method Drupal\\\\Component\\\\Plugin\\\\PluginInspectionInterface\\:\\:validateConfigurationForm\\(\\)\\.$#"
 			count: 1
 			path: src/PluginForm/IconPackExtractorForm.php
-
-		-
-			message: "#^Parameter \\#1 \\$class of method Drupal\\\\Component\\\\Plugin\\\\Attribute\\\\AttributeBase\\:\\:setClass\\(\\) expects class\\-string, string given\\.$#"
-			count: 1
-			path: tests/src/Unit/Attribute/IconExtractorTest.php
-
-		-
-			message: "#^Call to an undefined method Drupal\\\\ui_icons\\\\Plugin\\\\IconPackManagerInterface\\:\\:method\\(\\)\\.$#"
-			count: 2
-			path: tests/src/Unit/Template/IconTwigExtensionTest.php

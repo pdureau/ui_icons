@@ -12,7 +12,6 @@ use Drupal\ui_icons\Plugin\IconPackManagerInterface;
 use Prophecy\Argument;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpFoundation\Response;
 
 /**
  * Tests IconAutocompleteController Controller class.
@@ -49,93 +48,6 @@ class IconAutocompleteControllerTest extends IconUnitTestCase {
     $iconAutocompleteController = new IconAutocompleteController($iconPackManager, $renderer);
 
     $this->assertInstanceOf('Drupal\ui_icons\Controller\IconAutocompleteController', $iconAutocompleteController);
-  }
-
-  /**
-   * Test the handleRenderIcon method.
-   *
-   * @param string|null $iconId
-   *   The ID of the icon to be rendered. Can be null.
-   * @param bool $hasResult
-   *   Should have icon result.
-   * @param array $queryParams
-   *   The query parameters to be passed in the request.
-   * @param array|null $iconData
-   *   The data of the icon to be rendered. Can be null.
-   * @param string $expectedContent
-   *   The expected content of the response.
-   * @param int $expectedStatusCode
-   *   The expected status code of the response.
-   *
-   * @dataProvider handleRenderIconDataProvider
-   */
-  public function testHandleRenderIcon(?string $iconId, bool $hasResult, array $queryParams, ?array $iconData, string $expectedContent, int $expectedStatusCode): void {
-    $prophecy = $this->prophesize(IconPackManagerInterface::class);
-    if ($hasResult) {
-      $icon = $this->createMockIcon($iconData);
-      $prophecy->getIcon($iconId)->willReturn($icon);
-    }
-    else {
-      $prophecy->getIcon(Argument::any())->willReturn(NULL);
-    }
-    $iconPackManager = $prophecy->reveal();
-    $this->container->set('plugin.manager.ui_icons_pack', $iconPackManager);
-
-    $prophecy = $this->prophesize(RendererInterface::class);
-    $prophecy->renderInIsolation(Argument::any())->willReturn($expectedContent);
-    $renderer = $prophecy->reveal();
-    $this->container->set('renderer', $renderer);
-
-    $iconAutocompleteController = new IconAutocompleteController($iconPackManager, $renderer);
-
-    $request = new Request($queryParams);
-    $actual = $iconAutocompleteController->handleRenderIcon($request);
-
-    $expected = new Response($expectedContent, $expectedStatusCode);
-    $this->assertEquals($expected, $actual);
-  }
-
-  /**
-   * Provide data for testHandleRenderIcon.
-   *
-   * @return array
-   *   Test data.
-   */
-  public static function handleRenderIconDataProvider(): array {
-    return [
-      'empty query' => [
-        'iconId' => NULL,
-        'hasResult' => FALSE,
-        'queryParams' => ['q' => ''],
-        'iconData' => NULL,
-        'expectedContent' => '',
-        'expectedStatusCode' => 200,
-      ],
-      'valid icon query' => [
-        'iconId' => 'foo:bar',
-        'hasResult' => TRUE,
-        'queryParams' => ['q' => 'foo:bar', 'width' => 100, 'height' => 100],
-        'iconData' => ['icon_pack_id' => 'foo', 'icon_id' => 'bar', 'width' => 100, 'height' => 100],
-        'expectedContent' => '_rendered_',
-        'expectedStatusCode' => 200,
-      ],
-      'valid icon query with custom dimensions' => [
-        'iconId' => 'foo:bar',
-        'hasResult' => TRUE,
-        'queryParams' => ['q' => 'foo:bar', 'width' => 200, 'height' => 200],
-        'iconData' => ['icon_pack_id' => 'foo', 'icon_id' => 'bar', 'width' => 200, 'height' => 200],
-        'expectedContent' => '_rendered_',
-        'expectedStatusCode' => 200,
-      ],
-      'invalid query' => [
-        'iconId' => 'foo:bar',
-        'hasResult' => FALSE,
-        'queryParams' => ['q' => 'baz:foo', 'width' => 100, 'height' => 100],
-        'iconData' => NULL,
-        'expectedContent' => '',
-        'expectedStatusCode' => 200,
-      ],
-    ];
   }
 
   /**
