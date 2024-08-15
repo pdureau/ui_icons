@@ -56,18 +56,18 @@ class IconExtractorPluginManager extends DefaultPluginManager {
   /**
    * Get an extractor settings form.
    *
-   * @param array $extractor_configuration
+   * @param array $icon_pack_configuration
    *   The extractor configuration.
    *
    * @return \Drupal\Core\Plugin\PluginFormInterface|null
    *   The extractor form or null.
    */
-  public function getExtractorForm(array $extractor_configuration): ?PluginFormInterface {
-    if (!isset($extractor_configuration['settings'])) {
+  public function getExtractorForm(array $icon_pack_configuration): ?PluginFormInterface {
+    if (!isset($icon_pack_configuration['settings'])) {
       return NULL;
     }
     /** @var \Drupal\ui_icons\Plugin\IconExtractorPluginInterface $plugin */
-    $plugin = $this->createInstance($extractor_configuration['extractor'], $extractor_configuration);
+    $plugin = $this->createInstance($icon_pack_configuration['extractor'], $icon_pack_configuration);
     return $this->getPluginForm($plugin);
   }
 

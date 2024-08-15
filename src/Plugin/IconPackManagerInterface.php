@@ -82,13 +82,13 @@ interface IconPackManagerInterface extends PluginManagerInterface {
   /**
    * Retrieve extractor default options.
    *
-   * @param string $iconPack
+   * @param string $icon_pack_id
    *   The icon pack to look for.
    *
    * @return array
    *   The extractor defaults options.
    */
-  public function getExtractorFormDefaults(string $iconPack): array;
+  public function getExtractorFormDefaults(string $icon_pack_id): array;
 
   /**
    * Performs extra processing on plugin definitions.

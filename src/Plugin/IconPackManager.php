@@ -184,15 +184,15 @@ class IconPackManager extends DefaultPluginManager implements IconPackManagerInt
   /**
    * {@inheritdoc}
    */
-  public function getExtractorFormDefaults(string $iconPack): array {
+  public function getExtractorFormDefaults(string $icon_pack_id): array {
     $all_icon_pack = $this->getCleanDefinitions();
 
-    if (!isset($all_icon_pack[$iconPack]) || !isset($all_icon_pack[$iconPack]['settings'])) {
+    if (!isset($all_icon_pack[$icon_pack_id]) || !isset($all_icon_pack[$icon_pack_id]['settings'])) {
       return [];
     }
 
     $default = [];
-    foreach ($all_icon_pack[$iconPack]['settings'] as $name => $definition) {
+    foreach ($all_icon_pack[$icon_pack_id]['settings'] as $name => $definition) {
       if (isset($definition['default'])) {
         $default[$name] = $definition['default'];
       }

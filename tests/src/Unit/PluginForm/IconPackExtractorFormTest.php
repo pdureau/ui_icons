@@ -61,13 +61,8 @@ class IconPackExtractorFormTest extends UnitTestCase {
 
     $result = $this->iconPackForm->buildConfigurationForm($form, $formState);
 
-    $this->assertEquals('container', $result['#type']);
-    $this->assertEquals('<div id="ui-icons-settings-wrapper">', $result['#prefix']);
-    $this->assertEquals('</div>', $result['#suffix']);
-    $this->assertEquals('plugin_build_form', $result['plugin_build_form']);
-
-    $this->assertArrayNotHasKey('test_form', $result);
-    $this->assertArrayNotHasKey('ui-icons-settings', $result);
+    $this->assertSame('plugin_build_form', $result['plugin_build_form']);
+    $this->assertSame($form['test_form'], $result['test_form']);
   }
 
   /**

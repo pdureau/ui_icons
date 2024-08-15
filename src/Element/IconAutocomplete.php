@@ -239,14 +239,16 @@ class IconAutocomplete extends FormElementBase {
       'event' => 'autocompleteclose change',
     ];
 
-    // If no settings or no value found.
-    if (FALSE === (bool) $element['#show_settings']) {
-      return $element;
-    }
-
     // ProcessIcon will handle #value or #default_value.
     $icon_full_id = $element['icon_id']['#value'] ?? NULL;
     if (!$icon_full_id || FALSE === strpos($icon_full_id, ':') || NULL === self::iconPack()->getIcon($icon_full_id)) {
+      // If a default value based on a disabled icon pack exist, clear it.
+      unset($element['icon_id']['#value']);
+      return $element;
+    }
+
+    // If no settings or no value found.
+    if (FALSE === (bool) $element['#show_settings']) {
       return $element;
     }
 
@@ -256,7 +258,8 @@ class IconAutocomplete extends FormElementBase {
       '#title' => $element['#settings_title'],
     ];
 
-    [$icon_pack_id, $icon_id] = explode(':', $icon_full_id);
+    $icon_full_id = explode(':', $icon_full_id);
+    $icon_pack_id = $icon_full_id[0];
     $allowed_icon_pack = $element['#allowed_icon_pack'] ?? [];
 
     self::iconPack()->getExtractorPluginForms(
@@ -325,13 +328,14 @@ class IconAutocomplete extends FormElementBase {
     $settings = [];
     if (isset($input['icon_settings'][$icon_pack_id])) {
       $settings[$icon_pack_id] = $input['icon_settings'][$icon_pack_id];
+      // @todo validateConfigurationForm from extractor plugin.
     }
 
     $form_state->setValueForElement($element, ['icon' => $icon, 'settings' => $settings]);
   }
 
   /**
-   * Wraps the file icon pack service.
+   * Wraps the icon pack service.
    *
    * @return \Drupal\ui_icons\Plugin\IconPackManagerInterface
    *   The icon pack manager service.
