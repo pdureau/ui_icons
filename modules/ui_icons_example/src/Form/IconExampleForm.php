@@ -109,13 +109,13 @@ final class IconExampleForm extends FormBase {
       '#weight' => 1,
     ];
 
-    $form['icons']['icons_autocomplete'] = [
+    $form['icons']['icon_autocomplete'] = [
       '#type' => 'icon_autocomplete',
       '#title' => $this->t('Icon selector'),
       '#placeholder' => $this->t('Test me'),
     ];
 
-    $form['icons']['icons_autocomplete_settings'] = [
+    $form['icons']['icon_autocomplete_settings'] = [
       '#type' => 'icon_autocomplete',
       '#title' => $this->t('Icon selector with settings'),
       '#show_settings' => TRUE,
@@ -123,7 +123,7 @@ final class IconExampleForm extends FormBase {
     
     $allowed = array_slice(array_keys($iconPack), 0, 1);
     $names = $this->pluginManagerIconPack->listIconPackOptions();
-    $form['icons']['icons_autocomplete_limit'] = [
+    $form['icons']['icon_autocomplete_limit'] = [
       '#type' => 'icon_autocomplete',
       '#title' => $this->t('Icon selector limited'),
       '#description' => $this->t('Limited to: @name.', ['@name' => $names[$allowed[0]]]),
@@ -176,66 +176,17 @@ final class IconExampleForm extends FormBase {
   /**
    * {@inheritdoc}
    */
-  public function validateForm(array &$form, FormStateInterface $form_state): void {
-    // Example to run all form extractor plugin validate methods.
-    $iconPack = $this->pluginManagerIconPack->getDefinitions();
-    unset($iconPack['_icons_loaded']);
-    $extractor_forms = $this->iconPackExtractorManager->getExtractorForms($iconPack);
-
-    $message = [];
-
-    foreach ($iconPack as $icon_pack_id => $plugin) {
-      if (!isset($plugin['label']) || !isset($plugin['extractor'])) {
-        continue;
-      }
-      $params = ['@icon_pack_id' => $icon_pack_id];
-      $message[] = $this->t('Run validate extractor for: @icon_pack_id:', $params);
-
-      // Isolate the form part of the extractor to validate.
-      // $subform = $form['settings'][$icon_pack_id][$extractor_id];
-      // $extractor_forms[$extractor_id]->validateConfigurationForm($subform, SubformState::createForSubform($subform, $form, $form_state));
-    }
-    
-    $this->messenger()->addStatus(implode("<br>", $message));
-  }
-
-  /**
-   * {@inheritdoc}
-   */
   public function submitForm(array &$form, FormStateInterface $form_state): void {
-    // Example to run all form extractor plugin submit methods.
-    $iconPack = $this->pluginManagerIconPack->getDefinitions();
-    unset($iconPack['_icons_loaded']);
-    $extractor_forms = $this->iconPackExtractorManager->getExtractorForms($iconPack);
-
-    $message = [];
-
-    foreach ($iconPack as $icon_pack_id => $plugin) {
-      if (!isset($plugin['label']) || !isset($plugin['extractor'])) {
-        continue;
-      }
-
-      $extractor_id = $plugin['extractor'];
-
-      $params = ['@icon_pack_id' => $icon_pack_id, '@extractor_id' => $extractor_id];
-      $message[] = $this->t('Run submit extractor for: @icon_pack_id:@extractor_id', $params);
-
-      // Isolate the form part of the extractor to validate.
-      // $subform = $form['settings'][$icon_pack_id][$extractor_id];
-      // $extractor_forms[$extractor_id]->submitConfigurationForm($subform, SubformState::createForSubform($subform, $form, $form_state));
-    }
-    
-    $this->messenger()->addStatus(implode("<br>", $message));
-
-    $message = [];
     // Process the form, only display values for example.
     $values = $form_state->getValues();
 
-    foreach ($values['icons'] as $key_form => $icons) {
-      $message[] = $key_form . ': ' . (is_array($icons) ? implode(', ', $icons) : $icons);
+    foreach ($values['icons'] as $key_form => $icon) {
+      if (isset($icon['icon'])) {
+        $this->messenger()->addStatus($this->t('Saved icon for @key: @label', ['@key' => $key_form, '@label' => $icon['icon']->getLabel()]));
+      }
     }
     foreach ($values['icon_pack'] as $key_form => $iconPack) {
-      $message[] = $key_form . ': ' . (is_array($iconPack) ? implode(', ', $iconPack) : $iconPack);
+      $this->messenger()->addStatus($this->t('Saved icon pack for @pack', ['@pack' => (is_array($iconPack) ? implode(', ', $iconPack) : $iconPack)]));
     }
 
     foreach ($values['settings'] as $settings) {
@@ -246,17 +197,15 @@ final class IconExampleForm extends FormBase {
         if (!is_array($plugin_values)) {
           continue;
         }
-        $message[] = $this->t('Plugin @name submitted:', ['@name' => $plugin_id]);
+        $this->messenger()->addStatus($this->t('Plugin @name submitted:', ['@name' => $plugin_id]));
         foreach ($plugin_values as $key => $value) {
           if (FALSE !== strpos($key, 'form_') || 'op' === $key || 'submit' === $key) {
             continue;
           }
-          $message[] = $key . ': ' . $value;
+          $this->messenger()->addStatus($this->t('Save value @key: @value', ['@key' => $key, '@value' => $value]));
         }
       }
     }
-
-    $this->messenger()->addStatus(implode("<br>", $message));
   }
 
 }

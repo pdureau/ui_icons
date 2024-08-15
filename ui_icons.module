@@ -61,8 +61,8 @@ function template_preprocess_input__icon(array &$variables): void {
     $variables['icon_pack_id'] = $icon_pack_id;
     $variables['icon_id'] = $icon_id;
   }
-  elseif (isset($variables['element']['#value']['icon_id']) && FALSE !== strpos($variables['element']['#value']['icon_id'], ':')) {
-    [$icon_pack_id, $icon_id] = explode(':', $variables['element']['#value']['icon_id']);
+  elseif (isset($variables['element']['icon_id']['#value']) && FALSE !== strpos($variables['element']['icon_id']['#value'], ':')) {
+    [$icon_pack_id, $icon_id] = explode(':', $variables['element']['icon_id']['#value']);
     $variables['icon_pack_id'] = $icon_pack_id;
     $variables['icon_id'] = $icon_id;
   }
@@ -73,9 +73,6 @@ function template_preprocess_input__icon(array &$variables): void {
 
   if (isset($variables['element']['icon_settings'])) {
     $variables['settings_form'] = $variables['element']['icon_settings'];
-  }
-  elseif (isset($variables['element']['#default_settings'])) {
-    $variables['settings_form'] = $variables['element']['#default_settings'];
   }
 
 }

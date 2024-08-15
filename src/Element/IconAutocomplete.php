@@ -28,12 +28,14 @@ use Symfony\Component\HttpFoundation\Request;
  * - #allowed_icon_pack: (array) Icon pack to limit the selection.
  *
  * Some base properties from FormElementBase.
- * - #description: (string) Help or description text for the element.
- * - #placeholder' => (string) Placeholder text, default to
+ * - #description: (string) Help or description text for the input element.
+ * - #placeholder: (string) Placeholder text for the input, default to
  *   'Start typing icon name'.
- * - #attributes': (array) Attributes to the input element.
  * - #required: (bool) Whether or not input is required on the element.
  * - #size: (int): Textfield size, default 55.
+ *
+ * Global properties applied to the parent element:
+ * - #attributes': (array) Attributes to the global element.
  *
  * @see web/core/lib/Drupal/Core/Render/Element/FormElementBase.php
  *
@@ -66,6 +68,7 @@ class IconAutocomplete extends FormElementBase {
       ],
       '#process' => [
         [$class, 'processIcon'],
+        [$class, 'processIconAjaxForm'],
         [$class, 'processAjaxForm'],
         [$class, 'processGroup'],
       ],
@@ -84,7 +87,7 @@ class IconAutocomplete extends FormElementBase {
   /**
    * {@inheritdoc}
    */
-  public static function valueCallback(&$element, $input, FormStateInterface $form_state): mixed {
+  public static function valueCallback(mixed &$element, mixed $input, FormStateInterface $form_state): mixed {
     $icon = NULL;
     if ($input !== FALSE && !empty($input['icon_id'])) {
       $return = $input;
@@ -130,7 +133,7 @@ class IconAutocomplete extends FormElementBase {
    * @return \Drupal\Core\Ajax\AjaxResponse
    *   The ajax response of the ajax icon.
    */
-  public static function buildSettingsAjaxCallback(array &$form, FormStateInterface &$form_state, Request $request) {
+  public static function buildSettingsAjaxCallback(array &$form, FormStateInterface &$form_state, Request $request): AjaxResponse {
     /** @var \Drupal\Core\Render\RendererInterface $renderer */
     $renderer = \Drupal::service('renderer');
 
@@ -153,7 +156,7 @@ class IconAutocomplete extends FormElementBase {
   }
 
   /**
-   * Callback for #options form element property.
+   * Callback for creating form sub element icon_id.
    *
    * @param array $element
    *   An associative array containing the properties and children of the
@@ -164,12 +167,51 @@ class IconAutocomplete extends FormElementBase {
    *   The complete form structure.
    *
    * @return array
-   *   The processed element with added extractor plugin setting forms.
+   *   The processed element with icon_id element.
    */
-  public static function processIcon(&$element, FormStateInterface $form_state, &$complete_form): array {
+  public static function processIcon(array &$element, FormStateInterface $form_state, array &$complete_form): array {
     $element['#tree'] = TRUE;
-    $element['#limit_validation_errors'] = [];
 
+    $element['icon_id'] = [
+      '#type' => 'textfield',
+      '#title' => new TranslatableMarkup('Icon'),
+      '#placeholder' => $element['#placeholder'] ?? new TranslatableMarkup('Start typing icon name'),
+      '#title_display' => 'invisible',
+      '#autocomplete_route_name' => 'ui_icons.autocomplete',
+      '#required' => $element['#required'] ?? FALSE,
+      '#size' => $element['#size'] ?? 55,
+      '#maxlength' => 128,
+      '#value' => $element['#value']['icon_id'] ?? $element['#default_value'] ?? '',
+      '#error_no_message' => TRUE,
+      // Ensure the validateIcon is run.
+      '#limit_validation_errors' => [$element['#parents']],
+    ];
+
+    // Clean unwanted values on parent.
+    unset($element['#size'], $element['#placeholder']);
+
+    if (!empty($element['#allowed_icon_pack'])) {
+      $element['icon_id']['#autocomplete_query_parameters']['allowed_icon_pack'] = implode('+', $element['#allowed_icon_pack']);
+    }
+
+    return $element;
+  }
+
+  /**
+   * Callback for #ajax and settings form element.
+   *
+   * @param array $element
+   *   An associative array containing the properties and children of the
+   *   generic input element.
+   * @param \Drupal\Core\Form\FormStateInterface $form_state
+   *   The current state of the form.
+   * @param array $complete_form
+   *   The complete form structure.
+   *
+   * @return array
+   *   The processed element with added #ajax and extractor setting forms.
+   */
+  public static function processIconAjaxForm(array &$element, FormStateInterface $form_state, array &$complete_form): array {
     // Generate a unique wrapper HTML ID.
     $ajax_wrapper_id = Html::getUniqueId('ajax-wrapper');
 
@@ -179,44 +221,32 @@ class IconAutocomplete extends FormElementBase {
 
     $parents_prefix = implode('_', $element['#parents']);
 
-    $element['icon_id'] = [
-      '#type' => 'textfield',
-      '#title' => new TranslatableMarkup('Icon'),
-      '#placeholder' => $element['#placeholder'] ?? new TranslatableMarkup('Start typing icon name'),
-      '#title_display' => 'invisible',
-      '#autocomplete_route_name' => 'ui_icons.autocomplete',
-      '#attributes' => $element['#attributes'] ?? [],
-      '#required' => $element['#required'] ?? FALSE,
-      '#size' => $element['#size'] ?? 55,
-      '#maxlength' => 128,
-      '#value' => $element['#value']['icon_id'] ?? $element['#default_value'] ?? '',
-      '#error_no_message' => TRUE,
-      '#limit_validation_errors' => [$element['#parents']],
-      '#ajax' => [
-        'callback' => [static::class, 'buildSettingsAjaxCallback'],
-        'options' => [
-          'query' => [
-            'element_parents' => implode('/', $element['#array_parents']),
-          ],
+    $element['icon_id']['#ajax'] = [
+      'callback' => [static::class, 'buildSettingsAjaxCallback'],
+      'options' => [
+        'query' => [
+          'element_parents' => implode('/', $element['#array_parents']),
         ],
-        // Autocomplete is already doing the ajax progress.
-        'progress' => [
-          'type' => 'none',
-        ],
-        'disable-refocus' => TRUE,
-        'wrapper' => $ajax_wrapper_id,
-        'effect' => 'none',
-        // As we used autocomplete we want matching events.
-        'event' => 'autocompleteclose change',
       ],
+      // Autocomplete is already doing the ajax progress.
+      'progress' => [
+        'type' => 'none',
+      ],
+      'disable-refocus' => TRUE,
+      'wrapper' => $ajax_wrapper_id,
+      'effect' => 'none',
+      // As we used autocomplete we want matching events.
+      'event' => 'autocompleteclose change',
     ];
 
-    if (!empty($element['#allowed_icon_pack'])) {
-      $element['icon_id']['#autocomplete_query_parameters']['allowed_icon_pack'] = implode('+', $element['#allowed_icon_pack']);
+    // If no settings or no value found.
+    if (FALSE === (bool) $element['#show_settings']) {
+      return $element;
     }
 
-    // If no settings stop here.
-    if (!isset($element['#show_settings']) || FALSE === (bool) $element['#show_settings']) {
+    // ProcessIcon will handle #value or #default_value.
+    $icon_full_id = $element['icon_id']['#value'] ?? NULL;
+    if (!$icon_full_id || FALSE === strpos($icon_full_id, ':') || NULL === self::iconPack()->getIcon($icon_full_id)) {
       return $element;
     }
 
@@ -226,23 +256,19 @@ class IconAutocomplete extends FormElementBase {
       '#title' => $element['#settings_title'],
     ];
 
-    $icon_id = $element['#value']['icon_id'] ?? $element['#default_value'] ?? NULL;
-    if (!$icon_id || FALSE === strpos($icon_id, ':') || NULL === self::iconPack()->getIcon($icon_id)) {
-      unset($element['icon_settings']);
-      return $element;
-    }
-
-    [$icon_pack_id, $icon_id] = explode(':', $icon_id);
+    [$icon_pack_id, $icon_id] = explode(':', $icon_full_id);
+    $allowed_icon_pack = $element['#allowed_icon_pack'] ?? [];
 
     self::iconPack()->getExtractorPluginForms(
       $element['icon_settings'],
       $form_state,
-      $element['#default_settings'],
-      $element['#allowed_icon_pack'] + [$icon_pack_id => $icon_pack_id],
+      $element['#default_settings'] ?? [],
+      $allowed_icon_pack + [$icon_pack_id => $icon_pack_id],
     );
 
+    // Remove if no extractor form is found.
     if (3 === count($element['icon_settings'])) {
-      $element['icon_settings']['#type'] = 'container';
+      unset($element['icon_settings']);
     }
 
     return $element;

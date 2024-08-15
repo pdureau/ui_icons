@@ -26,8 +26,12 @@
         // Change autocomplete trigger to 3 characters and set delay a bit
         // longer from 300 to 500.
         // @see https://api.jqueryui.com/autocomplete/
-        jQuery(iconSelector).autocomplete('option', 'delay', 500);
-        jQuery(iconSelector).autocomplete('option', 'minLength', 3);
+        const options = {
+          autoFocus: true,
+          delay: 500,
+          minLength: 3,
+        };
+        jQuery(iconSelector).autocomplete('option', options);
       });
     },
   };

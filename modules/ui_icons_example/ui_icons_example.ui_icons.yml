@@ -200,7 +200,7 @@ icon_pack_example_no_settings:
   extractor: path
   config:
     sources:
-      - assets/icons/local_svg_group/group_3/sub_group/local_svg_group_3_10.0_{icon_id}.svg
+      - assets/icons/no_settings/{icon_id}.svg
 
 # icon_pack_example_drupal_core_sprite:
 #   label: Example Drupal core sprite
