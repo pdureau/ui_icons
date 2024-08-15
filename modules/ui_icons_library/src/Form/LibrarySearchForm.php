@@ -46,7 +46,7 @@ final class LibrarySearchForm extends FormBase {
     $session = $this->getRequest()->getSession();
     $values = $session->get('ui_icons_library_search');
     $search = $values['search'] ?? '';
-    $iconPack = $values['icon_pack'] ?? '';
+    $icon_pack = $values['icon_pack'] ?? '';
     $group = $values['group'] ?? '';
     $num_per_page = $values['num_per_page'] ?? 200;
 
@@ -54,7 +54,7 @@ final class LibrarySearchForm extends FormBase {
       '#type' => 'select',
       '#title_display' => 'invisible',
       '#title' => $this->t('Icon Pack'),
-      '#default_value' => $iconPack,
+      '#default_value' => $icon_pack,
       '#options' => ['' => $this->t('- Select Icon Pack -')] + $this->pluginManagerIconPack->listIconPackOptions(),
       '#weight' => -11,
     ];
@@ -85,10 +85,10 @@ final class LibrarySearchForm extends FormBase {
 
     $icons_list = $this->pluginManagerIconPack->getIcons();
 
-    if (!empty($iconPack)) {
+    if (!empty($icon_pack)) {
       $group_options = [];
       foreach ($icons_list as $icon) {
-        if ($iconPack !== $icon->getIconPackId()) {
+        if ($icon_pack !== $icon->getIconPackId()) {
           continue;
         }
         $group_id = $icon->getGroup();
@@ -113,7 +113,7 @@ final class LibrarySearchForm extends FormBase {
       'width' => 50,
       'height' => 50,
     ];
-    $icons = $this->filterIcons($icons_list, $iconPack, $group, $display_settings);
+    $icons = $this->filterIcons($icons_list, $icon_pack, $group, $display_settings);
 
     $total = count($icons);
     if ($total > 200) {
@@ -179,7 +179,7 @@ final class LibrarySearchForm extends FormBase {
    *
    * @param array $icons_list
    *   The list of icons to filter.
-   * @param string $iconPack
+   * @param string $icon_pack
    *   The icon set to filter by.
    * @param string $group
    *   The group to filter by.
@@ -189,10 +189,10 @@ final class LibrarySearchForm extends FormBase {
    * @return array
    *   The filtered list of icons.
    */
-  private function filterIcons(array $icons_list, string $iconPack, string $group, array $display_settings): array {
+  private function filterIcons(array $icons_list, string $icon_pack, string $group, array $display_settings): array {
     $icons = [];
     foreach ($icons_list as $id => $icon) {
-      if (!empty($iconPack) && $iconPack !== $icon->getIconPackId()) {
+      if (!empty($icon_pack) && $icon_pack !== $icon->getIconPackId()) {
         continue;
       }
       if (!empty($group) && $group !== $icon->getGroup()) {

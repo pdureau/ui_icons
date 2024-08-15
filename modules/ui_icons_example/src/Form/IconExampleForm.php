@@ -53,7 +53,7 @@ final class IconExampleForm extends FormBase {
    * {@inheritdoc}
    */
   public function buildForm(array $form, FormStateInterface $form_state): array {
-    $iconPack = $this->pluginManagerIconPack->getDefinitions();
+    $icon_pack = $this->pluginManagerIconPack->getDefinitions();
 
     $form = [];
     $form['#tree'] = TRUE;
@@ -121,7 +121,7 @@ final class IconExampleForm extends FormBase {
       '#show_settings' => TRUE,
     ];
     
-    $allowed = array_slice(array_keys($iconPack), 0, 1);
+    $allowed = array_slice(array_keys($icon_pack), 0, 1);
     $names = $this->pluginManagerIconPack->listIconPackOptions();
     $form['icons']['icon_autocomplete_limit'] = [
       '#type' => 'icon_autocomplete',
@@ -152,7 +152,7 @@ final class IconExampleForm extends FormBase {
     // and avoid reloading it.
     $form['icon_pack_definition'] = [
       '#type' => 'hidden',
-      '#value' => serialize($iconPack),
+      '#value' => serialize($icon_pack),
     ];
 
     // Add our extractor forms.
@@ -185,8 +185,8 @@ final class IconExampleForm extends FormBase {
         $this->messenger()->addStatus($this->t('Saved icon for @key: @label', ['@key' => $key_form, '@label' => $icon['icon']->getLabel()]));
       }
     }
-    foreach ($values['icon_pack'] as $key_form => $iconPack) {
-      $this->messenger()->addStatus($this->t('Saved icon pack for @pack', ['@pack' => (is_array($iconPack) ? implode(', ', $iconPack) : $iconPack)]));
+    foreach ($values['icon_pack'] as $key_form => $icon_pack) {
+      $this->messenger()->addStatus($this->t('Saved icon pack for @pack', ['@pack' => (is_array($icon_pack) ? implode(', ', $icon_pack) : $icon_pack)]));
     }
 
     foreach ($values['settings'] as $settings) {

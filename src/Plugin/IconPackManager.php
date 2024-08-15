@@ -129,11 +129,15 @@ class IconPackManager extends DefaultPluginManager implements IconPackManagerInt
    * {@inheritdoc}
    */
   public function listIconPackOptions(): array {
-    $iconPack = $this->getCleanDefinitions();
+    $icon_pack = $this->getCleanDefinitions();
+    $icons = $this->getIcons();
+    if (empty($icons)) {
+      return [];
+    }
 
     $options = [];
-    foreach ($iconPack as $key => $set) {
-      $options[$key] = $set['label'];
+    foreach ($icon_pack as $key => $set) {
+      $options[$key] = $set['label'] ?? '';
     }
 
     return $options;
@@ -143,11 +147,15 @@ class IconPackManager extends DefaultPluginManager implements IconPackManagerInt
    * {@inheritdoc}
    */
   public function listIconPackWithDescriptionOptions(): array {
-    $iconPack = $this->getCleanDefinitions();
+    $icon_pack = $this->getCleanDefinitions();
+    $icons = $this->getIcons();
+    if (empty($icons)) {
+      return [];
+    }
 
     $options = [];
-    foreach ($iconPack as $key => $set) {
-      $options[$key] = $set['label'];
+    foreach ($icon_pack as $key => $set) {
+      $options[$key] = $set['label'] ?? '';
       if (isset($set['description'])) {
         $options[$key] .= ' - ' . $set['description'];
       }
@@ -222,17 +230,17 @@ class IconPackManager extends DefaultPluginManager implements IconPackManagerInt
    * {@inheritdoc}
    */
   public function getExtractorPluginForms(array &$form, FormStateInterface $form_state, array $default_settings = [], array $allowed_icon_pack = []): void {
-    $iconPack = $this->getCleanDefinitions();
+    $icon_pack = $this->getCleanDefinitions();
     if (!empty($allowed_icon_pack)) {
-      $iconPack = array_intersect_key($iconPack, $allowed_icon_pack);
+      $icon_pack = array_intersect_key($icon_pack, $allowed_icon_pack);
     }
 
-    $extractor_forms = $this->iconPackExtractorManager->getExtractorForms($iconPack);
+    $extractor_forms = $this->iconPackExtractorManager->getExtractorForms($icon_pack);
     if (empty($extractor_forms)) {
       return;
     }
 
-    foreach ($iconPack as $icon_pack_id => $plugin) {
+    foreach ($icon_pack as $icon_pack_id => $plugin) {
       // Simply skip if no settings declared in definition.
       if (!isset($plugin['settings']) || empty($plugin['settings'])) {
         continue;
