@@ -85,8 +85,6 @@ final class LibrarySearchForm extends FormBase {
 
     $icons_list = $this->pluginManagerIconPack->getIcons();
 
-    $form['#access'] = !empty($icons_list);
-
     if (!empty($iconPack)) {
       $group_options = [];
       foreach ($icons_list as $icon) {

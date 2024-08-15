@@ -50,17 +50,13 @@ class IconAutocompleteController extends ControllerBase {
   public function handleSearchIcons(Request $request): JsonResponse {
     $query = (string) $request->query->get('q', '');
     if (empty(trim($query))) {
-      return new JsonResponse();
+      return new JsonResponse([]);
     }
 
-    // phpcs:disable Drupal.Commenting.InlineComment.SpacingBefore
-    // @todo Drupal core autocomplete is set to minLength 1, we cannot yet
-    // have a minimum size unless implementing our own autocomplete wrapper.
-    // @see web/core/misc/autocomplete.js
-    // if (mb_strlen($query) < 3) {
-    //   return new JsonResponse();
-    // }
-    // phpcs:enable Drupal.Commenting.InlineComment.SpacingBefore
+    if (mb_strlen($query) < 3) {
+      return new JsonResponse([]);
+    }
+
     $query = strtolower($query);
     $query = preg_replace('/[^ \w-]/', '', $query);
 
@@ -74,7 +70,7 @@ class IconAutocompleteController extends ControllerBase {
     $icons = $this->pluginManagerIconPack->getIcons();
 
     if (empty($icons)) {
-      return new JsonResponse();
+      return new JsonResponse([]);
     }
 
     $result = $this->searchIcon($icons, $query, $max_result, $allowed_icon_pack);
