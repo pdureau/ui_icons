@@ -75,7 +75,7 @@ final class IconExampleController extends ControllerBase {
         '#type' => 'ui_icon',
         '#icon_pack' => $icon->getIconPackId(),
         '#icon' => $icon->getIconId(),
-        '#context' => [
+        '#settings' => [
           'width' => 24,
           'height' => 24,
         ],
@@ -83,17 +83,17 @@ final class IconExampleController extends ControllerBase {
         '#suffix' => '</div>&nbsp;&nbsp;',
       ];
       $build['element'][] = $base;
-      $base['#context'] = [
+      $base['#settings'] = [
         'width' => 48,
         'height' => 48,
       ];
       $build['element'][] = $base;
-      $base['#context'] = [
+      $base['#settings'] = [
         'width' => 96,
         'height' => 96,
       ];
       $build['element'][] = $base;
-      $base['#context'] = [
+      $base['#settings'] = [
         'width' => 128,
         'height' => 128,
       ];

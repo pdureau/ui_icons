@@ -11,9 +11,9 @@ use Drupal\Core\Render\Element\RenderElementBase;
  * Provides a render element to display an ui icon.
  *
  * Properties:
- * - #icon_pack: Icon Pack provider plugin id.
- * - #icon: Name of the icon.
- * - #context: Optional, values sent to the inline Twig template.
+ * - #icon_pack: (string) Icon Pack provider plugin id.
+ * - #icon: (string) Name of the icon.
+ * - #settings: (array) Settings sent to the inline Twig template.
  *
  * Usage Example:
  * @code
@@ -21,7 +21,9 @@ use Drupal\Core\Render\Element\RenderElementBase;
  *   '#type' => 'ui_icon',
  *   '#icon_pack' => 'material_symbols',
  *   '#icon' => 'home',
- *   '#context' => [],
+ *   '#settings' => [
+ *     'width' => 64,
+ *   ],
  * ];
  * @endcode
  */
@@ -38,7 +40,7 @@ class Icon extends RenderElementBase {
       ],
       '#icon_pack' => '',
       '#icon' => '',
-      '#context' => [],
+      '#settings' => [],
     ];
   }
 
@@ -59,7 +61,7 @@ class Icon extends RenderElementBase {
     if (!$icon) {
       return $element;
     }
-    $element['inline-template'] = $icon->getRenderable($element['#context'] ?? []);
+    $element['inline-template'] = $icon->getRenderable($element['#settings'] ?? []);
 
     return $element;
   }
