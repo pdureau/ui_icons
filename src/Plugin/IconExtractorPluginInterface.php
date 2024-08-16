@@ -23,7 +23,7 @@ interface IconExtractorPluginInterface extends PluginFormInterface {
    *   keyed by the icon ID and the array values are the icon definition for
    *   each of the icons listed.
    */
-  public function getIcons(): array;
+  public function discoverIcons(): array;
 
   /**
    * Returns the translated plugin label.

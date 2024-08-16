@@ -21,9 +21,9 @@ use Drupal\ui_icons\Plugin\IconExtractorPluginInterface;
 class ManualExtractorTest extends UnitTestCase {
 
   /**
-   * Test the getIcons method.
+   * Test the discoverIcons method.
    */
-  public function testGetIconsExceptionIcons(): void {
+  public function testDiscoverIconsExceptionIcons(): void {
     $manualExtractorPlugin = new ManualExtractor(
       [],
       'test_extractor',
@@ -35,13 +35,13 @@ class ManualExtractorTest extends UnitTestCase {
     );
     $this->expectException(IconPackConfigErrorException::class);
     $this->expectExceptionMessage('Missing `config: icons` in your definition, extractor test_extractor require this value.');
-    $manualExtractorPlugin->getIcons();
+    $manualExtractorPlugin->discoverIcons();
   }
 
   /**
-   * Test the getIcons method.
+   * Test the discoverIcons method.
    */
-  public function testGetIconsEmpty(): void {
+  public function testDiscoverIconsEmpty(): void {
     $iconFinder = $this->createMock(IconFinder::class);
     $iconFinder->method('getFilesFromSource')->willReturn([]);
 
@@ -64,15 +64,15 @@ class ManualExtractorTest extends UnitTestCase {
       ],
       $iconFinder,
     );
-    $icons = $manualExtractorPlugin->getIcons();
+    $icons = $manualExtractorPlugin->discoverIcons();
 
     $this->assertEmpty($icons);
   }
 
   /**
-   * Test the getIcons method.
+   * Test the discoverIcons method.
    */
-  public function testGetIcons(): void {
+  public function testDiscoverIcons(): void {
     $icons_list = [
       'baz' => [
         'icon_id' => 'baz',
@@ -115,7 +115,7 @@ class ManualExtractorTest extends UnitTestCase {
     $this->assertSame('Test', $manualExtractorPlugin->label());
     $this->assertSame('Test description', $manualExtractorPlugin->description());
 
-    $icons = $manualExtractorPlugin->getIcons();
+    $icons = $manualExtractorPlugin->discoverIcons();
 
     $this->assertIsArray($icons);
     $this->assertArrayHasKey('manual:baz', $icons);

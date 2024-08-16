@@ -20,7 +20,7 @@ class PathExtractorTest extends UnitTestCase {
   /**
    * Test the getIcons method.
    */
-  public function testGetIconsExceptionSource(): void {
+  public function testDiscoverIconsExceptionSource(): void {
     $pathExtractorPlugin = new PathExtractor(
       [],
       'test_extractor',
@@ -32,13 +32,13 @@ class PathExtractorTest extends UnitTestCase {
     );
     $this->expectException(IconPackConfigErrorException::class);
     $this->expectExceptionMessage('Missing `config: sources` in your definition, extractor test_extractor require this value.');
-    $pathExtractorPlugin->getIcons();
+    $pathExtractorPlugin->discoverIcons();
   }
 
   /**
    * Test the getIcons method.
    */
-  public function testGetIconsExceptionSourceEmpty(): void {
+  public function testDiscoverIconsExceptionSourceEmpty(): void {
     $pathExtractorPlugin = new PathExtractor(
       [
         'config' => ['sources' => []],
@@ -52,13 +52,13 @@ class PathExtractorTest extends UnitTestCase {
     );
     $this->expectException(IconPackConfigErrorException::class);
     $this->expectExceptionMessage('Missing `config: sources` in your definition, extractor test_extractor require this value.');
-    $pathExtractorPlugin->getIcons();
+    $pathExtractorPlugin->discoverIcons();
   }
 
   /**
    * Test the getIcons method.
    */
-  public function testGetIconsExceptionPaths(): void {
+  public function testDiscoverIconsExceptionPaths(): void {
     $pathExtractorPlugin = new PathExtractor(
       [
         'config' => ['sources' => ['foo/bar']],
@@ -73,13 +73,13 @@ class PathExtractorTest extends UnitTestCase {
     );
     $this->expectException(IconPackConfigErrorException::class);
     $this->expectExceptionMessage('Could not retrieve paths for extractor test_extractor.');
-    $pathExtractorPlugin->getIcons();
+    $pathExtractorPlugin->discoverIcons();
   }
 
   /**
    * Test the getIcons method.
    */
-  public function testGetIcons(): void {
+  public function testDiscoverIcons(): void {
     $icons_list = [
       'baz' => [
         'name' => 'baz',
@@ -110,7 +110,7 @@ class PathExtractorTest extends UnitTestCase {
       ],
       $iconFinder,
     );
-    $icons = $pathExtractorPlugin->getIcons();
+    $icons = $pathExtractorPlugin->discoverIcons();
 
     $this->assertIsArray($icons);
     $this->assertArrayHasKey('path:baz', $icons);

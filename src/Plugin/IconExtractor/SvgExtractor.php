@@ -26,7 +26,7 @@ class SvgExtractor extends IconExtractorPluginBase {
   /**
    * {@inheritdoc}
    */
-  public function getIcons(): array {
+  public function discoverIcons(): array {
     if (!isset($this->configuration['config']['sources'])) {
       throw new IconPackConfigErrorException(sprintf('Missing `config: sources` in your definition, extractor %s require this value.', $this->getPluginId()));
     }

@@ -20,7 +20,7 @@ class SvgExtractorTest extends UnitTestCase {
   /**
    * Test the getIcons method.
    */
-  public function testGetIconsExceptionSource(): void {
+  public function testDiscoverIconsExceptionSource(): void {
     $svgExtractorPlugin = new SvgExtractor(
       [],
       'test_extractor',
@@ -32,13 +32,13 @@ class SvgExtractorTest extends UnitTestCase {
     );
     $this->expectException(IconPackConfigErrorException::class);
     $this->expectExceptionMessage('Missing `config: sources` in your definition, extractor test_extractor require this value.');
-    $svgExtractorPlugin->getIcons();
+    $svgExtractorPlugin->discoverIcons();
   }
 
   /**
    * Test the getIcons method.
    */
-  public function testGetIconsExceptionSourceEmpty(): void {
+  public function testDiscoverIconsExceptionSourceEmpty(): void {
     $svgExtractorPlugin = new SvgExtractor(
       [
         'config' => ['sources' => []],
@@ -52,13 +52,13 @@ class SvgExtractorTest extends UnitTestCase {
     );
     $this->expectException(IconPackConfigErrorException::class);
     $this->expectExceptionMessage('Missing `config: sources` in your definition, extractor test_extractor require this value.');
-    $svgExtractorPlugin->getIcons();
+    $svgExtractorPlugin->discoverIcons();
   }
 
   /**
    * Test the getIcons method.
    */
-  public function testGetIconsExceptionPaths(): void {
+  public function testDiscoverIconsExceptionPaths(): void {
     $svgExtractorPlugin = new SvgExtractor(
       [
         'config' => ['sources' => ['foo/bar']],
@@ -73,13 +73,13 @@ class SvgExtractorTest extends UnitTestCase {
     );
     $this->expectException(IconPackConfigErrorException::class);
     $this->expectExceptionMessage('Could not retrieve paths for extractor test_extractor.');
-    $svgExtractorPlugin->getIcons();
+    $svgExtractorPlugin->discoverIcons();
   }
 
   /**
    * Test the getIcons method.
    */
-  public function testGetIconsInvalid(): void {
+  public function testDiscoverIconsInvalid(): void {
     $iconFinder = $this->createMock(IconFinder::class);
 
     $icons_list = [
@@ -113,14 +113,14 @@ class SvgExtractorTest extends UnitTestCase {
       $iconFinder,
     );
 
-    $icons = $svgExtractorPlugin->getIcons();
+    $icons = $svgExtractorPlugin->discoverIcons();
     $this->assertSame("Start tag expected, '<' not found", trim($icons['svg:baz']->getContent()));
   }
 
   /**
    * Test the getIcons method.
    */
-  public function testGetIconsEmpty(): void {
+  public function testDiscoverIconsEmpty(): void {
     $iconFinder = $this->createMock(IconFinder::class);
     $iconFinder->method('getFilesFromSource')->willReturn([]);
 
@@ -141,7 +141,7 @@ class SvgExtractorTest extends UnitTestCase {
       ],
       $iconFinder,
     );
-    $icons = $svgExtractorPlugin->getIcons();
+    $icons = $svgExtractorPlugin->discoverIcons();
 
     $this->assertEmpty($icons);
   }
@@ -149,7 +149,7 @@ class SvgExtractorTest extends UnitTestCase {
   /**
    * Test the getIcons method.
    */
-  public function testGetIcons(): void {
+  public function testDiscoverIcons(): void {
     $iconFinder = $this->createMock(IconFinder::class);
 
     $icons_list = [
@@ -184,7 +184,7 @@ class SvgExtractorTest extends UnitTestCase {
       ],
       $iconFinder,
     );
-    $icons = $svgExtractorPlugin->getIcons();
+    $icons = $svgExtractorPlugin->discoverIcons();
 
     $this->assertIsArray($icons);
     $this->assertArrayHasKey('svg:baz', $icons);
