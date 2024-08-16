@@ -92,27 +92,34 @@ final class LibrarySearchForm extends FormBase {
           continue;
         }
         $group_id = $icon->getGroup();
+        if (empty($group_id)) {
+          continue;
+        }
         $group_options[$group_id] = ucfirst($group_id);
       }
-      ksort($group_options);
 
-      $form['group'] = [
-        '#type' => 'select',
-        '#title_display' => 'invisible',
-        '#title' => $this->t('Group'),
-        '#default_value' => $group,
-        '#options' => ['' => $this->t('- Select Group -')] + $group_options,
-        '#weight' => -11,
-      ];
+      if (!empty($group_options)) {
+        ksort($group_options);
+        $form['group'] = [
+          '#type' => 'select',
+          '#title_display' => 'invisible',
+          '#title' => $this->t('Group'),
+          '#default_value' => $group,
+          '#options' => ['' => $this->t('- Select Group -')] + $group_options,
+          '#weight' => -11,
+        ];
+      }
     }
 
     if (!empty($search)) {
       $icons_list = array_filter($icons_list, fn($id) => str_contains($id, $search), ARRAY_FILTER_USE_KEY);
     }
+
     $display_settings = [
-      'width' => 50,
-      'height' => 50,
+      'width' => 32,
+      'height' => 32,
     ];
+
     $icons = $this->filterIcons($icons_list, $icon_pack, $group, $display_settings);
 
     $total = count($icons);
@@ -139,6 +146,7 @@ final class LibrarySearchForm extends FormBase {
       '#search' => $search,
       '#icons' => $icons,
       '#total' => $total,
+      '#available' => count($icons_list),
       '#weight' => 1,
     ];
 

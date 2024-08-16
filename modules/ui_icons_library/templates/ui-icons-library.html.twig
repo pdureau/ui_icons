@@ -1,23 +1,24 @@
 {{ attach_library('ui_icons_library/ui_icons_library.admin') }}
 
-{% set size = icons|length %}
-
 <div class="ui-icons-wrapper">
   <div class="ui-icons-result">
     {% if search is empty %}
-      {% if size > 0 %}
+      {% if total > 0 %}
         <p>{{ 'Total of %total icons on your site.'|t({'%total': total}) }}</p>
       {% endif %}
     {% else %}
-      {% if size > 0 %}
+      {% if total > 0 %}
         <p>{{ 'Found %total icons for keyword: %search.'|t({'%total': total, '%search': search}) }}</p>
       {% else %}
         <p>{{ 'No icon found for keyword: %search.'|t({'%search': search}) }}</p>
       {% endif %}
     {% endif %}
 
-    {% if search is empty and size == 0 %}
-      <p>{{ 'Could not find any icon on your site, be sure to create a file `my_theme.ui_icons.yml` or `my_module.ui_icons.yml` and set a source with your icons.'|t }}</p>
+    {% if search is empty and total == 0 and available > 0 %}
+      <p>{{ 'There is a problem in search, reset this form.'|t }}</p>
+    {% endif %}
+    {% if search is empty and total == 0 and available == 0 %}
+      <p>{{ 'Could not find any icon, update your search or reset this form.'|t }}</p>
     {% endif %}
   </div>
 

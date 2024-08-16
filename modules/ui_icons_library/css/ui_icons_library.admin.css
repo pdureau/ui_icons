@@ -29,6 +29,8 @@
 .ui-icons-item__preview .thumbnail img,
 .ui-icons-item__preview .thumbnail svg {
   display: block;
+  max-width: 2.8rem;
+  max-height: 2.8rem;
   margin: auto;
   padding: 0.25rem 0.25rem 0 0.25rem;
 }

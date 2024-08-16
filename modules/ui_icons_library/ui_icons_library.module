@@ -13,7 +13,7 @@ declare(strict_types=1);
 function ui_icons_library_theme(): array {
   return [
     'ui_icons_library' => [
-      'variables' => ['icons' => [], 'total' => 0, 'search' => ''],
+      'variables' => ['icons' => [], 'search' => '', 'total' => 0, 'available' => 0],
     ],
   ];
 }
