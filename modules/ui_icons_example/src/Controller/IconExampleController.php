@@ -61,7 +61,8 @@ final class IconExampleController extends ControllerBase {
     ];
 
     foreach ($icons as $icon) {
-      $template = '{{ icon("' . $icon->getIconPackId() . '", "' . $icon->getIconId() . '", { width: 64, height: 64 }) }}';
+      $width = rand(20, 140);
+      $template = '{{ icon("' . $icon->getIconPackId() . '", "' . $icon->getIconId() . '", { width: ' . $width . ', height: ' . $width . '}) }}';
       $build['twig'][]['code'] = [
         '#markup' => '<pre><code>' . $template . '</code></pre>',
       ];
@@ -96,6 +97,11 @@ final class IconExampleController extends ControllerBase {
       $base['#settings'] = [
         'width' => 128,
         'height' => 128,
+      ];
+      $build['element'][] = $base;
+      $base['#settings'] = [
+        'width' => 64,
+        'height' => 64,
       ];
       $build['element'][] = $base;
       $build['element'][] = ['#markup' => '<hr>'];

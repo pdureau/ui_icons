@@ -86,13 +86,13 @@ final class IconExampleForm extends FormBase {
     $form['icon_pack']['icon_pack_select'] = [
       '#type' => 'select',
       '#title' => $this->t('Icon Pack selector with description'),
-      '#options' => $options,
+      '#options' => ['' => $this->t('- Select -')] + $options,
     ];
 
     $form['icon_pack']['icon_pack_select_title'] = [
       '#type' => 'select',
       '#title' => $this->t('Icon Pack selector title only'),
-      '#options' => $options_title,
+      '#options' => ['' => $this->t('- Select -')] + $options_title,
     ];
 
     $form['icon_pack']['icon_pack_select_multiple'] = [
@@ -120,9 +120,9 @@ final class IconExampleForm extends FormBase {
       '#title' => $this->t('Icon selector with settings'),
       '#show_settings' => TRUE,
     ];
-    
-    $allowed = array_slice(array_keys($icon_pack), 0, 1);
+
     $names = $this->pluginManagerIconPack->listIconPackOptions();
+    $allowed = array_slice(array_keys($names), 0, 1);
     $form['icons']['icon_autocomplete_limit'] = [
       '#type' => 'icon_autocomplete',
       '#title' => $this->t('Icon selector limited'),
@@ -132,7 +132,7 @@ final class IconExampleForm extends FormBase {
 
     // No full select as we could have thousands of icons.
     $options = ['' => $this->t('- Select -')];
-    $options += $this->pluginManagerIconPack->listOptions($allowed);
+    $options += $this->pluginManagerIconPack->listIconOptions($allowed);
     $form['icons']['icons_select_limited'] = [
       '#type' => 'select',
       '#title' => $this->t('Icon select limited'),
@@ -181,12 +181,35 @@ final class IconExampleForm extends FormBase {
     $values = $form_state->getValues();
 
     foreach ($values['icons'] as $key_form => $icon) {
+      if (is_string($icon) && !empty($icon)) {
+        $this->messenger()->addStatus($this->t('Saved %key: @label', ['%key' => $key_form, '@label' => $icon]));
+      }
       if (isset($icon['icon'])) {
-        $this->messenger()->addStatus($this->t('Saved icon for @key: @label', ['@key' => $key_form, '@label' => $icon['icon']->getLabel()]));
+        $this->messenger()->addStatus($this->t('Saved %key: @label', ['%key' => $key_form, '@label' => $icon['icon']->getLabel()]));
       }
     }
     foreach ($values['icon_pack'] as $key_form => $icon_pack) {
-      $this->messenger()->addStatus($this->t('Saved icon pack for @pack', ['@pack' => (is_array($icon_pack) ? implode(', ', $icon_pack) : $icon_pack)]));
+      if ('icon_pack_checkboxes' === $key_form) {
+        $filtered = array_filter($icon_pack, function($value) {
+          return 1 === $value;
+        });
+        $list = array_keys($filtered);
+        if (empty($list)) {
+          continue;
+        }
+        $this->messenger()->addStatus($this->t('Saved %key: @pack', ['%key' => $key_form, '@pack' => implode(', ', $list)]));
+        continue;
+      }
+      if (is_string($icon_pack) && !empty($icon_pack)) {
+        $this->messenger()->addStatus($this->t('Saved %key: @pack', ['%key' => $key_form, '@pack' => $icon_pack]));
+      }
+      if (is_array($icon_pack)) {
+        $list = array_flip($icon_pack);
+        if (empty($list)) {
+          continue;
+        }
+        $this->messenger()->addStatus($this->t('Saved %key: @pack', ['%key' => $key_form, '@pack' => implode(', ', $list)]));
+      }
     }
 
     foreach ($values['settings'] as $settings) {
@@ -202,7 +225,7 @@ final class IconExampleForm extends FormBase {
           if (FALSE !== strpos($key, 'form_') || 'op' === $key || 'submit' === $key) {
             continue;
           }
-          $this->messenger()->addStatus($this->t('Save value @key: @value', ['@key' => $key, '@value' => $value]));
+          $this->messenger()->addStatus($this->t('Save %key: @value', ['%key' => $key, '@value' => $value]));
         }
       }
     }
