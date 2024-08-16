@@ -56,12 +56,7 @@ function template_preprocess_input__icon(array &$variables): void {
   $variables['has_settings'] = $variables['element']['#show_settings'] ?? FALSE;
   $variables['icon_form'] = $variables['element']['icon_id'] ?? '';
 
-  if (isset($variables['element']['#default_value'])) {
-    [$icon_pack_id, $icon_id] = explode(':', $variables['element']['#default_value']);
-    $variables['icon_pack_id'] = $icon_pack_id;
-    $variables['icon_id'] = $icon_id;
-  }
-  elseif (isset($variables['element']['icon_id']['#value']) && FALSE !== strpos($variables['element']['icon_id']['#value'], ':')) {
+  if (isset($variables['element']['icon_id']['#value']) && FALSE !== strpos($variables['element']['icon_id']['#value'], ':')) {
     [$icon_pack_id, $icon_id] = explode(':', $variables['element']['icon_id']['#value']);
     $variables['icon_pack_id'] = $icon_pack_id;
     $variables['icon_id'] = $icon_id;
@@ -70,8 +65,13 @@ function template_preprocess_input__icon(array &$variables): void {
     $variables['icon_pack_id'] = $variables['element']['#value']['object']->getIconPackId();
     $variables['icon_id'] = $variables['element']['#value']['object']->getId();
   }
+  elseif (isset($variables['element']['#default_value'])) {
+    [$icon_pack_id, $icon_id] = explode(':', $variables['element']['#default_value']);
+    $variables['icon_pack_id'] = $icon_pack_id;
+    $variables['icon_id'] = $icon_id;
+  }
 
-  if (isset($variables['element']['icon_settings'])) {
+  if (isset($variables['element']['icon_settings']) && $variables['has_settings']) {
     $variables['settings_form'] = $variables['element']['icon_settings'];
   }
 

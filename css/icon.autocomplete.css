@@ -38,5 +38,6 @@
 .ui-icons-preview-icon svg {
   display: block;
   width: 2.5rem;
+  max-height: 2.6rem;
   margin: auto;
 }

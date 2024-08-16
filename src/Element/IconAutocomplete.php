@@ -240,7 +240,7 @@ class IconAutocomplete extends FormElementBase {
     ];
 
     // ProcessIcon will handle #value or #default_value.
-    $icon_full_id = $element['icon_id']['#value'] ?? NULL;
+    $icon_full_id = $element['#value']['icon_id'] ?? $element['icon_id']['#value'] ?? NULL;
     if (!$icon_full_id || FALSE === strpos($icon_full_id, ':') || NULL === self::iconPack()->getIcon($icon_full_id)) {
       // If a default value based on a disabled icon pack exist, clear it.
       unset($element['icon_id']['#value']);
@@ -260,13 +260,19 @@ class IconAutocomplete extends FormElementBase {
 
     $icon_full_id = explode(':', $icon_full_id);
     $icon_pack_id = $icon_full_id[0];
-    $allowed_icon_pack = $element['#allowed_icon_pack'] ?? [];
+
+    if (!empty($element['#allowed_icon_pack'])) {
+      if (!in_array($icon_pack_id, $element['#allowed_icon_pack'])) {
+        unset($element['icon_settings']);
+        return $element;
+      }
+    }
 
     self::iconPack()->getExtractorPluginForms(
       $element['icon_settings'],
       $form_state,
       $element['#default_settings'] ?? [],
-      $allowed_icon_pack + [$icon_pack_id => $icon_pack_id],
+     [$icon_pack_id => $icon_pack_id],
     );
 
     // Remove if no extractor form is found.
