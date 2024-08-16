@@ -99,11 +99,10 @@ class IconPackManagerKernelTest extends KernelTestBase {
   public function testListIconPackOptions(): void {
     $actual = $this->iconPackManager->listIconPackOptions();
     $expected = [
-      'test_local_files' => 'Local files',
-      'test_local_svg' => 'SVG manual',
-      'test_local_svg_sprite' => 'Small sprite',
-      'test_no_icons' => 'No Icons',
-      'test_no_settings' => 'No Settings',
+      'test_local_files' => 'Local files (8)',
+      'test_local_svg' => 'SVG manual (7)',
+      'test_local_svg_sprite' => 'Small sprite (5)',
+      'test_no_settings' => 'No Settings (5)',
     ];
     $this->assertSame($expected, $actual);
   }
@@ -114,29 +113,28 @@ class IconPackManagerKernelTest extends KernelTestBase {
   public function testListIconPackWithDescriptionOptions(): void {
     $actual = $this->iconPackManager->listIconPackWithDescriptionOptions();
     $expected = [
-      'test_local_files' => 'Local files - Local files relative available.',
-      'test_local_svg' => 'SVG manual - Local svg files.',
-      'test_local_svg_sprite' => 'Small sprite - Local svg sprite file.',
-      'test_no_icons' => 'No Icons',
-      'test_no_settings' => 'No Settings',
+      'test_local_files' => 'Local files (8) - Local files relative available.',
+      'test_local_svg' => 'SVG manual (7) - Local svg files.',
+      'test_local_svg_sprite' => 'Small sprite (5) - Local svg sprite file.',
+      'test_no_settings' => 'No Settings (5)',
     ];
     $this->assertSame($expected, $actual);
   }
 
   /**
-   * Test the listOptions method.
+   * Test the listIconOptions method.
    */
-  public function testListOptions(): void {
-    $actual = $this->iconPackManager->listOptions();
+  public function testListIconOptions(): void {
+    $actual = $this->iconPackManager->listIconOptions();
     $this->assertCount(25, $actual);
 
-    $actual = $this->iconPackManager->listOptions(['test_local_svg']);
+    $actual = $this->iconPackManager->listIconOptions(['test_local_svg']);
     $this->assertCount(7, $actual);
 
-    $actual = $this->iconPackManager->listOptions(['test_no_icons']);
+    $actual = $this->iconPackManager->listIconOptions(['test_no_icons']);
     $this->assertCount(0, $actual);
 
-    $actual = $this->iconPackManager->listOptions(['do_not_exist']);
+    $actual = $this->iconPackManager->listIconOptions(['do_not_exist']);
     $this->assertCount(0, $actual);
   }
 

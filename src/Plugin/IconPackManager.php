@@ -96,20 +96,18 @@ class IconPackManager extends DefaultPluginManager implements IconPackManagerInt
   public function getIcons(): array {
     $definitions = $this->getDefinitions();
 
-    // Keep loaded list in the definition to have cache.
-    if (isset($definitions['_icons_loaded'])) {
-      return $definitions['_icons_loaded'];
-    }
-
     $icons = [];
     foreach ($definitions as $definition) {
-      /** @var \Drupal\ui_icons\Plugin\IconExtractorPluginInterface $extractor */
-      $extractor = $this->iconPackExtractorManager->createInstance($definition['extractor'], $definition);
-      $icons += $extractor->getIcons();
-    }
+      if (!isset($definition['extractor'])) {
+        continue;
+      }
 
-    $definitions['_icons_loaded'] = $icons;
-    $this->setCachedDefinitions($definitions);
+      if (!isset($definition['_icons']['list'])) {
+        $icons += $this->getIconsFromDefinition($definition);
+        continue;
+      }
+      $icons += $definition['_icons']['list'];
+    }
 
     return $icons;
   }
@@ -122,6 +120,7 @@ class IconPackManager extends DefaultPluginManager implements IconPackManagerInt
     if (isset($icons[$icon_id])) {
       return $icons[$icon_id];
     }
+
     return NULL;
   }
 
@@ -129,15 +128,18 @@ class IconPackManager extends DefaultPluginManager implements IconPackManagerInt
    * {@inheritdoc}
    */
   public function listIconPackOptions(): array {
-    $icon_pack = $this->getCleanDefinitions();
-    $icons = $this->getIcons();
-    if (empty($icons)) {
-      return [];
-    }
+    $icon_pack_definition = $this->getDefinitions();
 
     $options = [];
-    foreach ($icon_pack as $key => $set) {
-      $options[$key] = $set['label'] ?? '';
+    foreach ($icon_pack_definition as $icon_pack_id => $definition) {
+      if (!isset($definition['_icons']['count'][$definition['extractor']])) {
+        continue;
+      }
+      $count = $definition['_icons']['count'][$definition['extractor']];
+      if (0 === $count) {
+        continue;
+      }
+      $options[$icon_pack_id] = sprintf('%s (%u)', $definition['label'] ?? $definition['id'], $count);
     }
 
     return $options;
@@ -147,18 +149,22 @@ class IconPackManager extends DefaultPluginManager implements IconPackManagerInt
    * {@inheritdoc}
    */
   public function listIconPackWithDescriptionOptions(): array {
-    $icon_pack = $this->getCleanDefinitions();
-    $icons = $this->getIcons();
-    if (empty($icons)) {
-      return [];
-    }
+    $icon_pack_definition = $this->getDefinitions();
 
     $options = [];
-    foreach ($icon_pack as $key => $set) {
-      $options[$key] = $set['label'] ?? '';
-      if (isset($set['description'])) {
-        $options[$key] .= ' - ' . $set['description'];
+    foreach ($icon_pack_definition as $icon_pack_id => $definition) {
+      if (!isset($definition['_icons']['count'][$definition['extractor']])) {
+        continue;
       }
+      $count = $definition['_icons']['count'][$definition['extractor']];
+      if (0 === $count) {
+        continue;
+      }
+      $description = '';
+      if (isset($definition['description'])) {
+        $description = ' - ' . $definition['description'];
+      }
+      $options[$icon_pack_id] = sprintf('%s (%u)%s', $definition['label'] ?? $definition['id'], $count, $description);
     }
 
     return $options;
@@ -167,7 +173,7 @@ class IconPackManager extends DefaultPluginManager implements IconPackManagerInt
   /**
    * {@inheritdoc}
    */
-  public function listOptions(?array $allowed_icon_pack = NULL): array {
+  public function listIconOptions(?array $allowed_icon_pack = NULL): array {
     $icons = $this->getIcons();
 
     if (empty($icons)) {
@@ -175,14 +181,14 @@ class IconPackManager extends DefaultPluginManager implements IconPackManagerInt
     }
 
     $result = [];
-    foreach ($icons as $icon_id => $icon) {
+    foreach ($icons as $icon_full_id => $icon) {
       if ($allowed_icon_pack) {
         if (in_array($icon->getIconPackId(), $allowed_icon_pack)) {
-          $result[$icon_id] = sprintf('%s (%s)', $icon->getLabel(), $icon->getIconPackLabel());
+          $result[$icon_full_id] = $icon->getLabel();
         }
       }
       else {
-        $result[$icon_id] = sprintf('%s (%s)', $icon->getLabel(), $icon->getIconPackLabel());
+        $result[$icon_full_id] = $icon->getLabel();
       }
     }
 
@@ -193,7 +199,7 @@ class IconPackManager extends DefaultPluginManager implements IconPackManagerInt
    * {@inheritdoc}
    */
   public function getExtractorFormDefaults(string $icon_pack_id): array {
-    $all_icon_pack = $this->getCleanDefinitions();
+    $all_icon_pack = $this->getDefinitions();
 
     if (!isset($all_icon_pack[$icon_pack_id]) || !isset($all_icon_pack[$icon_pack_id]['settings'])) {
       return [];
@@ -214,15 +220,26 @@ class IconPackManager extends DefaultPluginManager implements IconPackManagerInt
    */
   public function getDefinitions(): ?array {
     $definitions = $this->getCachedDefinitions();
+
     if (!isset($definitions)) {
       $definitions = $this->findDefinitions();
       foreach ($definitions as $key => $definition) {
         if (isset($definition['enabled']) && $definition['enabled'] === FALSE) {
           unset($definitions[$key]);
+          continue;
         }
+        $icons = $this->getIconsFromDefinition($definition);
+        $count_icons = count($icons);
+        $definitions[$key]['_icons'] = [
+          'list' => $icons,
+          'count' => [],
+        ];
+        $definitions[$key]['_icons']['count'][$definition['extractor']] = $count_icons;
       }
+
       $this->setCachedDefinitions($definitions);
     }
+
     return $definitions;
   }
 
@@ -230,7 +247,8 @@ class IconPackManager extends DefaultPluginManager implements IconPackManagerInt
    * {@inheritdoc}
    */
   public function getExtractorPluginForms(array &$form, FormStateInterface $form_state, array $default_settings = [], array $allowed_icon_pack = []): void {
-    $icon_pack = $this->getCleanDefinitions();
+    $icon_pack = $this->getDefinitions();
+
     if (!empty($allowed_icon_pack)) {
       $icon_pack = array_intersect_key($icon_pack, $allowed_icon_pack);
     }
@@ -316,12 +334,21 @@ class IconPackManager extends DefaultPluginManager implements IconPackManagerInt
   }
 
   /**
-   * Return definitions without cached loaded icons.
+   * Discover list of icons from definition extractor.
+   *
+   * @param array $definition
+   *   The definition.
+   *
+   *   return array
+   *   Discovered icons.
    */
-  private function getCleanDefinitions(): array {
-    $definitions = $this->getDefinitions();
-    unset($definitions['_icons_loaded']);
-    return $definitions;
+  private function getIconsFromDefinition(array $definition): array {
+    if (!isset($definition['extractor'])) {
+      return [];
+    }
+
+    $extractor = $this->iconPackExtractorManager->createInstance($definition['extractor'], $definition);
+    return $extractor->discoverIcons();
   }
 
 }

@@ -40,13 +40,15 @@ interface IconPackManagerInterface extends PluginManagerInterface {
   /**
    * Populates a key-value pair of available icons.
    *
+   * Can be used to create a limited select list of icons.
+   *
    * @param array|null $allowed_icon_pack
    *   Include only icons of these icon pack.
    *
    * @return array
    *   An array of translated icons labels, keyed by ID.
    */
-  public function listOptions(?array $allowed_icon_pack = NULL): array;
+  public function listIconOptions(?array $allowed_icon_pack = NULL): array;
 
   /**
    * Populates a key-value pair of available icon pack.
