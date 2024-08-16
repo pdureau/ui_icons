@@ -84,7 +84,7 @@ class IconAutocompleteControllerTest extends IconUnitTestCase {
     $actual = $iconAutocompleteController->handleSearchIcons($request);
 
     if (NULL === $expectedData) {
-      $expected = new JsonResponse();
+      $expected = new JsonResponse([]);
     }
     else {
       $expected = new JsonResponse($expectedData);
@@ -116,7 +116,7 @@ class IconAutocompleteControllerTest extends IconUnitTestCase {
       ],
       'query foo with allowed_icon_pack do not include icon' => [
         'iconsData' => self::createIconData(),
-        'queryParams' => ['q' => 'fo', 'allowed_icon_pack' => 'qux+bar'],
+        'queryParams' => ['q' => 'foo', 'allowed_icon_pack' => 'qux+bar'],
         'expectedData' => [],
       ],
       'query foo with max_result 2 for 3 valid icons' => [
@@ -132,6 +132,13 @@ class IconAutocompleteControllerTest extends IconUnitTestCase {
         'queryParams' => ['q' => 'tri'],
         'expectedData' => [
           self::createIconResultData(NULL, 'some-name-string'),
+        ],
+      ],
+      'query multiple words' => [
+        'iconsData' => self::createIconData('foo', 'foo-bar') + self::createIconData('foo', 'qux-foo', 'Biz'),
+        'queryParams' => ['q' => 'foo Baz'],
+        'expectedData' => [
+          self::createIconResultData('foo', 'foo-bar'),
         ],
       ],
       'query string part name with non ascii chars' => [
@@ -150,7 +157,7 @@ class IconAutocompleteControllerTest extends IconUnitTestCase {
       ],
       'query non ascii letter' => [
         'iconsData' => self::createIconData('%2$*', 'à(5çè', '?:!!/"&', ']}=(-_ù,'),
-        'queryParams' => ['q' => '!!'],
+        'queryParams' => ['q' => ':!!'],
         'expectedData' => [
           self::createIconResultData('%2$*', 'à(5çè', '?:!!/"&', ']}=(-_ù,'),
         ],
@@ -158,6 +165,16 @@ class IconAutocompleteControllerTest extends IconUnitTestCase {
       'query icon pack no result' => [
         'iconsData' => self::createIconData('my_icon_pack'),
         'queryParams' => ['q' => 'icon_pack'],
+        'expectedData' => [],
+      ],
+      'query 1 char' => [
+        'iconsData' => self::createIconData(),
+        'queryParams' => ['q' => 'f'],
+        'expectedData' => [],
+      ],
+      'query 2 chars' => [
+        'iconsData' => self::createIconData(),
+        'queryParams' => ['q' => 'fo'],
         'expectedData' => [],
       ],
       'query empty' => [
@@ -168,6 +185,11 @@ class IconAutocompleteControllerTest extends IconUnitTestCase {
       'query space' => [
         'iconsData' => self::createIconData(),
         'queryParams' => ['q' => ' '],
+        'expectedData' => NULL,
+      ],
+      'query spaces' => [
+        'iconsData' => self::createIconData(),
+        'queryParams' => ['q' => '   '],
         'expectedData' => NULL,
       ],
       'query foo with empty icons' => [

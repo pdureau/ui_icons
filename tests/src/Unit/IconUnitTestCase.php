@@ -15,7 +15,7 @@ use Drupal\ui_icons\IconDefinitionInterface;
 abstract class IconUnitTestCase extends UnitTestCase {
 
   /**
-   * Creates icon data result array.
+   * Creates icon data search result array.
    *
    * @param string|null $icon_pack_id
    *   The ID of the icon set.
@@ -28,11 +28,12 @@ abstract class IconUnitTestCase extends UnitTestCase {
    *   The icon data array.
    */
   protected static function createIconResultData(?string $icon_pack_id = NULL, ?string $icon_id = NULL, ?string $icon_pack_label = NULL): array {
+    $label = ucfirst(str_replace(['-', '_', '.'], ' ', ($icon_id ?? 'bar')));
     return [
       'value' => ($icon_pack_id ?? 'foo') . ':' . ($icon_id ?? 'bar'),
       'label' => new FormattableMarkup('<span class="ui-menu-icon">@icon</span> @name', [
         '@icon' => '_rendered_',
-        '@name' => ($icon_id ?? 'bar') . ' (' . ($icon_pack_label ?? 'Baz') . ')',
+        '@name' => $label . ' (' . ($icon_pack_label ?? 'Baz') . ')',
       ]),
     ];
   }
@@ -94,20 +95,24 @@ abstract class IconUnitTestCase extends UnitTestCase {
   /**
    * Create an icon.
    *
-   * @param array $iconData
+   * @param array $data
    *   The icon data to create.
    *
    * @return \Drupal\ui_icons\IconDefinitionInterface
    *   The icon mocked.
    */
-  protected function createIcon(array $iconData): IconDefinitionInterface {
+  protected function createIcon(array $data): IconDefinitionInterface {
     return IconDefinition::create(
-      $iconData['icon_id'],
-      $iconData['source'],
+      $data['icon_id'] ?? '',
+      $data['source'] ?? '',
       [
-        'icon_pack_id' => $iconData['icon_pack_id'],
-        'icon_pack_label' => $iconData['icon_pack_label'],
-      ]
+        'icon_pack_id' => $data['icon_pack_id'] ?? '',
+        'icon_pack_label' => $data['icon_pack_label'] ?? '',
+        'template' => $data['template'] ?? '',
+        'library' => $data['library'] ?? '',
+        'content' => $data['content'] ?? '',
+      ],
+      $data['group'] ?? NULL,
     );
   }
 

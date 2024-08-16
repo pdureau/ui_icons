@@ -290,15 +290,15 @@ class IconAutocomplete extends FormElementBase {
   public static function validateIcon(array &$element, FormStateInterface $form_state, array &$complete_form): void {
     $input_exists = FALSE;
     $values = $form_state->getValues();
+
     if (!$values) {
       return;
     }
+
     $input = NestedArray::getValue($values, $element['#parents'], $input_exists);
     if (!$input_exists) {
       return;
     }
-
-    $title = FormElementHelper::getElementTitle($element);
 
     if (empty($input['icon_id']) && !$element['#required']) {
       $form_state->setValueForElement($element, NULL);
@@ -309,7 +309,7 @@ class IconAutocomplete extends FormElementBase {
     $icon = self::iconPack()->getIcon($input['icon_id']);
     if (NULL === $icon || !$icon instanceof IconDefinitionInterface) {
       $form_state->setError($element['icon_id'], new TranslatableMarkup('Icon for %title is invalid: %icon.', [
-        '%title' => $title,
+        '%title' => FormElementHelper::getElementTitle($element),
         '%icon' => $input['icon_id'],
       ]));
       return;
@@ -318,7 +318,7 @@ class IconAutocomplete extends FormElementBase {
     $icon_pack_id = $icon->getIconPackId();
     if (!empty($element['#allowed_icon_pack']) && !in_array($icon_pack_id, $element['#allowed_icon_pack'])) {
       $form_state->setError($element['icon_id'], new TranslatableMarkup('Icon for %title is not valid anymore because it is part of icon pack: %icon_pack_id. This field limit icon pack to: %limit.', [
-        '%title' => $title,
+        '%title' => FormElementHelper::getElementTitle($element),
         '%icon_pack_id' => $icon_pack_id,
         '%limit' => implode(', ', $element['#allowed_icon_pack']),
       ]));

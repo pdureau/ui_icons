@@ -27,7 +27,8 @@
         // longer from 300 to 500.
         // @see https://api.jqueryui.com/autocomplete/
         const options = {
-          autoFocus: true,
+          // @todo check if autofocus first result is a good idea.
+          // autoFocus: true,
           delay: 500,
           minLength: 3,
         };

@@ -5,33 +5,29 @@ declare(strict_types=1);
 namespace Drupal\Tests\ui_icons\Unit;
 
 use Drupal\ui_icons\Exception\IconDefinitionInvalidDataException;
-use Drupal\ui_icons\IconDefinition;
 use Drupal\ui_icons\IconDefinitionInterface;
-use PHPUnit\Framework\TestCase;
 
 /**
  * Tests IconDefinition class used by extractor plugin.
  *
  * @group ui_icons
  */
-class IconDefinitionTest extends TestCase {
+class IconDefinitionTest extends IconUnitTestCase {
 
   /**
    * Test the getRenderable method.
    */
   public function testGetRenderable(): void {
-    $icon = IconDefinition::create(
-      'test_icon_pack:test',
-      '/foo/bar',
-      [
-        'icon_pack_id' => 'test_icon_pack',
-        'icon_pack_label' => 'Baz',
-        'template' => 'test_template',
-        'library' => 'test_library',
-        'content' => 'test_content',
-      ],
-      'test_group',
-    );
+    $icon = self::createIcon([
+      'icon_id' => 'test_icon_pack:test',
+      'source' => '/foo/bar',
+      'icon_pack_id' => 'test_icon_pack',
+      'icon_pack_label' => 'Baz',
+      'template' => 'test_template',
+      'library' => 'test_library',
+      'content' => 'test_content',
+      'group' => 'test_group',
+    ]);
 
     $expected = [
       '#type' => 'inline_template',
@@ -61,19 +57,14 @@ class IconDefinitionTest extends TestCase {
    * @dataProvider providerCreateIcon
    */
   public function testCreateIcon(array $icon_data): void {
-    $actual = IconDefinition::create(
-      $icon_data['icon_id'] ?? '',
-      $icon_data['source'] ?? '',
-      $icon_data['data'] ?? [],
-      $icon_data['group'] ?? NULL,
-    );
+    $actual = self::createIcon($icon_data);
 
     $this->assertInstanceOf(IconDefinitionInterface::class, $actual);
 
-    $this->assertEquals($icon_data['data']['icon_pack_id'] . ':' . $icon_data['icon_id'], $actual->getId());
-    $this->assertEquals($icon_data['data']['icon_pack_id'], $actual->getIconPackId());
-    $this->assertEquals($icon_data['data']['icon_pack_label'] ?? '', $actual->getIconPackLabel());
-    $this->assertEquals($icon_data['data']['content'], $actual->getContent());
+    $this->assertEquals($icon_data['icon_pack_id'] . ':' . $icon_data['icon_id'], $actual->getId());
+    $this->assertEquals($icon_data['icon_pack_id'], $actual->getIconPackId());
+    $this->assertEquals($icon_data['icon_pack_label'] ?? '', $actual->getIconPackLabel());
+    $this->assertEquals($icon_data['content'], $actual->getContent());
     $this->assertEquals($icon_data['icon_id'], $actual->getIconId());
     $this->assertEquals($icon_data['source'], $actual->getSource());
     $this->assertEquals($icon_data['group'], $actual->getGroup());
@@ -91,10 +82,8 @@ class IconDefinitionTest extends TestCase {
         [
           'icon_id' => 'foo',
           'source' => 'foo/bar',
-          'data' => [
-            'icon_pack_id' => 'baz',
-            'content' => NULL,
-          ],
+          'icon_pack_id' => 'baz',
+          'content' => NULL,
           'group' => NULL,
         ],
       ],
@@ -102,11 +91,9 @@ class IconDefinitionTest extends TestCase {
         [
           'icon_id' => 'foo',
           'source' => 'foo/bar',
-          'data' => [
-            'icon_pack_id' => 'baz',
-            'icon_pack_label' => 'Qux',
-            'content' => 'corge',
-          ],
+          'icon_pack_id' => 'baz',
+          'icon_pack_label' => 'Qux',
+          'content' => 'corge',
           'group' => 'quux',
         ],
       ],
@@ -114,48 +101,18 @@ class IconDefinitionTest extends TestCase {
   }
 
   /**
-   * Test the create method.
-   *
-   * @param array $icon_data
-   *   The icon data.
-   * @param array $errors
-   *   The error messages expected.
-   *
-   * @dataProvider providerCreateIconError
+   * Test the create method with errors.
    */
-  public function testCreateIconError(array $icon_data, array $errors): void {
+  public function testCreateIconError(): void {
     $this->expectException(IconDefinitionInvalidDataException::class);
-    $this->expectExceptionMessage(implode('. ', $errors));
+    $this->expectExceptionMessage('Empty icon_id provided. Empty source provided. Missing Icon Pack Id in data.');
 
-    IconDefinition::create(
-      $icon_data['icon_id'] ?? '',
-      $icon_data['source'] ?? '',
-      $icon_data['data'] ?? [],
-      $icon_data['group'] ?? NULL,
-    );
-  }
-
-  /**
-   * Provides data for testCreateIconError.
-   *
-   * @return array
-   *   Provide test data as icon data.
-   */
-  public static function providerCreateIconError(): array {
-    return [
-      [
-        [
-          'icon_id' => '',
-          'source' => '',
-          'data' => [],
-        ],
-        [
-          'Empty icon_id provided',
-          'Empty source provided',
-          'Missing Icon Pack Id in data',
-        ],
-      ],
-    ];
+    self::createIcon([
+      'icon_id' => '',
+      'source' => '',
+      'data' => [],
+      'group' => NULL,
+    ]);
   }
 
 }

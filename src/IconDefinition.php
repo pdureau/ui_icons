@@ -151,12 +151,12 @@ class IconDefinition implements IconDefinitionInterface {
       $errors[] = 'Empty source provided';
     }
 
-    if (!isset($data['icon_pack_id'])) {
+    if (!isset($data['icon_pack_id']) || empty($data['icon_pack_id'])) {
       $errors[] = 'Missing Icon Pack Id in data';
     }
 
     if ($errors) {
-      throw new IconDefinitionInvalidDataException(implode('. ', $errors));
+      throw new IconDefinitionInvalidDataException(implode('. ', $errors) . '.');
     }
   }
 

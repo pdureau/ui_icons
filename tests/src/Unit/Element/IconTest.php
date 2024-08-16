@@ -5,16 +5,15 @@ declare(strict_types=1);
 namespace Drupal\Tests\ui_icons\Unit\Element;
 
 use Drupal\Core\DependencyInjection\ContainerBuilder;
-use Drupal\Tests\UnitTestCase;
+use Drupal\Tests\ui_icons\Unit\IconUnitTestCase;
 use Drupal\ui_icons\Element\Icon;
-use Drupal\ui_icons\IconDefinition;
 
 /**
  * Tests Icon RenderElement class.
  *
  * @group ui_icons
  */
-class IconTest extends UnitTestCase {
+class IconTest extends IconUnitTestCase {
 
   /**
    * The container.
@@ -60,18 +59,7 @@ class IconTest extends UnitTestCase {
    * @dataProvider providerPreRenderIcon
    */
   public function testPreRenderIcon(array $data, array $expected): void {
-    $icon = IconDefinition::create(
-      $data['icon_id'],
-      $data['icon_source'],
-      [
-        'icon_pack_id' => $data['icon_pack_id'],
-        'icon_pack_label' => $data['icon_pack_label'] ?? '',
-        'template' => $data['icon_template'] ?? '',
-        'library' => $data['icon_library'] ?? '',
-        'content' => $data['icon_content'] ?? '',
-      ],
-      $data['icon_group'] ?? NULL,
-    );
+    $icon = self::createIcon($data);
 
     $prophecy = $this->prophesize('\Drupal\ui_icons\Plugin\IconPackManagerInterface');
     $prophecy->getIcon($data['icon_pack_id'] . ':' . $data['icon_id'])
@@ -127,8 +115,8 @@ class IconTest extends UnitTestCase {
         [
           'icon_pack_id' => 'icon_pack_id',
           'icon_id' => 'icon_id',
-          'icon_source' => '/foo/bar',
-          'icon_template' => 'my_template',
+          'source' => '/foo/bar',
+          'template' => 'my_template',
         ],
         [
           '#type' => 'inline_template',
@@ -147,11 +135,11 @@ class IconTest extends UnitTestCase {
           'icon_pack_id' => 'icon_pack_id',
           'icon_pack_label' => 'Baz',
           'icon_id' => 'icon_id',
-          'icon_source' => '/foo/bar',
-          'icon_group' => 'test_group',
-          'icon_content' => 'test_content',
-          'icon_template' => 'my_template',
-          'icon_library' => 'my_theme/my_library',
+          'source' => '/foo/bar',
+          'group' => 'test_group',
+          'content' => 'test_content',
+          'template' => 'my_template',
+          'library' => 'my_theme/my_library',
           'icon_settings' => ['foo' => 'bar'],
         ],
         [
