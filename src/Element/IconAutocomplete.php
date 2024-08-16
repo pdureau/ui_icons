@@ -308,7 +308,7 @@ class IconAutocomplete extends FormElementBase {
     /** @var \Drupal\ui_icons\IconDefinitionInterface $icon */
     $icon = self::iconPack()->getIcon($input['icon_id']);
     if (NULL === $icon || !$icon instanceof IconDefinitionInterface) {
-      $form_state->setError($element['icon_id'], new TranslatableMarkup('Icon for %title is invalid: %icon.', [
+      $form_state->setError($element['icon_id'], new TranslatableMarkup('Icon for %title is invalid: %icon.<br>Please search again and select a result in the list.', [
         '%title' => FormElementHelper::getElementTitle($element),
         '%icon' => $input['icon_id'],
       ]));

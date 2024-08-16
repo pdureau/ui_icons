@@ -335,7 +335,7 @@ class IconAutocompleteTest extends IconUnitTestCase {
 
     // The test is to expect the setError().
     $form_state->method('setError')
-      ->with($element['icon_id'], new TranslatableMarkup('Icon for %title is invalid: %icon.', [
+      ->with($element['icon_id'], new TranslatableMarkup('Icon for %title is invalid: %icon.<br>Please search again and select a result in the list.', [
         '%title' => $element['icon_id']['#title'],
         '%icon' => 'foo:baz',
       ]));
