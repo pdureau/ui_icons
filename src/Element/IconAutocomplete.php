@@ -26,6 +26,7 @@ use Symfony\Component\HttpFoundation\Request;
  * - #default_settings: (array) Settings for the extractor settings.
  * - #settings_title: (string) Extractor settings details title.
  * - #allowed_icon_pack: (array) Icon pack to limit the selection.
+ * - #return_id: (bool) Form return icon id instead of icon object as default.
  *
  * Some base properties from FormElementBase.
  * - #description: (string) Help or description text for the input element.
@@ -81,6 +82,7 @@ class IconAutocomplete extends FormElementBase {
       '#show_settings' => FALSE,
       '#default_settings' => [],
       '#settings_title' => new TranslatableMarkup('Settings'),
+      '#return_id' => FALSE,
     ];
   }
 
@@ -89,7 +91,13 @@ class IconAutocomplete extends FormElementBase {
    */
   public static function valueCallback(mixed &$element, mixed $input, FormStateInterface $form_state): mixed {
     $icon = NULL;
-    if ($input !== FALSE && !empty($input['icon_id'])) {
+
+    if ($input !== FALSE) {
+      if (empty($input['icon_id'])) {
+        // In case of default value we need to be able to delete.
+        unset($element['#default_value']);
+        return [];
+      }
       $return = $input;
 
       /** @var \Drupal\ui_icons\IconDefinitionInterface $icon */
@@ -292,6 +300,8 @@ class IconAutocomplete extends FormElementBase {
    *   The form state object.
    * @param array $complete_form
    *   The complete form array.
+   *
+   * @todo reduce complexity.
    */
   public static function validateIcon(array &$element, FormStateInterface $form_state, array &$complete_form): void {
     $input_exists = FALSE;
@@ -335,6 +345,11 @@ class IconAutocomplete extends FormElementBase {
     if (isset($input['icon_settings'][$icon_pack_id])) {
       $settings[$icon_pack_id] = $input['icon_settings'][$icon_pack_id];
       // @todo validateConfigurationForm from extractor plugin.
+    }
+
+    if (isset($element['#return_id']) && TRUE === $element['#return_id']) {
+      $form_state->setValueForElement($element, ['target_id' => $icon->getId(), 'settings' => $settings]);
+      return;
     }
 
     $form_state->setValueForElement($element, ['icon' => $icon, 'settings' => $settings]);

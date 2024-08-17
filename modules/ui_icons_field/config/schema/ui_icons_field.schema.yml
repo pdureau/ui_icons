@@ -2,19 +2,16 @@ field.value.ui_icon:
   type: mapping
   label: 'Default icon value'
   mapping:
-    default_icon:
-      type: mapping
-      mapping:
-        target_id:
-          type: string
-          label: 'Default icon ID'
-        settings:
-          type: sequence
-          label: 'Default icon settings'
-          # sequence:
-          #   type: sequence
-          #   sequence:
-          #     type: string
+    target_id:
+      type: string
+      label: 'Default icon ID'
+    settings:
+      type: sequence
+      label: 'Default icon settings'
+      # sequence:
+      #   type: sequence
+      #   sequence:
+      #     type: string
 
 field.formatter.settings.icon_formatter:
   type: mapping
@@ -23,10 +20,6 @@ field.formatter.settings.icon_formatter:
     icon_settings:
       type: sequence
       label: 'Icon extractor settings'
-      # sequence:
-      #   type: sequence
-      #   sequence:
-      #     type: string
 
 field.formatter.settings.icon_link_formatter:
   type: mapping
@@ -35,10 +28,6 @@ field.formatter.settings.icon_link_formatter:
     icon_settings:
       type: sequence
       label: 'Icon extractor settings'
-      # sequence:
-      #   type: sequence
-      #   sequence:
-      #     type: string
     icon_display:
       type: string
       label: 'Icon display position'

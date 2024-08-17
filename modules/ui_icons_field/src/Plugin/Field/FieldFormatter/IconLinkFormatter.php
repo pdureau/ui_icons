@@ -11,6 +11,7 @@ use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Path\PathValidatorInterface;
 use Drupal\Core\StringTranslation\TranslatableMarkup;
 use Drupal\link\Plugin\Field\FieldFormatter\LinkFormatter;
+use Drupal\ui_icons\IconDefinitionInterface;
 use Drupal\ui_icons\Plugin\IconPackManagerInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
@@ -214,30 +215,34 @@ class IconLinkFormatter extends LinkFormatter {
         continue;
       }
 
-      $icon = $item->options['value']['icon'] ?? NULL;
-
-      if (NULL === $icon) {
+      $icon_full_id = $item->options['icon']['target_id'] ?? NULL;
+      if (NULL === $icon_full_id) {
         continue;
       }
 
-      $settings = $item->options['value']['settings'] ?? [];
+      $icon = $this->pluginManagerIconPack->getIcon($icon_full_id);
+      if (!$icon instanceof IconDefinitionInterface) {
+        continue;
+      }
+
+      $icon_settings = $item->options['icon']['settings'];
       $icon_pack_id = $icon->getIconPackId();
 
       // Priority is to look for widget settings, then formatter, then defaults
       // from definition.
-      if (!empty($settings) && isset($settings[$icon_pack_id]) && !empty($settings[$icon_pack_id])) {
-        $settings = $settings[$icon_pack_id];
+      if (!empty($icon_settings) && isset($icon_settings[$icon_pack_id]) && !empty($icon_settings[$icon_pack_id])) {
+        $icon_settings = $icon_settings[$icon_pack_id];
       }
       else {
         $formatter_settings = $this->getSetting('icon_settings') ?? [];
         if (isset($formatter_settings[$icon_pack_id]) && !empty($formatter_settings[$icon_pack_id])) {
-          $settings = $formatter_settings[$icon_pack_id];
+          $icon_settings = $formatter_settings[$icon_pack_id];
         }
         else {
           // If the settings form has never been saved, we need to get extractor
           // default values if set.
           // @todo move to getRenderable()?
-          $settings = $this->pluginManagerIconPack->getExtractorFormDefaults($icon_pack_id);
+          $icon_settings = $this->pluginManagerIconPack->getExtractorFormDefaults($icon_pack_id);
         }
       }
 
@@ -246,7 +251,7 @@ class IconLinkFormatter extends LinkFormatter {
       switch ($icon_display) {
         case 'before':
           $elements[$delta] = [
-            'icon' => $icon->getRenderable($settings),
+            'icon' => $icon->getRenderable($icon_settings),
             'link' => $elements[$delta],
           ];
           break;
@@ -254,12 +259,12 @@ class IconLinkFormatter extends LinkFormatter {
         case 'after':
           $elements[$delta] = [
             'link' => $elements[$delta],
-            'icon' => $icon->getRenderable($settings),
+            'icon' => $icon->getRenderable($icon_settings),
           ];
           break;
 
         default:
-          $elements[$delta]['#title'] = $icon->getRenderable($settings);
+          $elements[$delta]['#title'] = $icon->getRenderable($icon_settings);
           break;
       }
     }

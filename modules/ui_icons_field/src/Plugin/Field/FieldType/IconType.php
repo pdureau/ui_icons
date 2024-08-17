@@ -21,7 +21,6 @@ use Drupal\Core\TypedData\MapDataDefinition;
   default_widget: "icon_widget",
   default_formatter: "icon_formatter",
   list_class: IconFieldItemList::class,
-
 )]
 class IconType extends FieldItemBase {
 

@@ -178,11 +178,13 @@ class IconLinkWidget extends LinkWidget implements ContainerFactoryPluginInterfa
     /** @var \Drupal\Core\Field\FieldItemInterface $item */
     $item = $items[$delta];
 
-    $icon_id = NULL;
+    $icon_full_id = NULL;
     $options = $item->get('options')->getValue() ?? [];
-    if (isset($options['value']['icon']) && $options['value']['icon'] instanceof IconDefinitionInterface) {
-      $icon = $options['value']['icon'];
-      $icon_id = $icon->getId();
+    if (isset($options['icon']['target_id'])) {
+      $icon = $this->pluginManagerIconPack->getIcon($options['icon']['target_id']);
+      if ($icon instanceof IconDefinitionInterface) {
+        $icon_full_id = $icon->getId();
+      }
     }
 
     $icon_display = $options['icon_display'] ?? 'icon_only';
@@ -190,11 +192,12 @@ class IconLinkWidget extends LinkWidget implements ContainerFactoryPluginInterfa
     $label = $this->fieldDefinition->getLabel() ?? $this->t('Link');
     $field_name = $this->fieldDefinition->getName();
 
-    $element['value'] = [
+    $element['icon'] = [
       '#type' => 'icon_autocomplete',
       '#title' => $this->t('@name icon', ['@name' => $label]),
       '#description' => $this->t('Pick an Icon for this link.'),
-      '#default_value' => $icon_id,
+      '#return_id' => TRUE,
+      '#default_value' => $icon_full_id,
       '#allowed_icon_pack' => $allowed_icon_pack,
       '#show_settings' => $settings['show_settings'],
       '#required' => $element['#required'] ? $settings['icon_required'] : FALSE,
@@ -203,15 +206,12 @@ class IconLinkWidget extends LinkWidget implements ContainerFactoryPluginInterfa
         $field_name,
         $delta,
         'options',
-        'value',
+        'icon',
       ]),
     ];
 
-    if ($icon_id) {
-      $element['value']['#default_value'] = $icon_id;
-      if (TRUE == $settings['show_settings'] && isset($options['value']['settings'])) {
-        $element['value']['#default_settings'] = $options['value']['settings'];
-      }
+    if ($icon_full_id && TRUE == $settings['show_settings'] && isset($options['icon']['settings'])) {
+      $element['icon']['#default_settings'] = $options['icon']['settings'];
     }
 
     if (TRUE == $settings['icon_position']) {

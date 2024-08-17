@@ -262,6 +262,20 @@ class IconAutocompleteTest extends IconUnitTestCase {
       ->with($element, ['icon' => $icon, 'settings' => $settings]);
 
     IconAutocomplete::validateIcon($element, $form_state, $complete_form);
+
+    // Test #return_id property.
+    $element['#return_id'] = TRUE;
+
+    $form_state = $this->createMock(FormStateInterface::class);
+    $form_state->method('getValues')
+      ->willReturn($values);
+
+    // Main test is to expect the setValueForElement() with only target_id.
+    $form_state->expects($this->once())
+      ->method('setValueForElement')
+      ->with($element, ['target_id' => $values['icon']['icon_id'], 'settings' => $settings]);
+
+    IconAutocomplete::validateIcon($element, $form_state, $complete_form);
   }
 
   /**
