@@ -9,7 +9,7 @@
    *
    * @type {Drupal~behavior}
    */
-  Drupal.behaviors.IconPreview = {
+  Drupal.behaviors.IconAutocompleteSelect = {
     attach(context) {
       const iconSelectors = once(
         'setIconPreview',
