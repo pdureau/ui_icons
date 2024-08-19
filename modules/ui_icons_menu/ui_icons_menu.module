@@ -86,37 +86,49 @@ function ui_icons_menu__preprocess_menu(array &$items): void {
 function ui_icons_menu__preprocess_menu_item(array &$item): void {
   /** @var \Drupal\Core\Url $url */
   $url = $item['url'];
+
   $options = $url->getOptions();
-
-  if (!empty($options['value']['icon']) && $options['value']['icon'] instanceof IconDefinitionInterface && empty($options['already_processed'])) {
-    $icon = $options['value']['icon'];
-    $icon_display = $options['icon_display'] ?? 'before';
-
-    $icon_settings = [];
-    if (isset($options['value']['settings'][$icon->getIconPackId()])) {
-      $icon_settings = $options['value']['settings'][$icon->getIconPackId()];
-    }
-    $icon = $icon->getRenderable($icon_settings);
-
-    switch ($icon_display) {
-      case 'before':
-        $item['title'] = [
-          'icon' => $icon,
-          'title' => ['#markup' => '<span class="ui-icons-menu-text">' . $item['title'] . '</span>'],
-        ];
-        break;
-
-      case 'after':
-        $item['title'] = [
-          'title' => ['#markup' => '<span class="ui-icons-menu-text">' . $item['title'] . '</span>'],
-          'icon' => $icon,
-        ];
-        break;
-
-      default:
-        $item['title'] = $icon;
-        break;
-    }
-
+  if (!isset($options['icon']['target_id']) || !empty($options['already_processed'])) {
+    return;
   }
+
+  $icon_full_id = $options['icon']['target_id'];
+  if (FALSE === strpos($icon_full_id, ':')) {
+    return;
+  }
+
+  /** @var \Drupal\ui_icons\Plugin\IconPackManagerInterface $iconPackManager */
+  $iconPackManager = \Drupal::service('plugin.manager.ui_icons_pack');
+  $icon = $iconPackManager->getIcon($icon_full_id);
+  if (FALSE === $icon) {
+    return;
+  }
+
+  $icon_settings = [];
+  if (isset($options['icon']['settings'][$icon->getIconPackId()])) {
+    $icon_settings = $options['icon']['settings'][$icon->getIconPackId()];
+  }
+  $icon = $icon->getRenderable($icon_settings);
+
+  $icon_display = $options['icon_display'] ?? 'before';
+  switch ($icon_display) {
+    case 'before':
+      $item['title'] = [
+        'icon' => $icon,
+        'title' => ['#markup' => '<span class="ui-icons-menu-text">' . $item['title'] . '</span>'],
+      ];
+      break;
+
+    case 'after':
+      $item['title'] = [
+        'title' => ['#markup' => '<span class="ui-icons-menu-text">' . $item['title'] . '</span>'],
+        'icon' => $icon,
+      ];
+      break;
+
+    default:
+      $item['title'] = $icon;
+      break;
+  }
+
 }
