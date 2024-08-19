@@ -11,14 +11,12 @@ ui_icons_material_svg_filled:
       description: "Set a width for this icon."
       type: "integer"
       default: 32
-      required: true
       suffix: "px"
     height:
       title: "Height"
       description: "Set a height for this icon."
       type: "integer"
       default: 32
-      required: true
       suffix: "px"
     title:
       title: "Title"
@@ -40,14 +38,12 @@ ui_icons_material_svg_outlined:
       description: "Set a width for this icon."
       type: "integer"
       default: 32
-      required: true
       suffix: "px"
     height:
       title: "Height"
       description: "Set a height for this icon."
       type: "integer"
       default: 32
-      required: true
       suffix: "px"
     title:
       title: "Title"
@@ -69,14 +65,12 @@ ui_icons_material_svg_round:
       description: "Set a width for this icon."
       type: "integer"
       default: 32
-      required: true
       suffix: "px"
     height:
       title: "Height"
       description: "Set a height for this icon."
       type: "integer"
       default: 32
-      required: true
       suffix: "px"
     title:
       title: "Title"
@@ -98,14 +92,12 @@ ui_icons_material_svg_sharp:
       description: "Set a width for this icon."
       type: "integer"
       default: 32
-      required: true
       suffix: "px"
     height:
       title: "Height"
       description: "Set a height for this icon."
       type: "integer"
       default: 32
-      required: true
       suffix: "px"
     title:
       title: "Title"
@@ -127,14 +119,12 @@ ui_icons_material_svg_two_tone:
       description: "Set a width for this icon."
       type: "integer"
       default: 32
-      required: true
       suffix: "px"
     height:
       title: "Height"
       description: "Set a height for this icon."
       type: "integer"
       default: 32
-      required: true
       suffix: "px"
     title:
       title: "Title"

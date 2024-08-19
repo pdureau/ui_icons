@@ -146,14 +146,12 @@ icon_pack_example_settings:
       description: "Set a width for this icon."
       type: "integer"
       default: 32
-      required: true
       suffix: "px"
     height:
       title: "Height"
       description: "Set a height for this icon."
       type: "integer"
       default: 32
-      required: true
       suffix: "px"
     title:
       title: "Title"
