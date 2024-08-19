@@ -10,27 +10,73 @@
   margin-left: 1rem;
 }
 
-.ui-icons-grid .ui-icons-item--grid {
-  display: inline-block;
-  margin: 0.25rem;
+.ui-icons-grid {
+  display: grid;
+  grid-gap: 10px;
+  margin: 10px 0;
+}
+
+@media (min-width: 480px) {
+  .ui-icons-grid {
+    grid-template-columns: repeat(6, 1fr)
+  }
+}
+
+@media (min-width: 600px) {
+  .ui-icons-grid {
+    grid-template-columns: repeat(8,1fr)
+  }
+}
+
+@media (min-width: 768px) {
+  .ui-icons-grid {
+    grid-template-columns: repeat(10,1fr)
+  }
+}
+
+@media (min-width: 1024px) {
+  .ui-icons-grid {
+    grid-template-columns: repeat(14,1fr)
+  }
+}
+
+@media (min-width: 1440px) {
+  .ui-icons-grid {
+    grid-template-columns: repeat(18,1fr)
+  }
+}
+
+.ui-icons-item {
+  position: relative;
+  padding: 0.2rem;
+  background-color: #f7f7f7;
   border: 1px solid #f7f7f7;
   border-radius: 5px;
   box-shadow: 2px 2px 2px 1px rgb(0, 0, 0, 0.2);
+  overflow: hidden;
 }
 
-.ui-icons-grid .ui-icons-item--grid .ui-icons-item__name {
-  font-size: x-small;
+.ui-icons-item-inner {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 1px;
 }
 
-.ui-icons-item__preview .thumbnail {
-  background-color: #f7f7f7;
-}
-
-.ui-icons-item__preview .thumbnail img,
-.ui-icons-item__preview .thumbnail svg {
+.ui-icons-item-inner img,
+.ui-icons-item-inner svg {
   display: block;
   max-width: 2.8rem;
   max-height: 2.8rem;
   margin: auto;
-  padding: 0.25rem 0.25rem 0 0.25rem;
+}
+
+.ui-icons-item-name {
+  font-size: 11px;
+  padding: 0.2rem 0 0;
+  max-width: 100%;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  overflow: hidden;
+  text-transform: capitalize;
 }

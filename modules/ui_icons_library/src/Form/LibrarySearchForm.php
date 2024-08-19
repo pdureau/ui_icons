@@ -48,20 +48,20 @@ final class LibrarySearchForm extends FormBase {
     $search = $values['search'] ?? '';
     $icon_pack = $values['icon_pack'] ?? '';
     $group = $values['group'] ?? '';
-    $num_per_page = $values['num_per_page'] ?? 200;
+    $num_per_page = $values['num_per_page'] ?? 196;
 
     $form['icon_pack'] = [
       '#type' => 'select',
       '#title_display' => 'invisible',
       '#title' => $this->t('Icon Pack'),
       '#default_value' => $icon_pack,
-      '#options' => ['' => $this->t('- Select Icon Pack -')] + $this->pluginManagerIconPack->listIconPackOptions(),
+      '#options' => ['' => $this->t('- Select Pack -')] + $this->pluginManagerIconPack->listIconPackOptions(),
       '#weight' => -11,
     ];
 
     $form['search'] = [
       '#type' => 'textfield',
-      '#size' => 20,
+      '#size' => 12,
       '#default_value' => $search,
       '#title' => $this->t('Keywords'),
       '#title_display' => 'invisible',
@@ -123,8 +123,8 @@ final class LibrarySearchForm extends FormBase {
     $icons = $this->filterIcons($icons_list, $icon_pack, $group, $display_settings);
 
     $total = count($icons);
-    if ($total > 200) {
-      $options = [200, 600, 1200];
+    if ($total > 196) {
+      $options = [196, 588, 1176];
       $form['num_per_page'] = [
         '#type' => 'select',
         '#title' => $this->t('Icons per page'),
