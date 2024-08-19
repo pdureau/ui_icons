@@ -30,7 +30,7 @@
           // @todo check if autofocus first result is a good idea.
           // autoFocus: true,
           delay: 500,
-          minLength: 3,
+          minLength: 2,
         };
         jQuery(iconSelector).autocomplete('option', options);
       });

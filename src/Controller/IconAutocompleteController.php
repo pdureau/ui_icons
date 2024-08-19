@@ -50,7 +50,9 @@ class IconAutocompleteController extends ControllerBase {
   public function handleSearchIcons(Request $request): JsonResponse {
     $query = trim((string) $request->query->get('q', ''));
 
-    if (empty($query) || mb_strlen($query) < 3) {
+    // @todo global match length with autocomplete in
+    // web/modules/ui_icons/js/icon.autocomplete.js
+    if (empty($query) || mb_strlen($query) < 2) {
       return new JsonResponse([]);
     }
 
