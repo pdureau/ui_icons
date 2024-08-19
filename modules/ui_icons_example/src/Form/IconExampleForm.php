@@ -6,7 +6,6 @@ namespace Drupal\ui_icons_example\Form;
 
 use Drupal\Core\Form\FormBase;
 use Drupal\Core\Form\FormStateInterface;
-use Drupal\Core\Render\Element;
 use Drupal\ui_icons\Plugin\IconExtractorPluginManager;
 use Drupal\ui_icons\Plugin\IconPackManagerInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
@@ -130,6 +129,25 @@ final class IconExampleForm extends FormBase {
       '#allowed_icon_pack' => $allowed,
     ];
 
+    $form['icons']['icon_picker'] = [
+      '#type' => 'icon_picker',
+      '#title' => $this->t('Icon picker'),
+    ];
+
+    $form['icons']['icon_picker_settings'] = [
+      '#type' => 'icon_picker',
+      '#title' => $this->t('Icon picker with settings'),
+      '#show_settings' => TRUE,
+    ];
+
+    $allowed = array_slice(array_keys($names), -1);
+    $form['icons']['icon_picker_limit'] = [
+      '#type' => 'icon_picker',
+      '#title' => $this->t('Icon picker limited'),
+      '#description' => $this->t('Limited to: @name.', ['@name' => $names[$allowed[0]]]),
+      '#allowed_icon_pack' => $allowed,
+    ];
+
     // No full select as we could have thousands of icons.
     $options = ['' => $this->t('- Select -')];
     $options += $this->pluginManagerIconPack->listIconOptions($allowed);
@@ -155,12 +173,7 @@ final class IconExampleForm extends FormBase {
       '#value' => serialize($icon_pack),
     ];
 
-    // Add our extractor forms.
-    $this->pluginManagerIconPack->getExtractorPluginForms($form['settings'], $form_state);
-    foreach (Element::children($form['settings']) as $icon_pack_id) {
-      $form['settings'][$icon_pack_id]['#type'] = 'details';
-      $form['settings'][$icon_pack_id]['#title'] = $icon_pack_id;
-    }
+    $this->pluginManagerIconPack->getExtractorPluginForms($form['settings'], $form_state, [], [], TRUE);
 
     $form['actions'] = [
       '#type' => 'actions',
