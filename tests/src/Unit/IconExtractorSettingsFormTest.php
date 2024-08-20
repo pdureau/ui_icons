@@ -36,7 +36,7 @@ class IconExtractorSettingsFormTest extends UnitTestCase {
    * @return array
    *   The data for settings and expected.
    *
-   * @phpcs:disable 
+   * @phpcs:disable
    */
   public static function settingsFormDataProvider(): array {
     return [
@@ -63,7 +63,6 @@ class IconExtractorSettingsFormTest extends UnitTestCase {
             'type' => 'string',
             'size' => 22,
             'maxlength' => 33,
-            'required' => TRUE,
             'placeholder' => 'My test string',
             'pattern' => '_pattern_',
             'prefix' => '_prefix_',
@@ -78,7 +77,6 @@ class IconExtractorSettingsFormTest extends UnitTestCase {
             '#size' => 22,
             '#maxlength' => 33,
             '#pattern' => '_pattern_',
-            '#required' => TRUE,
             '#field_prefix' => '_prefix_',
             '#field_suffix' => '_suffix_',
             '#placeholder' => 'My test string',

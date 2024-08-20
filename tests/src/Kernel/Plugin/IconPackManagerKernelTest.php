@@ -169,12 +169,6 @@ class IconPackManagerKernelTest extends KernelTestBase {
     $expected = ['test_local_files', 'test_local_svg', 'test_local_svg_sprite', 'test_no_icons'];
     $this->assertSame($expected, array_keys($form));
 
-    // Attributes is important, used by js for hidden/show.
-    $this->assertSame(['name' => 'icon-settings--test_local_files'], $form['test_local_files']['#attributes']);
-    $this->assertSame(['name' => 'icon-settings--test_local_svg'], $form['test_local_svg']['#attributes']);
-    $this->assertSame(['name' => 'icon-settings--test_local_svg_sprite'], $form['test_local_svg_sprite']['#attributes']);
-    $this->assertSame(['name' => 'icon-settings--test_no_icons'], $form['test_no_icons']['#attributes']);
-
     // Check under settings form key.
     $this->assertArrayHasKey('width', $form['test_local_files']);
     $this->assertArrayHasKey('height', $form['test_local_files']);

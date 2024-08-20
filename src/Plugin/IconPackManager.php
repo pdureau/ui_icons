@@ -246,7 +246,7 @@ class IconPackManager extends DefaultPluginManager implements IconPackManagerInt
   /**
    * {@inheritdoc}
    */
-  public function getExtractorPluginForms(array &$form, FormStateInterface $form_state, array $default_settings = [], array $allowed_icon_pack = []): void {
+  public function getExtractorPluginForms(array &$form, FormStateInterface $form_state, array $default_settings = [], array $allowed_icon_pack = [], bool $wrap_details = FALSE): void {
     $icon_pack = $this->getDefinitions();
 
     if (!empty($allowed_icon_pack)) {
@@ -267,10 +267,8 @@ class IconPackManager extends DefaultPluginManager implements IconPackManagerInt
       // Create the container for each extractor settings used to have the
       // extractor form.
       $form[$icon_pack_id] = [
-        '#type' => 'container',
-        // Name is used for js hide/show settings.
-        // @see web/modules/ui_icons/js/ui_icons.admin.js
-        '#attributes' => ['name' => 'icon-settings--' . $icon_pack_id],
+        '#type' => $wrap_details ? 'details' : 'container',
+        '#title' => $wrap_details ? $plugin['label'] : '',
       ];
 
       // Create the extractor form and set settings so we can build with values.

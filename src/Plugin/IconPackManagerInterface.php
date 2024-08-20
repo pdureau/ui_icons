@@ -78,8 +78,10 @@ interface IconPackManagerInterface extends PluginManagerInterface {
    *   The settings for the forms (optional).
    * @param array $allowed_icon_pack
    *   The list of icon set (optional).
+   * @param bool $wrap_details
+   *   Wrap each form in details (optional).
    */
-  public function getExtractorPluginForms(array &$form, FormStateInterface $form_state, array $default_settings = [], array $allowed_icon_pack = []): void;
+  public function getExtractorPluginForms(array &$form, FormStateInterface $form_state, array $default_settings = [], array $allowed_icon_pack = [], bool $wrap_details = FALSE): void;
 
   /**
    * Retrieve extractor default options.

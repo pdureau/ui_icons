@@ -113,6 +113,10 @@ class IconFormatter extends FormatterBase implements ContainerFactoryPluginInter
   public function settingsForm(array $form, FormStateInterface $form_state): array {
     $elements = parent::settingsForm($form, $form_state);
 
+    $icon_settings = $this->getSetting('icon_settings') ?? [];
+
+    $this->pluginManagerIconPack->getExtractorPluginForms($elements, $form_state, $icon_settings, [], TRUE);
+
     // @todo get widget settings to know if field has extractor settings enabled.
     $elements['icon_pack_notice'] = [
       '#type' => 'html_tag',
@@ -120,10 +124,6 @@ class IconFormatter extends FormatterBase implements ContainerFactoryPluginInter
       '#value' => $this->t('If the form display allow user to set his own settings, these values will be ignored.'),
       '#attributes' => ['class' => ['description']],
     ];
-
-    $icon_settings = $this->getSetting('icon_settings') ?? [];
-
-    $this->pluginManagerIconPack->getExtractorPluginForms($elements, $form_state, $icon_settings);
 
     // Placeholder to get all settings serialized as the form keys are dynamic
     // and based on icon pack definition options.

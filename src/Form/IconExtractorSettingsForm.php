@@ -94,7 +94,6 @@ class IconExtractorSettingsForm {
       'size' => '#size',
       'maxlength' => '#maxlength',
       'pattern' => '#pattern',
-      'required' => '#required',
       'prefix' => '#field_prefix',
       'suffix' => '#field_suffix',
       'placeholder' => '#placeholder',

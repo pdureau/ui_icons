@@ -145,7 +145,7 @@ class IconLinkFormatter extends LinkFormatter {
 
     $icon_settings = $this->getSetting('icon_settings') ?? [];
 
-    $this->pluginManagerIconPack->getExtractorPluginForms($elements, $form_state, $icon_settings);
+    $this->pluginManagerIconPack->getExtractorPluginForms($elements, $form_state, $icon_settings, [], TRUE);
 
     // Placeholder to get all settings serialized as the form keys are dynamic
     // and based on icon pack definition options.
