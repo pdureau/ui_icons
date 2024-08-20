@@ -15,9 +15,3 @@ libraries
   └── fontawesome
       └── svgs
         └── _GROUP_
-
-## MAINTAINERS
-
-Current maintainers for Drupal 10:
-
-- Jean Valverde (mogtofu33) - https://www.drupal.org/u/mogtofu33

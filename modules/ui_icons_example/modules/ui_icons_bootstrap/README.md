@@ -23,9 +23,3 @@ libraries
       └── node_modules
           └── bootstrap-icons
               └── icons
-
-## MAINTAINERS
-
-Current maintainers for Drupal 10:
-
-- Jean Valverde (mogtofu33) - https://www.drupal.org/u/mogtofu33
