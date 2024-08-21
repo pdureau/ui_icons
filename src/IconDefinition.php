@@ -103,6 +103,7 @@ class IconDefinition implements IconDefinitionInterface {
   public function getRenderable(array $options = []): array {
     $context = [
       'icon_label' => $this->getLabel(),
+      'icon_full_id' => $this->getId(),
       'icon_id' => $this->icon_id,
       'source' => $this->source,
       'content' => new FormattableMarkup($this->getContent(), []),
