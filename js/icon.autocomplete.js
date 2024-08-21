@@ -4,6 +4,9 @@
  */
 // eslint-disable-next-line func-names
 (function ($, Drupal, once) {
+
+  'use strict';
+
   /**
    * UI Icons autocomplete tweaks.
    *
