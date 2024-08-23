@@ -25,7 +25,7 @@ ui_icons_phosphor_svg:
       title: "Alt text"
       description: "Accessibility alternative text, leave empty for decorative icon."
   template: >
-    <svg xmlns="http://www.w3.org/2000/svg" width="{{ width|default(32) }}" height="{{ height|default(32) }}" fill="currentColor" class="bi bi-{{ icon_id }}" viewBox="0 0 256 256">
-        <title>{{ title|default(icon_id|capitalize) }}</title>
+    <svg xmlns="http://www.w3.org/2000/svg" width="{{ width|default(32) }}" height="{{ height|default(32) }}" class="phosphor phosphor-{{ icon_id }}" viewBox="0 0 256 256" fill="currentColor">
+      <title>{{ title|default(icon_id|capitalize) }}</title>
       {{ content }}
     </svg>
