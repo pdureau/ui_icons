@@ -40,6 +40,7 @@ class IconDefinitionTest extends IconUnitTestCase {
         'icon_pack_label' => 'Baz',
         'foo' => 'bar',
         'icon_label' => 'Test icon pack:test',
+        'icon_full_id' => 'test_icon_pack:test_icon_pack:test',
       ],
     ];
 
