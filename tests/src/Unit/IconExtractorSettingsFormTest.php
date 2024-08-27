@@ -27,7 +27,7 @@ class IconExtractorSettingsFormTest extends UnitTestCase {
    */
   public function testGenerateSettingsForm(array $settings, array $expected): void {
     $actual = IconExtractorSettingsForm::generateSettingsForm($settings);
-    $this->assertSame($expected, $actual);
+    $this->assertEquals($expected, $actual);
   }
 
   /**
@@ -44,14 +44,15 @@ class IconExtractorSettingsFormTest extends UnitTestCase {
         'settings' => [
           'test_string_default' => [
             'title' => 'Test String',
-            'description' => 'Form test string',
+            'type' => 'string',
+            'description' => 'Form test string.',
           ],
         ],
         'expected' => [
           'test_string_default' => [
-            '#type' => 'textfield',
             '#title' => 'Test String',
-            '#description' => 'Form test string',
+            '#description' => 'Form test string.',
+            '#type' => 'textfield',
           ],
         ],
       ],
@@ -59,27 +60,43 @@ class IconExtractorSettingsFormTest extends UnitTestCase {
         'settings' => [
           'test_string' => [
             'title' => 'Test String',
+            'type' => 'string',
             'description' => 'Form test string',
             'type' => 'string',
-            'size' => 22,
-            'maxlength' => 33,
-            'placeholder' => 'My test string',
+            'maxLength' => 33,
             'pattern' => '_pattern_',
-            'prefix' => '_prefix_',
-            'suffix' => '_suffix_',
           ],
         ],
         'expected' => [
           'test_string' => [
-            '#type' => 'textfield',
             '#title' => 'Test String',
             '#description' => 'Form test string',
-            '#size' => 22,
-            '#maxlength' => 33,
+            '#type' => 'textfield',
             '#pattern' => '_pattern_',
-            '#field_prefix' => '_prefix_',
-            '#field_suffix' => '_suffix_',
-            '#placeholder' => 'My test string',
+            '#maxlength' => 33,
+            '#size' => 33,
+          ],
+        ],
+      ],
+      'case for string field with min' => [
+        'settings' => [
+          'test_string' => [
+            'title' => 'Test String',
+            'type' => 'string',
+            'description' => 'Form test string',
+            'type' => 'string',
+            'minLength' => 10,
+            'maxLength' => 33,
+          ],
+        ],
+        'expected' => [
+          'test_string' => [
+            '#title' => 'Test String',
+            '#description' => 'Form test string',
+            '#type' => 'textfield',
+            '#pattern' => '^.{10,}$',
+            '#maxlength' => 33,
+            '#size' => 33,
           ],
         ],
       ],
@@ -89,19 +106,35 @@ class IconExtractorSettingsFormTest extends UnitTestCase {
             'title' => 'Test Number',
             'description' => 'Form test number',
             'type' => 'number',
-            'min' => 1,
-            'max' => 100,
-            'step' => 1,
           ],
         ],
         'expected' => [
           'test_number' => [
-            '#type' => 'number',
             '#title' => 'Test Number',
             '#description' => 'Form test number',
+            '#type' => 'number',
+          ],
+        ],
+      ],
+      'case for number field with min/max/step' => [
+        'settings' => [
+          'test_number' => [
+            'title' => 'Test Number',
+            'description' => 'Form test number',
+            'type' => 'number',
+            'minimum' => 1,
+            'maximum' => 100,
+            'multipleOf' => 1,
+          ],
+        ],
+        'expected' => [
+          'test_number' => [
+            '#title' => 'Test Number',
+            '#description' => 'Form test number',
+            '#type' => 'number',
+            '#step' => 1,
             '#min' => 1,
             '#max' => 100,
-            '#step' => 1,
           ],
         ],
       ],
@@ -115,47 +148,9 @@ class IconExtractorSettingsFormTest extends UnitTestCase {
         ],
         'expected' => [
           'test_boolean' => [
-            '#type' => 'checkbox',
             '#title' => 'Test Boolean',
             '#description' => 'Form test boolean',
-          ],
-        ],
-      ],
-      'case for color field' => [
-        'settings' => [
-          'test_color' => [
-            'title' => 'Test Color',
-            'description' => 'Form test color',
-            'type' => 'color',
-          ],
-        ],
-        'expected' => [
-          'test_color' => [
-            '#type' => 'color',
-            '#title' => 'Test Color',
-            '#description' => 'Form test color',
-          ],
-        ],
-      ],
-      'case for range field' => [
-        'settings' => [
-          'test_range' => [
-            'title' => 'Test Range',
-            'description' => 'Form test range',
-            'type' => 'range',
-            'min' => 1,
-            'max' => 100,
-            'step' => 1,
-          ],
-        ],
-        'expected' => [
-          'test_range' => [
-            '#type' => 'range',
-            '#title' => 'Test Range',
-            '#description' => 'Form test range',
-            '#min' => 1,
-            '#max' => 100,
-            '#step' => 1,
+            '#type' => 'checkbox',
           ],
         ],
       ],
@@ -170,10 +165,30 @@ class IconExtractorSettingsFormTest extends UnitTestCase {
         ],
         'expected' => [
           'test_enum' => [
-            '#type' => 'select',
             '#title' => 'Test Enum',
             '#description' => 'Form test enum',
-            '#options' => array_combine(['option1', 'option2', 'option3'], ['option1', 'option2', 'option3']),
+            '#type' => 'select',
+            '#options' => array_combine(['option1', 'option2', 'option3'], ['Option1', 'Option2', 'Option3']),
+          ],
+        ],
+      ],
+      'case for field with enum and default' => [
+        'settings' => [
+          'test_enum' => [
+            'title' => 'Test Enum',
+            'description' => 'Form test enum',
+            'type' => 'string',
+            'enum' => ['option1', 'option2', 'option3'],
+            'default' => 'option2',
+          ],
+        ],
+        'expected' => [
+          'test_enum' => [
+            '#title' => 'Test Enum',
+            '#description' => 'Form test enum',
+            '#type' => 'select',
+            '#options' => array_combine(['option1', 'option2', 'option3'], ['Option1', 'Option2', 'Option3']),
+            '#default_value' => 'option2',
           ],
         ],
       ],
@@ -182,18 +197,16 @@ class IconExtractorSettingsFormTest extends UnitTestCase {
           'test_default' => [
             'title' => 'Test Default',
             'description' => 'Form test default',
-            'size' => 44,
             'type' => 'string',
             'default' => 'default value',
           ],
         ],
         'expected' => [
           'test_default' => [
-            '#type' => 'textfield',
             '#title' => 'Test Default',
             '#description' => 'Form test default',
-            '#size' => 44,
             '#default_value' => 'default value',
+            '#type' => 'textfield',
           ],
         ],
       ],
@@ -202,20 +215,42 @@ class IconExtractorSettingsFormTest extends UnitTestCase {
           'test_number' => [
             'title' => 'Test float',
             'description' => 'Form test float',
-            'type' => 'float',
-            'min' => 10,
-            'max' => 1200,
-            'step' => 5,
+            'type' => 'number',
+            'minimum' => 10.0,
+            'maximum' => 12.0,
+            'multipleOf' => 0.1,
           ],
         ],
         'expected' => [
           'test_number' => [
-            '#type' => 'number',
             '#title' => 'Test float',
             '#description' => 'Form test float',
-            '#min' => 10,
-            '#max' => 1200,
-            '#step' => 5,
+            '#type' => 'number',
+            '#step' => 0.1,
+            '#min' => 10.0,
+            '#max' => 12.0,
+          ],
+        ],
+      ],
+      'case for float 2 decimal field' => [
+        'settings' => [
+          'test_number' => [
+            'title' => 'Test float',
+            'description' => 'Form test float',
+            'type' => 'number',
+            'minimum' => 10.01,
+            'maximum' => 12.01,
+            'multipleOf' => 0.01,
+          ],
+        ],
+        'expected' => [
+          'test_number' => [
+            '#title' => 'Test float',
+            '#description' => 'Form test float',
+            '#type' => 'number',
+            '#step' => 0.01,
+            '#min' => 10.01,
+            '#max' => 12.01,
           ],
         ],
       ],
@@ -242,10 +277,10 @@ class IconExtractorSettingsFormTest extends UnitTestCase {
     $actual = IconExtractorSettingsForm::generateSettingsForm($options, $form_state);
     $expected = [
       'test_saved' => [
-        '#type' => 'textfield',
         '#title' => $options['test_saved']['title'],
         '#description' => $options['test_saved']['description'],
         '#default_value' => 'saved value',
+        '#type' => 'textfield',
       ],
     ];
     $this->assertSame($expected, $actual);

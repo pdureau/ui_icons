@@ -33,12 +33,13 @@ ui_icons.icon_pack_options.icon_pack_example_settings:
     decimal:
       type: float
       label: 'Test decimal'
-    range:
+    number:
       type: integer
-      label: 'Test range'
+      label: 'Test number'
       constraints:
         Range:
           min: 0
+          max: 100
 
 ui_icons.icon_pack_options.icon_pack_example_no_settings:
   type: mapping

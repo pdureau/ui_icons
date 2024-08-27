@@ -11,18 +11,18 @@ ui_icons_phosphor_svg:
       description: "Set a width for this icon."
       type: "integer"
       default: 32
-      suffix: "px"
     height:
       title: "Height"
       description: "Set a height for this icon."
       type: "integer"
       default: 32
-      suffix: "px"
     title:
       title: "Title"
+      type: "string"
       description: "Set a title on hover for this icon."
     alt:
       title: "Alt text"
+      type: "string"
       description: "Accessibility alternative text, leave empty for decorative icon."
   template: >
     <svg xmlns="http://www.w3.org/2000/svg" width="{{ width|default(32) }}" height="{{ height|default(32) }}" class="phosphor phosphor-{{ icon_id }}" viewBox="0 0 256 256" fill="currentColor">

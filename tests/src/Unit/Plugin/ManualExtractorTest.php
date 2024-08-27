@@ -170,11 +170,11 @@ class ManualExtractorTest extends UnitTestCase {
 
     $expected = [
       'foo' => [
-        '#type' => 'textfield',
         '#title' => 'foo',
         '#default_value' => [
           '#default_value' => 'bar',
         ],
+        '#type' => 'textfield',
       ],
     ];
     $this->assertSame($expected, $manualExtractorPlugin->buildConfigurationForm($form, $sub_form_state));

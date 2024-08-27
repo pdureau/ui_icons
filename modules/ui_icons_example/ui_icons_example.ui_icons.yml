@@ -40,9 +40,11 @@ icon_pack_example_drupal_core:
       default: 40
     title:
       title: "Title"
+      type: "string"
       description: "Set a title on hover for this icon."
     alt:
       title: "Alt text"
+      type: "string"
       description: "Accessibility alternative text, leave empty for decorative icon."
 
 icon_pack_example_local:
@@ -66,9 +68,11 @@ icon_pack_example_local:
       default: 32
     title:
       title: "Title"
+      type: string
       description: "Set a title on hover for this icon."
     alt:
       title: "Alt text"
+      type: "string"
       description: "Accessibility alternative text, leave empty for decorative icon."
 
 icon_pack_example_svg:
@@ -94,10 +98,10 @@ icon_pack_example_svg:
       default: 32
     title:
       title: "Title"
-      placeholder: "Set a title on hover for this icon."
+      type: "string"
     alt:
       title: "Alt text"
-      placeholder: "Accessibility alternative text, leave empty for decorative icon."
+      type: "string"
   template: >
     <svg xmlns="http://www.w3.org/2000/svg" width="{{ width|default(32) }}" height="{{ height|default(32) }}" fill="currentColor" viewBox="0 0 163.83 124.92" aria-label="{{ alt|default(icon_id|capitalize) }}">
       {{ content }}
@@ -123,9 +127,11 @@ icon_pack_example_svg_sprite:
       default: 32
     title:
       title: "Title"
+      type: "string"
       description: "Set a title on hover for this icon."
     alt:
       title: "Alt text"
+      type: "string"
       description: "Accessibility alternative text, leave empty for decorative icon."
   template: >
     <svg width="{{ width|default(32) }}" height="{{ height|default(32) }}" fill="currentColor" aria-label="{{ alt|default(icon_id|capitalize) }}">
@@ -146,21 +152,19 @@ icon_pack_example_settings:
       description: "Set a width for this icon."
       type: "integer"
       default: 32
-      suffix: "px"
     height:
       title: "Height"
       description: "Set a height for this icon."
       type: "integer"
       default: 32
-      suffix: "px"
     title:
       title: "Title"
+      type: "string"
       description: "Set a title on hover for this icon."
-      placeholder: "Start typing a title, default Icon id"
     alt:
       title: "Alt text"
+      type: "string"
       description: "Accessibility alternative text, leave empty for decorative icon."
-      placeholder: "Accessibility alternative text"
     select:
       title: "Test select"
       description: "Test for a select with enum property."
@@ -171,26 +175,20 @@ icon_pack_example_settings:
       title: "Test boolean"
       description: "Test for a boolean property."
       type: "boolean"
-    color:
-      title: "Test color"
-      description: "Test for a color property with default."
-      type: "color"
-      default: "#8FA2DC"
     decimal:
       title: "Test decimal"
-      description: "Test for a decimal property with default."
-      type: "decimal"
+      description: "Test for a decimal property with default and step."
+      type: "number"
       default: 66.66
-    range:
-      title: "Test range"
-      description: "Test for a range property."
-      type: "range"
+      multipleOf: 0.01
+    number:
+      title: "Test number min/max/step"
+      description: "Test for number with constraints."
+      type: "integer"
       default: 30
-      min: 10
-      prefix: 10
-      max: 100
-      suffix: 100
-      step: 10
+      minimum: 10
+      maximum: 100
+      multipleOf: 10
 
 icon_pack_example_no_settings:
   label: Example no settings
