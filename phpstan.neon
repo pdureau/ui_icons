@@ -9,6 +9,9 @@ parameters:
       - */tests/*
       # Always fail because of missing link_attributes module.
       - */ui_icons_field_link_attributes/src/Plugin/Field/FieldWidget/IconLinkWithAttributesWidget.php
+      - */ui_icons_patterns/src/Plugin/UiPatterns/PropType/IconPropType.php
+      - */ui_icons_patterns/src/Plugin/UiPatterns/SettingType/IconSettingType.php
+      - */ui_icons_patterns/src/Plugin/UiPatterns/Source/IconSource.php
   fileExtensions:
     - php
     - module

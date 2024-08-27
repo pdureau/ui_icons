@@ -438,6 +438,7 @@ final class IconSelectForm extends FormBase {
     ];
 
     $total_page = (int) round($total / self::NUM_PER_PAGE) + 1;
+    $arg = ['@current_page' => $current_page + 1, '@total_page' => $total_page];
 
     return [
       'current_page' => $current_page + 1,
@@ -460,7 +461,7 @@ final class IconSelectForm extends FormBase {
         '#disabled' => !($total_page > $current_page + 1),
       ],
       'page_info' => [
-        '#markup' => $this->t('Page @current_page/@total_page', ['@current_page' => $current_page + 1, '@total_page' => $total_page]),
+        '#markup' => $this->t('Page @current_page/@total_page', $arg),
       ],
     ];
   }

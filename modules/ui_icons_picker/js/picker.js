@@ -4,23 +4,20 @@
  */
 // eslint-disable-next-line func-names
 (function ($, Drupal, once) {
-
-  'use strict';
-
   function openDialog(event) {
     event.preventDefault();
 
-    var element = event.target || event.srcElement;
+    const element = event.target || event.srcElement;
 
-    var ajaxSettings = {
-      element: element,
+    const ajaxSettings = {
+      element,
       progress: { type: 'throbber' },
       url: element.getAttribute('data-dialog-url'),
       dialogType: 'modal',
       httpMethod: 'GET',
       dialog: {
         classes: {
-          'ui-dialog': 'icon-library-widget-modal'
+          'ui-dialog': 'icon-library-widget-modal',
         },
         title: Drupal.t('Select icon'),
         height: '95%',
@@ -28,11 +25,11 @@
         query: {
           wrapper_id: element.getAttribute('data-wrapper-id'),
           allowed_icon_pack: element.getAttribute('data-allowed-icon-pack'),
-        }
+        },
       },
     };
 
-    var myAjaxObject = Drupal.ajax(ajaxSettings);
+    const myAjaxObject = Drupal.ajax(ajaxSettings);
     myAjaxObject.execute();
   }
 
@@ -46,11 +43,9 @@
    */
   Drupal.behaviors.icon_dialog = {
     attach(context) {
-      once('dialog', 'input.form-icon-dialog', context).forEach(
-        (element) => {
-          element.addEventListener('click', openDialog);
-        },
-      );
+      once('dialog', 'input.form-icon-dialog', context).forEach((element) => {
+        element.addEventListener('click', openDialog);
+      });
     },
   };
 
@@ -73,9 +68,10 @@
     response,
     status,
   ) {
-    const elem = document.querySelector(`#${response.wrapper_id} input[name$='icon_id]']`);
+    const elem = document.querySelector(
+      `#${response.wrapper_id} input[name$='icon_id]']`,
+    );
     elem.value = response.icon_full_id;
     jQuery(elem).trigger('change');
   };
-
 })(jQuery, Drupal, once);

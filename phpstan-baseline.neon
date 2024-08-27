@@ -11,6 +11,16 @@ parameters:
 			path: modules/ui_icons_field/src/Plugin/Field/FieldWidget/IconWidget.php
 
 		-
+			message: "#^Attribute class Drupal\\\\ui_patterns\\\\Attribute\\\\Source does not exist\\.$#"
+			count: 1
+			path: modules/ui_icons_patterns/src/Plugin/UiPatterns/Source/IconRenderableSource.php
+
+		-
+			message: "#^Call to an undefined method Drupal\\\\ui_icons_patterns\\\\Plugin\\\\UiPatterns\\\\Source\\\\IconRenderableSource\\:\\:getSetting\\(\\)\\.$#"
+			count: 1
+			path: modules/ui_icons_patterns/src/Plugin/UiPatterns/Source/IconRenderableSource.php
+
+		-
 			message: "#^Parameter \\#1 \\$array of static method Drupal\\\\Component\\\\Utility\\\\NestedArray\\:\\:getValue\\(\\) is passed by reference, so it expects variables only\\.$#"
 			count: 1
 			path: modules/ui_icons_picker/src/Form/IconSelectForm.php
