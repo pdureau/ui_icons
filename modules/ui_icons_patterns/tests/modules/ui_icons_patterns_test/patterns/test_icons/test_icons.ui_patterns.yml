@@ -1,0 +1,24 @@
+test_icons:
+  label: 'Button to test icons'
+  fields:
+    label:
+      type: render
+      label: 'Label'
+      preview:
+        type: ui_icon
+        icon_pack: icon_pack_example_drupal_core
+        icon: circle
+  settings:
+    icon1:
+      label: 'Icon 1'
+      type: 'icon'
+      preview:
+        icon_pack: 'icon_pack_example_drupal_core'
+        icon: 'arrow-left'
+    icon2:
+      label: 'Icon 2'
+      type: 'icon'
+      preview:
+        icon_pack: 'icon_pack_example_drupal_core'
+        icon: 'arrow-right'
+        settings: {}

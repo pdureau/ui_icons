@@ -36,19 +36,19 @@ class IconTwigExtension extends AbstractExtension {
    *   The icon set ID.
    * @param string $icon_id
    *   The icon ID.
-   * @param array $options
-   *   An array of options for the icon.
+   * @param array $settings
+   *   An array of settings for the icon.
    *
    * @return array
    *   The icon renderable.
    */
-  public function getIconRenderable(string $icon_pack_id, string $icon_id, array $options = []): array {
+  public function getIconRenderable(string $icon_pack_id, string $icon_id, ?array $settings = []): array {
     $icon = $this->pluginManagerIconPack->getIcon($icon_pack_id . ':' . $icon_id);
     if (!$icon) {
       return [];
     }
 
-    return $icon->getRenderable($options);
+    return $icon->getRenderable($settings ?? []);
   }
 
 }

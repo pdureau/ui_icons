@@ -1,0 +1,32 @@
+name: 'Button to test icons'
+slots:
+  label:
+    title: Label
+props:
+  type: object
+  properties:
+    icon1:
+      title: 'Icon 1, with explicit typing'
+      $ref: ui-patterns://icon
+    icon2:
+      title: 'Icon 2, with implicit typing'
+      type: object
+      properties:
+        icon_pack: {type: 'string'}
+        icon: {type: 'string'}
+stories:
+  preview:
+    title: Preview
+    slots:
+      label:
+        type: ui_icon
+        icon_pack: icon_pack_example_drupal_core
+        icon: circle
+    props:
+      icon1:
+        icon_pack: 'icon_pack_example_drupal_core'
+        icon: 'arrow-left'
+      icon2:
+        icon_pack: 'icon_pack_example_drupal_core'
+        icon: 'arrow-right'
+        settings: {}
