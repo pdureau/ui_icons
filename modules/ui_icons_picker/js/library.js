@@ -46,14 +46,14 @@
       // Move the icon instead of label in each radio.
       const iconPickerPreview = once('setIconPreview', '.icon-radio', context);
       iconPickerPreview.forEach((element) => {
-        const icon_preview = document.querySelector(
+        const iconPreview = document.querySelector(
           `.icon-preview[data-icon-id='${element.value}']`,
         );
-        if (!icon_preview || typeof element.labels[0] === 'undefined') {
+        if (!iconPreview || typeof element.labels[0] === 'undefined') {
           return;
         }
         element.labels[0].textContent = '';
-        element.labels[0].prepend(icon_preview);
+        element.labels[0].prepend(iconPreview);
 
         // Submit when clicked any icon.
         element.addEventListener('click', function (event) {
