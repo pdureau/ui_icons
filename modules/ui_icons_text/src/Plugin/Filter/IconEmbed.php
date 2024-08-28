@@ -26,13 +26,13 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  * @internal
  */
 #[Filter(
-  id: "icon_embed",
-  title: new TranslatableMarkup("Embed icon"),
-  description: new TranslatableMarkup("Embeds icon items using a custom tag, <code>&lt;drupal-icon&gt;</code>."),
+  id: 'icon_embed',
+  title: new TranslatableMarkup('Embed icon'),
+  description: new TranslatableMarkup('Embeds icon items using a custom tag, <code>&lt;drupal-icon&gt;</code>.'),
   type: FilterInterface::TYPE_TRANSFORM_REVERSIBLE,
   weight: 100,
   settings: [
-    "allowed_icon_pack" => [],
+    'allowed_icon_pack' => [],
   ],
 )]
 class IconEmbed extends FilterBase implements ContainerFactoryPluginInterface {

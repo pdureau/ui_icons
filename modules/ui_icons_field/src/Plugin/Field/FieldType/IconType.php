@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Drupal\ui_icons_field\Plugin\Field\FieldType;
 
 use Drupal\Core\Field\Attribute\FieldType;
+use Drupal\Core\Field\FieldDefinitionInterface;
 use Drupal\Core\Field\FieldItemBase;
 use Drupal\Core\Field\FieldStorageDefinitionInterface;
 use Drupal\Core\StringTranslation\TranslatableMarkup;
@@ -15,11 +16,11 @@ use Drupal\Core\TypedData\MapDataDefinition;
  * Plugin implementation of the 'ui_icon' field type.
  */
 #[FieldType(
-  id: "ui_icon",
-  label: new TranslatableMarkup("UI Icon"),
-  description: new TranslatableMarkup("Reference an Icon from icon pack definition."),
-  default_widget: "icon_widget",
-  default_formatter: "icon_formatter",
+  id: 'ui_icon',
+  label: new TranslatableMarkup('UI Icon'),
+  description: new TranslatableMarkup('Reference an Icon from icon pack definition.'),
+  default_widget: 'icon_widget',
+  default_formatter: 'icon_formatter',
   list_class: IconFieldItemList::class,
 )]
 class IconType extends FieldItemBase {
@@ -69,6 +70,20 @@ class IconType extends FieldItemBase {
   public function isEmpty(): bool {
     $value = $this->get('target_id')->getValue();
     return $value === NULL || $value === '';
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public static function generateSampleValue(FieldDefinitionInterface $field_definition) {
+    $manager = \Drupal::service('plugin.manager.ui_icons_pack');
+    $icons = $manager->getIcons();
+    if (empty($icons)) {
+      return [];
+    }
+    return [
+      'target_id' => array_rand($icons),
+    ];
   }
 
 }

@@ -113,7 +113,7 @@ class IconFormatter extends FormatterBase implements ContainerFactoryPluginInter
   public function settingsForm(array $form, FormStateInterface $form_state): array {
     $elements = parent::settingsForm($form, $form_state);
 
-    $icon_settings = $this->getSetting('icon_settings') ?? [];
+    $icon_settings = $this->getSetting('icon_settings') ?: [];
 
     $this->pluginManagerIconPack->getExtractorPluginForms($elements, $form_state, $icon_settings, [], TRUE);
 
@@ -156,7 +156,16 @@ class IconFormatter extends FormatterBase implements ContainerFactoryPluginInter
     $values = $form_state->getValues();
     $name = $this->fieldDefinition->getName();
 
-    $settings = $values['fields'][$name]['settings_edit_form']['settings'] ?? [];
+    $settings = [];
+    // Field UI "MAnage display" page.
+    if (isset($values['fields'][$name]['settings_edit_form']['settings'])) {
+      $settings = $values['fields'][$name]['settings_edit_form']['settings'];
+    }
+    // Layout builder UI.
+    elseif (isset($values['settings']['formatter']['settings'])) {
+      $settings = $values['settings']['formatter']['settings'];
+    }
+
     unset($settings['icon_settings']);
 
     // @todo do we need configuration validation of plugin form?

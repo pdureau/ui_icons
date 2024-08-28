@@ -143,7 +143,7 @@ class IconLinkFormatter extends LinkFormatter {
       '#attributes' => ['class' => ['description']],
     ];
 
-    $icon_settings = $this->getSetting('icon_settings') ?? [];
+    $icon_settings = $this->getSetting('icon_settings') ?: [];
 
     $this->pluginManagerIconPack->getExtractorPluginForms($elements, $form_state, $icon_settings, [], TRUE);
 
@@ -192,7 +192,16 @@ class IconLinkFormatter extends LinkFormatter {
     $values = $form_state->getValues();
     $name = $this->fieldDefinition->getName();
 
-    $settings = $values['fields'][$name]['settings_edit_form']['settings'] ?? [];
+    $settings = [];
+    // Field UI "MAnage display" page.
+    if (isset($values['fields'][$name]['settings_edit_form']['settings'])) {
+      $settings = $values['fields'][$name]['settings_edit_form']['settings'];
+    }
+    // Layout builder UI.
+    elseif (isset($values['settings']['formatter']['settings'])) {
+      $settings = $values['settings']['formatter']['settings'];
+    }
+
     // Clean unwanted values from link.
     foreach (['icon_settings', 'trim_length', 'icon_display', 'url_only', 'url_plain', 'rel', 'target'] as $key) {
       unset($settings[$key]);
