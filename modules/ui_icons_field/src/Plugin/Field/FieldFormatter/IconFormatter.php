@@ -154,22 +154,44 @@ class IconFormatter extends FormatterBase implements ContainerFactoryPluginInter
    */
   public function validateSettings(array $element, FormStateInterface $form_state, &$complete_form): void {
     $values = $form_state->getValues();
-    $name = $this->fieldDefinition->getName();
 
-    $settings = [];
-    // Field UI "MAnage display" page.
-    if (isset($values['fields'][$name]['settings_edit_form']['settings'])) {
-      $settings = $values['fields'][$name]['settings_edit_form']['settings'];
+    $find_icon_settings = function ($elem) use (&$find_icon_settings) {
+      if (!is_array($elem)) {
+        return FALSE;
+      }
+
+      if (isset($elem['icon_settings'])) {
+        return $elem;
+      }
+
+      foreach ($elem as $value) {
+        $result = $find_icon_settings($value);
+        if ($result !== FALSE) {
+          return $result;
+        }
+      }
+
+      return FALSE;
+    };
+
+    $settings = array_filter($values, function ($elem) use ($find_icon_settings) {
+      return $find_icon_settings($elem) !== FALSE;
+    });
+
+    // Extract the value excluding 'icon_settings' key.
+    $filtered_values = array_map(function ($elem) use ($find_icon_settings) {
+      $found = $find_icon_settings($elem);
+      return array_filter($found, function ($key) {
+        return $key !== 'icon_settings';
+      }, ARRAY_FILTER_USE_KEY);
+    }, $settings);
+
+    if (!$filtered_values) {
+      return;
     }
-    // Layout builder UI.
-    elseif (isset($values['settings']['formatter']['settings'])) {
-      $settings = $values['settings']['formatter']['settings'];
-    }
 
-    unset($settings['icon_settings']);
-
-    // @todo do we need configuration validation of plugin form?
-    $form_state->setValueForElement($element, $settings);
+    // Set the value for the element in the form state to b saved.
+    $form_state->setValueForElement($element, reset($filtered_values));
   }
 
   /**
