@@ -11,7 +11,7 @@
 
     const ajaxSettings = {
       element,
-      progress: { type: 'throbber' },
+      progress: { type: 'none' },
       url: element.getAttribute('data-dialog-url'),
       dialogType: 'modal',
       httpMethod: 'GET',

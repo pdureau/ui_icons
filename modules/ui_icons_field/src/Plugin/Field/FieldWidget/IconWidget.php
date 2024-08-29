@@ -25,14 +25,52 @@ class IconWidget extends WidgetBase implements ContainerFactoryPluginInterface {
   /**
    * {@inheritdoc}
    */
+  public static function defaultSettings() {
+    return [
+      'icon_selector' => 'icon_autocomplete',
+    ] + parent::defaultSettings();
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function settingsForm(array $form, FormStateInterface $form_state) {
+    $element = [];
+
+    $element['icon_selector'] = [
+      '#type' => 'select',
+      '#title' => $this->t('Icon selector'),
+      '#options' => $this->getPickerOptions(),
+      '#default_value' => $this->getSetting('icon_selector'),
+    ];
+
+    return $element;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function settingsSummary() {
+    $summary = [];
+
+    $icon_selector = $this->getSetting('icon_selector');
+    $summary[] = $this->t('Selector: @type', ['@type' => $this->getPickerOptions()[$icon_selector]]);
+
+    return $summary;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
   public function formElement(FieldItemListInterface $items, $delta, array $element, array &$form, FormStateInterface $form_state): array {
     $cardinality = $this->fieldDefinition->getFieldStorageDefinition()->getCardinality();
 
     /** @var \Drupal\Core\Field\FieldItemInterface $item */
     $item = $items[$delta];
 
+    $icon_selector = $this->getSetting('icon_selector');
     $element['value'] = [
-      '#type' => 'icon_autocomplete',
+      '#type' => $icon_selector,
       '#title' => $cardinality === 1 ? $this->fieldDefinition->getLabel() : $this->t('Icon'),
       '#allowed_icon_pack' => $this->fieldDefinition->getSetting('allowed_icon_pack'),
       '#required' => $element['#required'] ?? FALSE,
@@ -65,6 +103,19 @@ class IconWidget extends WidgetBase implements ContainerFactoryPluginInterface {
     }
 
     return $values;
+  }
+
+  /**
+   * Get the icon selector options.
+   *
+   * @return \Drupal\Core\StringTranslation\TranslatableMarkup[]
+   *   An array of options for selectors options.
+   */
+  private function getPickerOptions(): array {
+    return [
+      'icon_autocomplete' => $this->t('Autocomplete'),
+      'icon_picker' => $this->t('Picker'),
+    ];
   }
 
 }
