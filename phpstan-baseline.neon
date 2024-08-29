@@ -1,11 +1,6 @@
 parameters:
 	ignoreErrors:
 		-
-			message: "#^Access to an undefined property Drupal\\\\Core\\\\Field\\\\FieldItemInterface\\:\\:\\$settings\\.$#"
-			count: 1
-			path: modules/ui_icons_field/src/Plugin/Field/FieldWidget/IconWidget.php
-
-		-
 			message: "#^Access to an undefined property Drupal\\\\Core\\\\Field\\\\FieldItemInterface\\:\\:\\$target_id\\.$#"
 			count: 1
 			path: modules/ui_icons_field/src/Plugin/Field/FieldWidget/IconWidget.php

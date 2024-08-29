@@ -42,7 +42,7 @@ use Drupal\ui_icons\IconDefinitionInterface;
  * @code
  * my_icon_pack:
  *   label: 'My icons'
- *   description: 'My UI Icons set to use everywhere.'
+ *   description: 'My UI Icons pack to use everywhere.'
  *   extractor: svg
  *   config:
  *     sources:

@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Drupal\ui_icons_field\Plugin\Field\FieldFormatter;
 
+use Drupal\Core\Entity\EntityDisplayRepositoryInterface;
 use Drupal\Core\Field\Attribute\FieldFormatter;
 use Drupal\Core\Field\FieldDefinitionInterface;
 use Drupal\Core\Field\FieldItemListInterface;
@@ -48,6 +49,8 @@ class IconLinkFormatter extends LinkFormatter {
    *   The path validator service.
    * @param \Drupal\ui_icons\Plugin\IconPackManagerInterface $pluginManagerIconPack
    *   The ui icons pack manager.
+   * @param \Drupal\Core\Entity\EntityDisplayRepositoryInterface $entityDisplayRepository
+   *   Manage entity view mode configurations and displays.
    */
   public function __construct(
     $plugin_id,
@@ -59,6 +62,7 @@ class IconLinkFormatter extends LinkFormatter {
     array $third_party_settings,
     protected PathValidatorInterface $path_validator,
     protected IconPackManagerInterface $pluginManagerIconPack,
+    protected EntityDisplayRepositoryInterface $entityDisplayRepository,
   ) {
     parent::__construct(
       $plugin_id,
@@ -71,6 +75,7 @@ class IconLinkFormatter extends LinkFormatter {
       $path_validator
     );
     $this->pluginManagerIconPack = $pluginManagerIconPack;
+    $this->entityDisplayRepository = $entityDisplayRepository;
   }
 
   /**
@@ -91,7 +96,8 @@ class IconLinkFormatter extends LinkFormatter {
       $configuration['view_mode'],
       $configuration['third_party_settings'],
       $container->get('path.validator'),
-      $container->get('plugin.manager.ui_icons_pack')
+      $container->get('plugin.manager.ui_icons_pack'),
+      $container->get('entity_display.repository')
     );
   }
 
@@ -128,29 +134,46 @@ class IconLinkFormatter extends LinkFormatter {
   public function settingsForm(array $form, FormStateInterface $form_state): array {
     $elements = parent::settingsForm($form, $form_state);
 
-    $elements['icon_display'] = [
-      '#type' => 'select',
-      '#title' => $this->t('Icon display'),
-      '#description' => $this->t('If the form display allow user to set his own display, this will be ignored.'),
-      '#options' => $this->getDisplayPositions(),
-      '#default_value' => $this->getSetting('icon_display') ?? 'icon_only',
-    ];
+    // Access FieldWidget settings to match this formatter settings.
+    // Except in some context like views where we don't have the bundle.
+    if (!$bundle = $this->fieldDefinition->getTargetBundle()) {
+      $widget_settings = [
+        'icon_position' => FALSE,
+        'allowed_icon_pack' => [],
+      ];
+    }
+    else {
+      $field_name = $this->fieldDefinition->getName();
+      $form_display = $this->entityDisplayRepository->getFormDisplay(
+        $this->fieldDefinition->getTargetEntityTypeId(),
+        $bundle,
+        // @todo is it possible to support form display?
+        'default'
+      );
+      $widget_settings = $form_display->getComponent($field_name)['settings'];
+    }
 
-    $elements['icon_pack_notice'] = [
-      '#type' => 'html_tag',
-      '#tag' => 'p',
-      '#value' => $this->t('If the form display allow user to set his own settings, these values will be ignored.'),
-      '#attributes' => ['class' => ['description']],
-    ];
+    if (isset($widget_settings['icon_position']) && FALSE === $widget_settings['icon_position']) {
+      $elements['icon_display'] = [
+        '#type' => 'select',
+        '#title' => $this->t('Icon display'),
+        '#options' => $this->getDisplayPositions(),
+        '#default_value' => $this->getSetting('icon_display') ?? 'icon_only',
+      ];
+    }
 
-    $icon_settings = $this->getSetting('icon_settings') ?: [];
-
-    $this->pluginManagerIconPack->getExtractorPluginForms($elements, $form_state, $icon_settings, [], TRUE);
+    $this->pluginManagerIconPack->getExtractorPluginForms(
+      $elements,
+      $form_state,
+      $this->getSetting('icon_settings') ?: [],
+      $widget_settings['allowed_icon_pack'] ? array_filter($widget_settings['allowed_icon_pack']) : [],
+      TRUE
+    );
 
     // Placeholder to get all settings serialized as the form keys are dynamic
     // and based on icon pack definition options.
-    // @todo change to #element_submit when available in
-    // https://drupal.org/i/2820359.
+    // @todo change to #element_submit when available.
+    // @see https://drupal.org/i/2820359
     $elements['icon_settings'] = [
       '#type' => 'hidden',
       '#element_validate' => [
@@ -228,8 +251,10 @@ class IconLinkFormatter extends LinkFormatter {
 
     $filtered_values = reset($filtered_values);
 
-    // Clean unwanted values from link.
-    foreach (['icon_settings', 'trim_length', 'icon_display', 'url_only', 'url_plain', 'rel', 'target'] as $key) {
+    // Do not include this form values.
+    unset($filtered_values['icon_display']);
+    // Clean unwanted values from link formatter.
+    foreach (array_keys(LinkFormatter::defaultSettings()) as $key) {
       unset($filtered_values[$key]);
     }
 
@@ -243,7 +268,7 @@ class IconLinkFormatter extends LinkFormatter {
   public function viewElements(FieldItemListInterface $items, $langcode): array {
     $elements = parent::viewElements($items, $langcode);
 
-    $icon_display_formatter = $this->getSetting('icon_display');
+    $formatter_icon_display = $this->getSetting('icon_display');
 
     foreach ($items as $delta => $item) {
       if ($item->isEmpty()) {
@@ -260,33 +285,20 @@ class IconLinkFormatter extends LinkFormatter {
         continue;
       }
 
-      $icon_settings = $item->options['icon']['settings'];
       $icon_pack_id = $icon->getIconPackId();
 
-      // Priority is to look for widget settings, then formatter, then defaults
-      // from definition.
-      if (!empty($icon_settings) && isset($icon_settings[$icon_pack_id]) && !empty($icon_settings[$icon_pack_id])) {
-        $icon_settings = $icon_settings[$icon_pack_id];
-      }
-      else {
-        $formatter_settings = $this->getSetting('icon_settings') ?? [];
-        if (isset($formatter_settings[$icon_pack_id]) && !empty($formatter_settings[$icon_pack_id])) {
-          $icon_settings = $formatter_settings[$icon_pack_id];
-        }
-        else {
-          // If the settings form has never been saved, we need to get extractor
-          // default values if set.
-          // @todo move to getRenderable()?
-          $icon_settings = $this->pluginManagerIconPack->getExtractorFormDefaults($icon_pack_id);
-        }
+      $settings = [];
+      $formatter_settings = $this->getSetting('icon_settings') ?? [];
+      if (isset($formatter_settings[$icon_pack_id])) {
+        $settings = $formatter_settings[$icon_pack_id];
       }
 
-      $icon_display = $item->options['icon_display'] ?? $icon_display_formatter ?? NULL;
+      $icon_display = $item->options['icon_display'] ?? $formatter_icon_display ?? NULL;
 
       switch ($icon_display) {
         case 'before':
           $elements[$delta] = [
-            'icon' => $icon->getRenderable($icon_settings),
+            'icon' => $icon->getRenderable($settings),
             'link' => $elements[$delta],
           ];
           break;
@@ -294,12 +306,12 @@ class IconLinkFormatter extends LinkFormatter {
         case 'after':
           $elements[$delta] = [
             'link' => $elements[$delta],
-            'icon' => $icon->getRenderable($icon_settings),
+            'icon' => $icon->getRenderable($settings),
           ];
           break;
 
         default:
-          $elements[$delta]['#title'] = $icon->getRenderable($icon_settings);
+          $elements[$delta]['#title'] = $icon->getRenderable($settings);
           break;
       }
     }

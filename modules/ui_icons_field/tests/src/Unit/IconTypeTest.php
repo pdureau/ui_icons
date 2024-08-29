@@ -44,9 +44,8 @@ class IconTypeTest extends UnitTestCase {
   public function testSchema(): void {
     $schema = $this->iconType::schema($this->createMock(FieldStorageDefinitionInterface::class));
 
-    $this->assertCount(2, $schema['columns']);
+    $this->assertCount(1, $schema['columns']);
     $this->assertArrayHasKey('target_id', $schema['columns']);
-    $this->assertArrayHasKey('settings', $schema['columns']);
   }
 
   /**
@@ -56,7 +55,6 @@ class IconTypeTest extends UnitTestCase {
     $properties = $this->iconType::propertyDefinitions($this->createMock(FieldStorageDefinitionInterface::class));
 
     $this->assertSame('string', $properties['target_id']->getDataType());
-    $this->assertSame('map', $properties['settings']->getDataType());
   }
 
 }

@@ -36,7 +36,7 @@ class IconPackManagerKernelTest extends KernelTestBase {
    *
    * @var \Drupal\ui_icons\Plugin\IconPackManagerInterface
    */
-  private IconPackManagerInterface $iconPackManager;
+  private IconPackManagerInterface $pluginManagerIconPack;
 
   /**
    * The App root instance.
@@ -57,7 +57,7 @@ class IconPackManagerKernelTest extends KernelTestBase {
     $ui_icons_extractor_plugin_manager = $this->container->get('plugin.manager.ui_icons_extractor');
     $this->appRoot = $this->container->getParameter('app.root');
 
-    $this->iconPackManager = new IconPackManager(
+    $this->pluginManagerIconPack = new IconPackManager(
       $module_handler,
       $theme_handler,
       $cache_backend,
@@ -70,14 +70,14 @@ class IconPackManagerKernelTest extends KernelTestBase {
    * Test the _construct method.
    */
   public function testConstructor(): void {
-    $this->assertInstanceOf(IconPackManager::class, $this->iconPackManager);
+    $this->assertInstanceOf(IconPackManager::class, $this->pluginManagerIconPack);
   }
 
   /**
    * Test the getIcons method.
    */
   public function testGetIcons(): void {
-    $icons = $this->iconPackManager->getIcons();
+    $icons = $this->pluginManagerIconPack->getIcons();
     $this->assertIsArray($icons);
     $this->assertArrayHasKey('test_local_files:local__9.0_black', $icons);
   }
@@ -86,10 +86,10 @@ class IconPackManagerKernelTest extends KernelTestBase {
    * Test the getIcon method.
    */
   public function testGetIcon(): void {
-    $icon = $this->iconPackManager->getIcon('test_local_files:local__9.0_black');
+    $icon = $this->pluginManagerIconPack->getIcon('test_local_files:local__9.0_black');
     $this->assertInstanceOf(IconDefinitionInterface::class, $icon);
 
-    $icon = $this->iconPackManager->getIcon('test_local_files:_do_not_exist_');
+    $icon = $this->pluginManagerIconPack->getIcon('test_local_files:_do_not_exist_');
     $this->assertNull($icon);
   }
 
@@ -97,7 +97,7 @@ class IconPackManagerKernelTest extends KernelTestBase {
    * Test the listIconPackOptions method.
    */
   public function testListIconPackOptions(): void {
-    $actual = $this->iconPackManager->listIconPackOptions();
+    $actual = $this->pluginManagerIconPack->listIconPackOptions();
     $expected = [
       'test_local_files' => 'Local files (8)',
       'test_local_svg' => 'SVG manual (7)',
@@ -111,7 +111,7 @@ class IconPackManagerKernelTest extends KernelTestBase {
    * Test the listIconPackWithDescriptionOption method.
    */
   public function testListIconPackWithDescriptionOptions(): void {
-    $actual = $this->iconPackManager->listIconPackWithDescriptionOptions();
+    $actual = $this->pluginManagerIconPack->listIconPackWithDescriptionOptions();
     $expected = [
       'test_local_files' => 'Local files (8) - Local files relative available.',
       'test_local_svg' => 'SVG manual (7) - Local svg files.',
@@ -125,16 +125,16 @@ class IconPackManagerKernelTest extends KernelTestBase {
    * Test the listIconOptions method.
    */
   public function testListIconOptions(): void {
-    $actual = $this->iconPackManager->listIconOptions();
+    $actual = $this->pluginManagerIconPack->listIconOptions();
     $this->assertCount(25, $actual);
 
-    $actual = $this->iconPackManager->listIconOptions(['test_local_svg']);
+    $actual = $this->pluginManagerIconPack->listIconOptions(['test_local_svg']);
     $this->assertCount(7, $actual);
 
-    $actual = $this->iconPackManager->listIconOptions(['test_no_icons']);
+    $actual = $this->pluginManagerIconPack->listIconOptions(['test_no_icons']);
     $this->assertCount(0, $actual);
 
-    $actual = $this->iconPackManager->listIconOptions(['do_not_exist']);
+    $actual = $this->pluginManagerIconPack->listIconOptions(['do_not_exist']);
     $this->assertCount(0, $actual);
   }
 
@@ -142,7 +142,7 @@ class IconPackManagerKernelTest extends KernelTestBase {
    * Test the getExtractorFormDefault method.
    */
   public function testGetExtractorFormDefaults(): void {
-    $actual = $this->iconPackManager->getExtractorFormDefaults('test_local_files');
+    $actual = $this->pluginManagerIconPack->getExtractorFormDefaults('test_local_files');
     // @see ui_icons/tests/modules/ui_icons_test/ui_icons_test.ui_icons.yml
     $expected = [
       'width' => 32,
@@ -151,7 +151,7 @@ class IconPackManagerKernelTest extends KernelTestBase {
     ];
     $this->assertSame($expected, $actual);
 
-    $actual = $this->iconPackManager->getExtractorFormDefaults('test_no_settings');
+    $actual = $this->pluginManagerIconPack->getExtractorFormDefaults('test_no_settings');
     $this->assertSame([], $actual);
   }
 
@@ -162,7 +162,7 @@ class IconPackManagerKernelTest extends KernelTestBase {
     $form_state = $this->createMock(FormStateInterface::class);
     $form = [];
 
-    $this->iconPackManager->getExtractorPluginForms($form, $form_state);
+    $this->pluginManagerIconPack->getExtractorPluginForms($form, $form_state);
 
     // @see ui_icons/tests/modules/ui_icons_test/ui_icons_test.ui_icons.yml
     $this->assertCount(4, array_keys($form));
@@ -195,7 +195,7 @@ class IconPackManagerKernelTest extends KernelTestBase {
 
     $allowed_icon_pack['test_local_svg'] = '';
 
-    $this->iconPackManager->getExtractorPluginForms($form, $form_state, [], $allowed_icon_pack);
+    $this->pluginManagerIconPack->getExtractorPluginForms($form, $form_state, [], $allowed_icon_pack);
 
     $this->assertArrayHasKey('test_local_svg', $form);
 
@@ -217,7 +217,7 @@ class IconPackManagerKernelTest extends KernelTestBase {
     ];
 
     $form_state = $this->createMock(FormStateInterface::class);
-    $this->iconPackManager->getExtractorPluginForms($form, $form_state);
+    $this->pluginManagerIconPack->getExtractorPluginForms($form, $form_state);
 
     // Without default, values are from definition.
     $this->assertSame(32, $form['test_local_files']['width']['#default_value']);
@@ -242,7 +242,7 @@ class IconPackManagerKernelTest extends KernelTestBase {
       ->willReturn($default_settings['test_local_files']);
 
     // Test with only one icon pack test_local_files.
-    $this->iconPackManager->getExtractorPluginForms($form, $form_state, $default_settings, ['test_local_files' => '']);
+    $this->pluginManagerIconPack->getExtractorPluginForms($form, $form_state, $default_settings, ['test_local_files' => '']);
 
     $this->assertSame($default_settings['test_local_files']['width'], $form['test_local_files']['width']['#default_value']);
     $this->assertSame($default_settings['test_local_files']['height'], $form['test_local_files']['height']['#default_value']);
@@ -261,7 +261,7 @@ class IconPackManagerKernelTest extends KernelTestBase {
       'config' => [],
     ];
 
-    $this->iconPackManager->processDefinition($definition, 'foo');
+    $this->pluginManagerIconPack->processDefinition($definition, 'foo');
 
     $this->assertSame('foo', $definition['id']);
     $this->assertSame('Foo', $definition['label']);
@@ -281,7 +281,7 @@ class IconPackManagerKernelTest extends KernelTestBase {
     $definition = ['provider' => 'foo'];
     $this->expectException(IconPackConfigErrorException::class);
     $this->expectExceptionMessage('Invalid Icon Pack id in: foo, name: $ Not valid !* must contain only lowercase letters, numbers, and underscores.');
-    $this->iconPackManager->processDefinition($definition, '$ Not valid !*');
+    $this->pluginManagerIconPack->processDefinition($definition, '$ Not valid !*');
   }
 
   /**
@@ -295,7 +295,7 @@ class IconPackManagerKernelTest extends KernelTestBase {
     ];
     $this->expectException(IconPackConfigErrorException::class);
     $this->expectExceptionMessage('Missing `extractor:` key in your definition!');
-    $this->iconPackManager->processDefinition($definition, 'foo');
+    $this->pluginManagerIconPack->processDefinition($definition, 'foo');
   }
 
   /**
@@ -310,7 +310,7 @@ class IconPackManagerKernelTest extends KernelTestBase {
     ];
     $this->expectException(IconPackConfigErrorException::class);
     $this->expectExceptionMessage('Missing `config:` key in your definition extractor!');
-    $this->iconPackManager->processDefinition($definition, 'foo');
+    $this->pluginManagerIconPack->processDefinition($definition, 'foo');
   }
 
 }

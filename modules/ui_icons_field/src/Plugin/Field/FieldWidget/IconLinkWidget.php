@@ -86,7 +86,6 @@ class IconLinkWidget extends LinkWidget implements ContainerFactoryPluginInterfa
       'allowed_icon_pack' => [],
       'icon_required' => TRUE,
       'icon_position' => FALSE,
-      'show_settings' => FALSE,
     ] + parent::defaultSettings();
   }
 
@@ -98,8 +97,8 @@ class IconLinkWidget extends LinkWidget implements ContainerFactoryPluginInterfa
 
     $elements['allowed_icon_pack'] = [
       '#type' => 'checkboxes',
-      '#title' => $this->t('Limit Icon set'),
-      '#description' => $this->t('Select Icons set to make available. If no selection, all will be made available.'),
+      '#title' => $this->t('Allowed icon packs'),
+      '#description' => $this->t('Select Icons pack to make available. If no selection, all will be made available.'),
       // @todo is there a way to have this without DI?
       '#options' => $this->pluginManagerIconPack->listIconPackWithDescriptionOptions(),
       '#default_value' => $this->getSetting('allowed_icon_pack'),
@@ -118,13 +117,6 @@ class IconLinkWidget extends LinkWidget implements ContainerFactoryPluginInterfa
       '#title' => $this->t('Allow icon display position selection'),
       '#description' => $this->t('If selected, a "position" select will be made available. Default is from the display of this field.'),
       '#default_value' => (bool) $this->getSetting('icon_position'),
-    ];
-
-    $elements['show_settings'] = [
-      '#type' => 'checkbox',
-      '#title' => $this->t('Allow icon settings form'),
-      '#description' => $this->t('If selected, all Icons set settings will be made available for all enabled Icon set above. Note that display setting on these field will be ignored.'),
-      '#default_value' => $this->getSetting('show_settings'),
     ];
 
     return $elements;
@@ -161,10 +153,6 @@ class IconLinkWidget extends LinkWidget implements ContainerFactoryPluginInterfa
       $summary[] = $this->t('Can set icon display');
     }
 
-    if (!empty($settings['show_settings'])) {
-      $summary[] = $this->t('Icon settings enabled');
-    }
-
     return $summary;
   }
 
@@ -199,7 +187,7 @@ class IconLinkWidget extends LinkWidget implements ContainerFactoryPluginInterfa
       '#return_id' => TRUE,
       '#default_value' => $icon_full_id,
       '#allowed_icon_pack' => $allowed_icon_pack,
-      '#show_settings' => $settings['show_settings'],
+      '#show_settings' => FALSE,
       '#required' => $element['#required'] ? $settings['icon_required'] : FALSE,
       // Put the parent to allow saving under `options`.
       '#parents' => array_merge($element['#field_parents'], [
@@ -209,10 +197,6 @@ class IconLinkWidget extends LinkWidget implements ContainerFactoryPluginInterfa
         'icon',
       ]),
     ];
-
-    if ($icon_full_id && TRUE == $settings['show_settings'] && isset($options['icon']['settings'])) {
-      $element['icon']['#default_settings'] = $options['icon']['settings'];
-    }
 
     if (TRUE == $settings['icon_position']) {
       $element['icon_display'] = [

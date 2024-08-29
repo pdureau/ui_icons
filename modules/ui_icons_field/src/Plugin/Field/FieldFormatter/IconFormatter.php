@@ -113,22 +113,19 @@ class IconFormatter extends FormatterBase implements ContainerFactoryPluginInter
   public function settingsForm(array $form, FormStateInterface $form_state): array {
     $elements = parent::settingsForm($form, $form_state);
 
-    $icon_settings = $this->getSetting('icon_settings') ?: [];
-
-    $this->pluginManagerIconPack->getExtractorPluginForms($elements, $form_state, $icon_settings, [], TRUE);
-
-    // @todo get widget settings to know if field has extractor settings enabled.
-    $elements['icon_pack_notice'] = [
-      '#type' => 'html_tag',
-      '#tag' => 'p',
-      '#value' => $this->t('If the form display allow user to set his own settings, these values will be ignored.'),
-      '#attributes' => ['class' => ['description']],
-    ];
+    $this->pluginManagerIconPack->getExtractorPluginForms(
+      $elements,
+      $form_state,
+      $this->getSetting('icon_settings') ?: [],
+      // @todo views do not retrieve FieldType value saved.
+      $this->fieldDefinition->getSetting('allowed_icon_pack') ?: [],
+      TRUE
+    );
 
     // Placeholder to get all settings serialized as the form keys are dynamic
     // and based on icon pack definition options.
-    // @todo probably change to #element_submit when available in
-    // https://drupal.org/i/2820359.
+    // @todo change to #element_submit when available.
+    // @see https://drupal.org/i/2820359
     $elements['icon_settings'] = [
       '#type' => 'hidden',
       '#element_validate' => [
@@ -144,6 +141,18 @@ class IconFormatter extends FormatterBase implements ContainerFactoryPluginInter
    *
    * All extractor settings form values are serialized in a single declared
    * icon_settings form key.
+   * This form can be included in different forms: Field UI, Views UI, Layout
+   * Builder... to avoid an implementation for each structure we try to be
+   * generic by looking for 'icon_settings' key, when encountered it means we
+   * are at the level of the settings array to save, ie:
+   * foo
+   *   bar
+   *     settings:
+   *       icon_pack_id_1: settings array
+   *       icon_pack_id_2: settings array
+   *       icon_settings: ... this element key
+   * This method isolate the 'settings', remove icon_settings part and save it
+   * by setting it as value to the element.
    *
    * @param array $element
    *   The element being processed.
@@ -217,23 +226,10 @@ class IconFormatter extends FormatterBase implements ContainerFactoryPluginInter
 
       $icon_pack_id = $icon->getIconPackId();
 
-      // Priority is to look for widget settings, then formatter, then defaults
-      // from definition.
-      $settings = $item->get('settings')->getValue();
-      if (!empty($settings) && isset($settings[$icon_pack_id]) && !empty($settings[$icon_pack_id])) {
-        $settings = $settings[$icon_pack_id];
-      }
-      else {
-        $formatter_settings = $this->getSetting('icon_settings') ?? [];
-        if (isset($formatter_settings[$icon_pack_id]) && !empty($formatter_settings[$icon_pack_id])) {
-          $settings = $formatter_settings[$icon_pack_id];
-        }
-        else {
-          // If the settings form has never been saved, we need to get extractor
-          // default values if set.
-          // @todo move to getRenderable()?
-          $settings = $this->pluginManagerIconPack->getExtractorFormDefaults($icon_pack_id);
-        }
+      $settings = [];
+      $formatter_settings = $this->getSetting('icon_settings') ?? [];
+      if (isset($formatter_settings[$icon_pack_id])) {
+        $settings = $formatter_settings[$icon_pack_id];
       }
 
       $elements[$delta] = $icon->getRenderable($settings);

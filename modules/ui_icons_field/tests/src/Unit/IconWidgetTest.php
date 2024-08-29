@@ -71,49 +71,6 @@ class IconWidgetTest extends IconUnitTestCase {
   }
 
   /**
-   * Tests the default settings of the widget.
-   */
-  public function testDefaultSettings(): void {
-    $expected = [
-      'allowed_icon_pack' => [],
-      'show_settings' => FALSE,
-    ];
-    $this->assertEquals($expected, $this->widget->defaultSettings());
-  }
-
-  /**
-   * Tests the settings form.
-   */
-  public function testSettingsForm(): void {
-    $form = [];
-    $form_state = $this->createMock(FormStateInterface::class);
-
-    $form = $this->widget->settingsForm($form, $form_state);
-
-    $this->assertArrayHasKey('allowed_icon_pack', $form);
-    $this->assertArrayHasKey('show_settings', $form);
-  }
-
-  /**
-   * Tests the settings summary.
-   */
-  public function testSettingsSummary(): void {
-    $this->widget->setSetting('allowed_icon_pack', ['icon_pack_1' => 'icon_pack_1']);
-    $this->widget->setSetting('show_settings', TRUE);
-
-    $summary = $this->widget->settingsSummary();
-
-    $this->assertStringContainsString('With Icon set:', $summary[0]->getUntranslatedString());
-    $this->assertSame('Icon settings enabled', $summary[1]->getUntranslatedString());
-
-    $this->widget->setSetting('allowed_icon_pack', []);
-
-    $summary = $this->widget->settingsSummary();
-
-    $this->assertStringContainsString('All icon sets available for selection', $summary[0]->getUntranslatedString());
-  }
-
-  /**
    * Tests the massageFormValues method.
    */
   public function testMassageFormValues(): void {
@@ -125,35 +82,22 @@ class IconWidgetTest extends IconUnitTestCase {
       'icon' => NULL,
     ];
 
-    // Icon without settings.
+    // Icon with data.
     $values[]['value'] = [
       'icon' => $this->createMockIcon([
         'icon_pack_id' => 'foo',
         'icon_id' => 'bar',
       ]),
-      'settings' => [],
-    ];
-
-    // Icon with settings.
-    $values[]['value'] = [
-      'icon' => $this->createMockIcon([
-        'icon_pack_id' => 'foo',
-        'icon_id' => 'bar',
-      ]),
-      'settings' => ['baz' => 'qux'],
     ];
 
     $actual = $this->widget->massageFormValues($values, [], $form_state);
 
     foreach ($actual as $delta => $value) {
       if (NULL === $values[$delta]['value']['icon']) {
-        $this->assertNull($value['target_id']);
-        $this->assertEmpty($value['settings']);
+        $this->assertArrayNotHasKey('target_id', $value);
       }
       else {
-        $this->assertInstanceOf('Drupal\ui_icons\IconDefinitionInterface', $value['value']['icon']);
         $this->assertEquals('foo:bar', $value['target_id']);
-        $this->assertEquals($values[$delta]['value']['settings'], $value['settings']);
       }
     }
   }

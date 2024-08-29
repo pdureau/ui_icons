@@ -113,31 +113,6 @@ class IconWidgetTest extends KernelTestBase {
   }
 
   /**
-   * Tests the formElement method.
-   */
-  public function testFormElementWithSettings(): void {
-    $entity = EntityTest::create([
-      'name' => 'sample entity',
-    ]);
-    $entity->save();
-
-    $element = $this->buildWidgetForm($entity, [
-      'show_settings' => TRUE,
-      'allowed_icon_pack' => [
-        'foo' => 'bar',
-        'baz' => 0,
-      ],
-    ]);
-
-    $this->assertArrayHasKey('value', $element);
-    $this->assertSame('icon_autocomplete', $element['value']['#type']);
-    $this->assertNull($element['value']['#default_value']);
-    $this->assertSame(['foo' => 'bar'], $element['value']['#allowed_icon_pack']);
-    $this->assertTrue($element['value']['#show_settings']);
-    $this->assertFalse($element['value']['#required']);
-  }
-
-  /**
    * Build the icon widget form.
    *
    * @param \Drupal\Core\Entity\EntityInterface $entity

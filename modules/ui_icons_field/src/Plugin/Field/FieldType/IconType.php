@@ -8,22 +8,44 @@ use Drupal\Core\Field\Attribute\FieldType;
 use Drupal\Core\Field\FieldDefinitionInterface;
 use Drupal\Core\Field\FieldItemBase;
 use Drupal\Core\Field\FieldStorageDefinitionInterface;
+use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\StringTranslation\TranslatableMarkup;
 use Drupal\Core\TypedData\DataDefinition;
-use Drupal\Core\TypedData\MapDataDefinition;
+use Drupal\ui_icons\Plugin\IconPackManagerInterface;
 
 /**
  * Plugin implementation of the 'ui_icon' field type.
  */
 #[FieldType(
   id: 'ui_icon',
-  label: new TranslatableMarkup('UI Icon'),
+  label: new TranslatableMarkup('Icon'),
   description: new TranslatableMarkup('Reference an Icon from icon pack definition.'),
   default_widget: 'icon_widget',
   default_formatter: 'icon_formatter',
   list_class: IconFieldItemList::class,
 )]
 class IconType extends FieldItemBase {
+
+  /**
+   * Plugin manager for icons pack discovery and definitions.
+   *
+   * @var \Drupal\ui_icons\Plugin\IconPackManagerInterface
+   */
+  private ?IconPackManagerInterface $pluginManagerIconPack = NULL;
+
+  /**
+   * Get the Icon pack plugin manager.
+   *
+   * @return \Drupal\ui_icons\Plugin\IconPackManagerInterface
+   *   Plugin manager for icon pack discovery and definitions.
+   */
+  private function getIconPackManager(): IconPackManagerInterface {
+    if (!isset($this->pluginManagerIconPack)) {
+      $this->pluginManagerIconPack = \Drupal::service('plugin.manager.ui_icons_pack');
+    }
+
+    return $this->pluginManagerIconPack;
+  }
 
   /**
    * {@inheritdoc}
@@ -37,12 +59,6 @@ class IconType extends FieldItemBase {
           'length' => 128,
           'not null' => TRUE,
         ],
-        'settings' => [
-          'description' => 'The serialized settings of the Icon.',
-          'type' => 'blob',
-          'not null' => FALSE,
-          'serialize' => TRUE,
-        ],
       ],
       'indexes' => [
         'target_id' => ['target_id'],
@@ -55,13 +71,54 @@ class IconType extends FieldItemBase {
    */
   public static function propertyDefinitions(FieldStorageDefinitionInterface $field_definition): array {
     $properties = [];
+
     $properties['target_id'] = DataDefinition::create('string')
       ->setLabel(new TranslatableMarkup('Icon ID'))
       ->setRequired(TRUE);
-    $properties['settings'] = MapDataDefinition::create()
-      ->setLabel(new TranslatableMarkup('Settings'));
-    return $properties;
 
+    return $properties;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public static function defaultFieldSettings() {
+    return [
+      'allowed_icon_pack' => [],
+    ] + parent::defaultFieldSettings();
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function fieldSettingsForm(array $form, FormStateInterface $form_state) {
+    $options = $this->getIconPackManager()->listIconPackOptions();
+
+    $elements = [
+      'allowed_icon_pack' => [
+        '#type' => 'checkboxes',
+        '#title' => $this->t('Allowed icon packs'),
+        '#description' => $this->t('Select Icons pack to make available. If no selection, all will be made available.'),
+        '#options' => $options,
+        '#default_value' => $this->getSetting('allowed_icon_pack'),
+      ],
+    ];
+
+    // If no Icon pack enable, inform and do not allow save.
+    if (empty($options)) {
+      $elements['allowed_icon_pack']['#description'] = $this->t('No Icon pack found, see documentation to add Icon Pack to your website.');
+      $elements['allowed_icon_pack']['#required'] = TRUE;
+    }
+
+    return $elements;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public static function fieldSettingsToConfigData(array $settings) {
+    $settings['allowed_icon_pack'] = array_filter($settings['allowed_icon_pack']);
+    return $settings;
   }
 
   /**
@@ -76,11 +133,13 @@ class IconType extends FieldItemBase {
    * {@inheritdoc}
    */
   public static function generateSampleValue(FieldDefinitionInterface $field_definition) {
-    $manager = \Drupal::service('plugin.manager.ui_icons_pack');
-    $icons = $manager->getIcons();
+    $allowed_icon_pack = $field_definition->getSetting('allowed_icon_pack');
+    $icons = \Drupal::service('plugin.manager.ui_icons_pack')->listIconOptions($allowed_icon_pack);
+
     if (empty($icons)) {
       return [];
     }
+
     return [
       'target_id' => array_rand($icons),
     ];
