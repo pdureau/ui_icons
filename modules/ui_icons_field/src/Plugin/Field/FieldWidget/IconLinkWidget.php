@@ -98,7 +98,7 @@ class IconLinkWidget extends LinkWidget implements ContainerFactoryPluginInterfa
     $elements['allowed_icon_pack'] = [
       '#type' => 'checkboxes',
       '#title' => $this->t('Allowed icon packs'),
-      '#description' => $this->t('Select Icons pack to make available. If no selection, all will be made available.'),
+      '#description' => $this->t('If none are selected, all will be allowed.'),
       // @todo is there a way to have this without DI?
       '#options' => $this->pluginManagerIconPack->listIconPackWithDescriptionOptions(),
       '#default_value' => $this->getSetting('allowed_icon_pack'),

@@ -98,7 +98,7 @@ class IconType extends FieldItemBase {
       'allowed_icon_pack' => [
         '#type' => 'checkboxes',
         '#title' => $this->t('Allowed icon packs'),
-        '#description' => $this->t('Select Icons pack to make available. If no selection, all will be made available.'),
+        '#description' => $this->t('If none are selected, all will be allowed.'),
         '#options' => $options,
         '#default_value' => $this->getSetting('allowed_icon_pack'),
       ],
