@@ -25,6 +25,10 @@ export default class IconEditing extends Plugin {
     this.attrs = {
       drupalIconId: 'data-icon-id',
       drupalIconSettings: 'data-icon-settings',
+      class: 'class',
+      role: 'role',
+      ariaLabel: 'aria-label',
+      ariaHidden: 'aria-hidden',
     };
     this.converterAttributes = ['drupalIconId', 'drupalIconSettings'];
   }
@@ -45,16 +49,23 @@ export default class IconEditing extends Plugin {
    * @private
    */
   _defineSchema() {
-    const schema = this.editor.model.schema;
+    const { schema } = this.editor.model;
+
     schema.register('drupalIcon', {
-      // inheritAllFrom: '$inlineObject',
-      inheritAllFrom: 'imageInline',
+      // Behaves like a self-contained object (e.g. an image).
+      isObject: true,
+      // Allows placement of the object to be inline with text.
+      isInline: true,
+      // Allows an icon to be inserted wherever text is allowed (including another container such as a button).
+      allowWhere: '$text',
       allowAttributes: Object.keys(this.attrs),
     });
+
     // Register `<drupal-icon>` as a block element in the DOM converter. This
     // ensures that the DOM converter knows to handle the `<drupal-icon>` as a
     // block element.
-    this.editor.editing.view.domConverter.blockElements.push('drupal-icon');
+    // @todo copy from Media, do we need it?
+    // this.editor.editing.view.domConverter.blockElements.push('drupal-icon');
   }
 
   /**

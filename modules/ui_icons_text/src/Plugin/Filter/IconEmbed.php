@@ -12,6 +12,7 @@ use Drupal\Core\Render\BubbleableMetadata;
 use Drupal\Core\Render\RenderContext;
 use Drupal\Core\Render\RendererInterface;
 use Drupal\Core\StringTranslation\TranslatableMarkup;
+use Drupal\Core\Template\Attribute;
 use Drupal\filter\Attribute\Filter;
 use Drupal\filter\FilterProcessResult;
 use Drupal\filter\Plugin\FilterBase;
@@ -57,18 +58,6 @@ class IconEmbed extends FilterBase implements ContainerFactoryPluginInterface {
    * @var \Drupal\Core\Logger\LoggerChannelFactoryInterface
    */
   protected $loggerFactory;
-
-  /**
-   * An array of counters for the recursive rendering protection.
-   *
-   * Each counter takes into account all the relevant information about the
-   * field and the referenced entity that is being rendered.
-   *
-   * @var array
-   *
-   * @see \Drupal\Core\Field\Plugin\Field\FieldFormatter\EntityReferenceEntityFormatter::$recursiveRenderDepth
-   */
-  protected static $recursiveRenderDepth = [];
 
   /**
    * Constructs a IconEmbed object.
@@ -153,8 +142,6 @@ class IconEmbed extends FilterBase implements ContainerFactoryPluginInterface {
     foreach ($xpath->query('//drupal-icon[normalize-space(@data-icon-id)!=""]') as $node) {
       /** @var \DOMElement $node */
       $icon_id = $node->getAttribute('data-icon-id');
-      // Delete the consumed attributes.
-      $node->removeAttribute('data-icon-id');
 
       // Because of Ckeditor attributes system, we use a single attribute with
       // serialized settings.
@@ -168,19 +155,32 @@ class IconEmbed extends FilterBase implements ContainerFactoryPluginInterface {
       $icon = $this->pluginManagerIconPack->getIcon($icon_id);
       assert($icon === NULL || $icon instanceof IconDefinitionInterface);
 
-      // Use default settings if none set.
-      // @todo getRenderable should fallback to definition settings.
-      if (empty($settings)) {
-        [$icon_pack_id] = explode(':', $icon_id);
-        $settings = $this->pluginManagerIconPack->getExtractorFormDefaults($icon_pack_id);
-      }
-
       if (!$icon) {
         $this->loggerFactory->get('ui_icons')->error('During rendering of embedded icon: the icon item with ID "@id" does not exist.', ['@id' => $icon_id]);
       }
 
+      $attributes = [];
+      if ($class = $node->getAttribute('class')) {
+        $attributes['class'] = explode(' ', $class);
+      }
+      if ($aria_label = $node->getAttribute('aria-label')) {
+        $attributes['aria-label'] = $aria_label;
+      }
+      if ($node->getAttribute('aria-hidden')) {
+        $attributes['aria-hidden'] = TRUE;
+      }
+      if ($role = $node->getAttribute('role')) {
+        $attributes['role'] = $role;
+        // The element with role="presentation" is not part of the accessibility
+        // tree and should not have an accessible name.
+        // @see https://developer.mozilla.org/en-US/docs/Web/Accessibility/ARIA/Roles/presentation_role
+        if (in_array($role, ['presentation', 'none'])) {
+          unset($attributes['aria-label']);
+        }
+      }
+
       $build = $icon
-        ? $this->getWrappedRenderable($icon, $settings)
+        ? $this->getWrappedRenderable($icon, $settings, $attributes)
         : $this->renderMissingIconIndicator($icon_id);
 
       $this->renderIntoDomNode($build, $node, $result);
@@ -215,15 +215,21 @@ class IconEmbed extends FilterBase implements ContainerFactoryPluginInterface {
    *   The icon to render.
    * @param array $settings
    *   Settings to pass as context to the rendered icon.
+   * @param array $attributes
+   *   Extra attributes to pass to the wrapper.
    *
    * @return array
    *   Renderable array.
    *
    * @todo wrapping, class and library as filter settings?
    */
-  protected function getWrappedRenderable(IconDefinitionInterface $icon, array $settings): array {
+  protected function getWrappedRenderable(IconDefinitionInterface $icon, array $settings, array $attributes): array {
+    $attributes['class'][] = 'drupal-icon';
+    $attributes = new Attribute($attributes);
+
     $build = $icon->getRenderable($settings);
-    $build['#prefix'] = '<span class="drupal-icon">';
+
+    $build['#prefix'] = '<span' . $attributes . '>';
     $build['#suffix'] = '</span>';
     $build['#attached']['library'][] = 'ui_icons_text/icon.content';
 
@@ -232,6 +238,8 @@ class IconEmbed extends FilterBase implements ContainerFactoryPluginInterface {
 
   /**
    * Renders the given render array into the given DOM node.
+   *
+   * @todo this is a copy from Media core, not sure we really need it.
    *
    * @param array $build
    *   The render array to render in isolation.
@@ -304,15 +312,6 @@ class IconEmbed extends FilterBase implements ContainerFactoryPluginInterface {
       $node->parentNode->insertBefore($replacement_node, $node);
     }
     $node->parentNode->removeChild($node);
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function calculateDependencies(): array {
-    $dependencies = [];
-    // @todo ensure icon pack definition is still available?
-    return $dependencies;
   }
 
 }
