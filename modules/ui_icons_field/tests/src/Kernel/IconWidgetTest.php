@@ -10,8 +10,6 @@ use Drupal\Core\Field\FieldStorageDefinitionInterface;
 use Drupal\Core\Form\FormState;
 use Drupal\entity_test\Entity\EntityTest;
 use Drupal\KernelTests\KernelTestBase;
-use Drupal\ui_icons\Plugin\IconPackManagerInterface;
-use Drupal\ui_icons_field\Plugin\Field\FieldWidget\IconWidget;
 
 /**
  * Tests the IconWidget field class.
@@ -34,25 +32,11 @@ class IconWidgetTest extends KernelTestBase {
   ];
 
   /**
-   * The field widget under test.
-   *
-   * @var \Drupal\ui_icons_field\Plugin\Field\FieldWidget\IconWidget
-   */
-  private IconWidget $widget;
-
-  /**
    * The field definition.
    *
    * @var \Drupal\Core\Field\FieldDefinitionInterface
    */
   private FieldDefinitionInterface $fieldDefinition;
-
-  /**
-   * The IconPackManager instance.
-   *
-   * @var \Drupal\ui_icons\Plugin\IconPackManagerInterface
-   */
-  private IconPackManagerInterface $pluginManagerIconPack;
 
   /**
    * The base field definition.
@@ -67,8 +51,6 @@ class IconWidgetTest extends KernelTestBase {
   protected function setUp(): void {
     parent::setUp();
 
-    $this->pluginManagerIconPack = $this->container->get('plugin.manager.ui_icons_pack');
-
     // @todo test with entity_test_rev?
     $this->baseField = BaseFieldDefinition::create('ui_icon')
       ->setName('icon');
@@ -82,15 +64,6 @@ class IconWidgetTest extends KernelTestBase {
     $this->fieldDefinition = $this->createMock(FieldDefinitionInterface::class);
     $this->fieldDefinition->method('getFieldStorageDefinition')
       ->willReturn($this->createMock(FieldStorageDefinitionInterface::class));
-
-    $this->widget = new IconWidget(
-      'icon_widget',
-      [],
-      $this->fieldDefinition,
-      [],
-      [],
-      $this->pluginManagerIconPack
-    );
   }
 
   /**

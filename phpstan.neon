@@ -6,7 +6,6 @@ parameters:
     analyseAndScan:
       - */node_modules/*
       - */vendor/*
-      - */tests/*
       # Always fail because of missing link_attributes module.
       - */ui_icons_field_link_attributes/src/Plugin/Field/FieldWidget/IconLinkWithAttributesWidget.php
       - */ui_icons_patterns/src/Plugin/UiPatterns/PropType/IconPropType.php

@@ -24,10 +24,10 @@
 
   <div class="ui-icons-grid">
     {% for icon_full_id, icon in icons %}
-      {% set icon_id = icon_full_id | split(':') | last %}
+      {% set icon_id = icon_full_id|split(':')|last %}
       {% set icon_data = icon['#context'] %}
 
-      {% set full_name = icon_data['icon_label'] ?? icon_id ~ ' - ' ~ icon_data['icon_pack_label']  %}
+      {% set full_name = icon_data['icon_label'] ?? icon_id ~ ' - ' ~ icon_data['icon_pack_label'] %}
       {% if icon['#group'] %}
         {% set full_name = full_name ~ ' - ' ~ icon['#group']|capitalize %}
       {% endif %}

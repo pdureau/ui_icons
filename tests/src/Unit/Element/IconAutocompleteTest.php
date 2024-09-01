@@ -201,7 +201,7 @@ class IconAutocompleteTest extends IconUnitTestCase {
     $ui_icons_pack_plugin_manager->expects($this->once())
       ->method('getExtractorPluginForms')
       ->with($this->anything())
-      ->will($this->returnCallback(function (&$form) {
+      ->will($this->returnCallback(function (&$form): void {
         $form['sub_form'] = TRUE;
       }));
     $this->container->set('plugin.manager.ui_icons_pack', $ui_icons_pack_plugin_manager);

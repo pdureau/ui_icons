@@ -9,7 +9,6 @@ use Drupal\Core\Field\FieldDefinitionInterface;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\StringTranslation\TranslationInterface;
 use Drupal\Tests\ui_icons\Unit\IconUnitTestCase;
-use Drupal\ui_icons\Plugin\IconPackManagerInterface;
 use Drupal\ui_icons_field\Plugin\Field\FieldWidget\IconWidget;
 
 /**
@@ -34,13 +33,6 @@ class IconWidgetTest extends IconUnitTestCase {
   private FieldDefinitionInterface $fieldDefinition;
 
   /**
-   * The IconPackManager instance.
-   *
-   * @var \Drupal\ui_icons\Plugin\IconPackManagerInterface
-   */
-  private IconPackManagerInterface $pluginManagerIconPack;
-
-  /**
    * The container.
    *
    * @var \Drupal\Core\DependencyInjection\ContainerBuilder
@@ -57,7 +49,6 @@ class IconWidgetTest extends IconUnitTestCase {
     $this->container->set('string_translation', $this->createMock(TranslationInterface::class));
     \Drupal::setContainer($this->container);
 
-    $this->pluginManagerIconPack = $this->createMock(IconPackManagerInterface::class);
     $this->fieldDefinition = $this->createMock(FieldDefinitionInterface::class);
 
     $this->widget = new IconWidget(
@@ -65,8 +56,7 @@ class IconWidgetTest extends IconUnitTestCase {
       [],
       $this->fieldDefinition,
       [],
-      [],
-      $this->pluginManagerIconPack
+      []
     );
   }
 
