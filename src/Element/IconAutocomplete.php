@@ -114,7 +114,7 @@ class IconAutocomplete extends FormElementBase {
       }
     }
     else {
-      if (!empty($element['#default_value'])) {
+      if (!empty($element['#default_value']) && is_string($element['#default_value'])) {
         /** @var \Drupal\ui_icons\IconDefinitionInterface $icon */
         $icon = self::iconPack()->getIcon($element['#default_value']);
       }
@@ -255,7 +255,7 @@ class IconAutocomplete extends FormElementBase {
 
     // ProcessIcon will handle #value or #default_value.
     $icon_full_id = $element['#value']['icon_id'] ?? $element['icon_id']['#value'] ?? NULL;
-    if (!$icon_full_id || FALSE === strpos($icon_full_id, ':') || NULL === self::iconPack()->getIcon($icon_full_id)) {
+    if (!$icon_full_id || !is_string($icon_full_id) || FALSE === strpos($icon_full_id, ':') || NULL === self::iconPack()->getIcon($icon_full_id)) {
       // If a default value based on a disabled icon pack exist, clear it.
       unset($element['icon_id']['#value']);
       return $element;

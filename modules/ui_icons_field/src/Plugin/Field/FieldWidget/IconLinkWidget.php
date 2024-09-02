@@ -86,6 +86,10 @@ class IconLinkWidget extends LinkWidget implements ContainerFactoryPluginInterfa
       'allowed_icon_pack' => [],
       'icon_required' => TRUE,
       'icon_position' => FALSE,
+      // Show settings is used by menu link implementation.
+      // there is no settings form visible as it must be set only in the field
+      // definition.
+      'show_settings' => FALSE,
     ] + parent::defaultSettings();
   }
 
@@ -187,7 +191,8 @@ class IconLinkWidget extends LinkWidget implements ContainerFactoryPluginInterfa
       '#return_id' => TRUE,
       '#default_value' => $icon_full_id,
       '#allowed_icon_pack' => $allowed_icon_pack,
-      '#show_settings' => FALSE,
+      // Show settings is used by menu link implementation.
+      '#show_settings' => $settings['show_settings'] ?? FALSE,
       '#required' => $element['#required'] ? $settings['icon_required'] : FALSE,
       // Put the parent to allow saving under `options`.
       '#parents' => array_merge($element['#field_parents'], [
@@ -197,6 +202,10 @@ class IconLinkWidget extends LinkWidget implements ContainerFactoryPluginInterfa
         'icon',
       ]),
     ];
+
+    if (isset($options['icon']['settings'])) {
+      $element['icon']['#default_settings'] = $options['icon']['settings'];
+    }
 
     if (TRUE == $settings['icon_position']) {
       $element['icon_display'] = [
