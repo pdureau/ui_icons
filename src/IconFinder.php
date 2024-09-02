@@ -86,8 +86,8 @@ class IconFinder implements ContainerInjectionInterface {
 
   use AutowireTrait;
 
-  protected const GROUP_PATTERN = '{group}';
-  protected const ICON_ID_PATTERN = '{icon_id}';
+  private const GROUP_PATTERN = '{group}';
+  private const ICON_ID_PATTERN = '{icon_id}';
 
   /**
    * Constructs a new IconFinder.
@@ -98,8 +98,8 @@ class IconFinder implements ContainerInjectionInterface {
    *   The file url generator service.
    */
   public function __construct(
-    protected FileSystemInterface $fileSystem,
-    protected FileUrlGeneratorInterface $fileUrlGenerator,
+    private readonly FileSystemInterface $fileSystem,
+    private readonly FileUrlGeneratorInterface $fileUrlGenerator,
   ) {}
 
   /**

@@ -20,6 +20,8 @@ use Symfony\Component\HttpFoundation\Request;
  */
 class IconAutocompleteController extends ControllerBase {
 
+  private const SEARCH_MIN_LENGTH = 2;
+
   /**
    * The controller constructor.
    */
@@ -52,7 +54,7 @@ class IconAutocompleteController extends ControllerBase {
 
     // @todo global match length with autocomplete in
     // web/modules/ui_icons/js/icon.autocomplete.js
-    if (empty($query) || mb_strlen($query) < 2) {
+    if (empty($query) || mb_strlen($query) < self::SEARCH_MIN_LENGTH) {
       return new JsonResponse([]);
     }
 

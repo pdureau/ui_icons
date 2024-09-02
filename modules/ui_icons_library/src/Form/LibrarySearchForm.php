@@ -17,6 +17,8 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  */
 final class LibrarySearchForm extends FormBase {
 
+  private const NUM_PER_PAGE = 196;
+
   public function __construct(
     private readonly IconPackManagerInterface $pluginManagerIconPack,
     private readonly PagerManagerInterface $pagerManager,
@@ -48,7 +50,7 @@ final class LibrarySearchForm extends FormBase {
     $search = $values['search'] ?? '';
     $icon_pack = $values['icon_pack'] ?? '';
     $group = $values['group'] ?? '';
-    $num_per_page = $values['num_per_page'] ?? 196;
+    $num_per_page = $values['num_per_page'] ?? self::NUM_PER_PAGE;
 
     $form['icon_pack'] = [
       '#type' => 'select',
@@ -123,8 +125,8 @@ final class LibrarySearchForm extends FormBase {
     $icons = $this->filterIcons($icons_list, $icon_pack, $group, $display_settings);
 
     $total = count($icons);
-    if ($total > 196) {
-      $options = [196, 588, 1176];
+    if ($total > self::NUM_PER_PAGE) {
+      $options = [self::NUM_PER_PAGE, self::NUM_PER_PAGE * 2, self::NUM_PER_PAGE * 4];
       $form['num_per_page'] = [
         '#type' => 'select',
         '#title' => $this->t('Icons per page'),

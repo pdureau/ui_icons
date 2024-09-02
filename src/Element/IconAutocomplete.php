@@ -282,6 +282,10 @@ class IconAutocomplete extends FormElementBase {
       }
     }
 
+    // Track the array size before adding forms, if no change it means we have
+    // no extractors form.
+    $settings_empty_count = count($element['icon_settings']);
+
     self::iconPack()->getExtractorPluginForms(
       $element['icon_settings'],
       $form_state,
@@ -290,7 +294,7 @@ class IconAutocomplete extends FormElementBase {
     );
 
     // Remove if no extractor form is found.
-    if (3 === count($element['icon_settings'])) {
+    if ($settings_empty_count === count($element['icon_settings'])) {
       unset($element['icon_settings']);
     }
 

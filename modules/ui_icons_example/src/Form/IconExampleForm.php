@@ -24,12 +24,9 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 final class IconExampleForm extends FormBase {
 
   public function __construct(
-    protected IconPackManagerInterface $pluginManagerIconPack,
-    protected IconExtractorPluginManager $iconPackExtractorManager,
-  ) {
-    $this->pluginManagerIconPack = $pluginManagerIconPack;
-    $this->iconPackExtractorManager = $iconPackExtractorManager;
-  }
+    private readonly IconPackManagerInterface $pluginManagerIconPack,
+    private readonly IconExtractorPluginManager $iconPackExtractorManager,
+  ) {}
 
   /**
    * {@inheritdoc}

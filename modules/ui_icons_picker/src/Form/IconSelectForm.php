@@ -21,9 +21,10 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  */
 final class IconSelectForm extends FormBase {
 
-  const AJAX_WRAPPER_ID = 'icon-results-wrapper';
-  const MESSAGE_WRAPPER_ID = 'icon-message-wrapper';
-  const NUM_PER_PAGE = 308;
+  private const AJAX_WRAPPER_ID = 'icon-results-wrapper';
+  private const MESSAGE_WRAPPER_ID = 'icon-message-wrapper';
+  private const NUM_PER_PAGE = 308;
+  private const SEARCH_MIN_LENGTH = 2;
 
   public function __construct(
     private readonly IconPackManagerInterface $pluginManagerIconPack,
@@ -76,7 +77,7 @@ final class IconSelectForm extends FormBase {
     $search = $input['filter'] ?? '';
     $icons_list = $modal_state['icon_list'];
 
-    if (!empty($search) && strlen($search) > 2) {
+    if (!empty($search) && strlen($search) > self::SEARCH_MIN_LENGTH) {
       $icons_list = array_filter($icons_list, fn($id) => str_contains($id, $search), ARRAY_FILTER_USE_KEY);
     }
 

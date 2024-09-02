@@ -18,12 +18,9 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 final class IconFilterController implements ContainerInjectionInterface {
 
   public function __construct(
-    protected IconPackManagerInterface $pluginManagerIconPack,
-    protected RendererInterface $renderer,
-  ) {
-    $this->pluginManagerIconPack = $pluginManagerIconPack;
-    $this->renderer = $renderer;
-  }
+    private readonly IconPackManagerInterface $pluginManagerIconPack,
+    private readonly RendererInterface $renderer,
+  ) {}
 
   /**
    * {@inheritdoc}

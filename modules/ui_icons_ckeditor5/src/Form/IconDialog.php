@@ -87,30 +87,25 @@ final class IconDialog extends FormBase {
         '#weight' => -10,
       ];
       $response->addCommand(new HtmlCommand('#editor-icon-dialog-form', $form));
+      return $response;
     }
-    else {
-      $values = [];
-      $value = $form_state->getValue('icon');
-      $icon = $value['icon'] ?? NULL;
 
-      if ($icon instanceof IconDefinitionInterface) {
-        $values = [
-          'settings' => [
-            'icon' => $icon->getId(),
-            'icon_settings' => $value['settings'][$icon->getIconPackId()] ?? [],
-          ],
-        ];
-      }
-      else {
-        $values = [
-          'settings' => [
-            'icon' => NULL,
-          ],
-        ];
-      }
-      $response->addCommand(new EditorDialogSave($values));
-      $response->addCommand(new CloseModalDialogCommand());
+    $values = [
+      'settings' => [
+        'icon' => NULL,
+      ],
+    ];
+
+    $value = $form_state->getValue('icon');
+    $icon = $value['icon'] ?? NULL;
+
+    if ($icon instanceof IconDefinitionInterface) {
+      $values['settings']['icon'] = $icon->getId();
+      $values['settings']['icon_settings'] = $value['settings'][$icon->getIconPackId()] ?? [];
     }
+
+    $response->addCommand(new EditorDialogSave($values));
+    $response->addCommand(new CloseModalDialogCommand());
 
     return $response;
   }
