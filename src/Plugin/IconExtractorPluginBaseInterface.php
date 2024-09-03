@@ -10,7 +10,7 @@ use Drupal\ui_icons\IconDefinition;
 /**
  * Interface for ui_icons_extractor plugins.
  */
-interface IconExtractorPluginInterface extends PluginFormInterface {
+interface IconExtractorPluginBaseInterface extends PluginFormInterface {
 
   /**
    * Get a list of all the icons available for this extractor.
@@ -51,21 +51,5 @@ interface IconExtractorPluginInterface extends PluginFormInterface {
    *   The Icon definition.
    */
   public static function createIcon(string $icon_id, string $path, array $data, ?string $group = NULL): IconDefinition;
-
-  /**
-   * Create files from sources config.
-   *
-   * @param array $sources
-   *   The extractor config sources, path or url.
-   * @param array $paths
-   *   The definition paths. Include:
-   *   - drupal_root
-   *   - absolute_path
-   *   - relative_path.
-   *
-   * @return array
-   *   List of files with metadata.
-   */
-  public function getFilesFromSources(array $sources, array $paths): array;
 
 }

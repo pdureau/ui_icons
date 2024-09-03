@@ -40,7 +40,7 @@ ICON_PACK_MACHINE_NAME:
 ```
 
 This module provide multiple extractors, you an provide other extractor with
-other modules or custom code, @see IconExtractorPluginInterface.
+other modules or custom code, @see IconExtractorPluginBaseInterface.
 
 Available extractors with this module:
 

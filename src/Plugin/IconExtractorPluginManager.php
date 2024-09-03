@@ -28,7 +28,7 @@ class IconExtractorPluginManager extends DefaultPluginManager {
    * Constructs the object.
    */
   public function __construct(\Traversable $namespaces, CacheBackendInterface $cache_backend, ModuleHandlerInterface $module_handler, PluginFormFactoryInterface $plugin_form_manager) {
-    parent::__construct('Plugin/IconExtractor', $namespaces, $module_handler, IconExtractorPluginInterface::class, IconExtractor::class);
+    parent::__construct('Plugin/IconExtractor', $namespaces, $module_handler, IconExtractorPluginBaseInterface::class, IconExtractor::class);
     $this->alterInfo('ui_icons_extractor_info');
     $this->setCacheBackend($cache_backend, 'ui_icons_extractor_plugins');
     $this->pluginFormFactory = $plugin_form_manager;
@@ -66,7 +66,7 @@ class IconExtractorPluginManager extends DefaultPluginManager {
     if (!isset($icon_pack_configuration['settings'])) {
       return NULL;
     }
-    /** @var \Drupal\ui_icons\Plugin\IconExtractorPluginInterface $plugin */
+    /** @var \Drupal\ui_icons\Plugin\IconExtractorPluginBaseInterface $plugin */
     $plugin = $this->createInstance($icon_pack_configuration['extractor'], $icon_pack_configuration);
     return $this->getPluginForm($plugin);
   }
@@ -74,13 +74,13 @@ class IconExtractorPluginManager extends DefaultPluginManager {
   /**
    * Retrieves the plugin form for a given icon extractor.
    *
-   * @param \Drupal\ui_icons\Plugin\IconExtractorPluginInterface $icon_extractor
+   * @param \Drupal\ui_icons\Plugin\IconExtractorPluginBaseInterface $icon_extractor
    *   The ui icons extractor plugin.
    *
    * @return \Drupal\Core\Plugin\PluginFormInterface
    *   The plugin form for this plugin.
    */
-  protected function getPluginForm(IconExtractorPluginInterface $icon_extractor): PluginFormInterface {
+  protected function getPluginForm(IconExtractorPluginBaseInterface $icon_extractor): PluginFormInterface {
     if ($icon_extractor instanceof PluginWithFormsInterface) {
       return $this->pluginFormFactory->createInstance($icon_extractor, 'settings');
     }

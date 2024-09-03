@@ -1,0 +1,7 @@
+name: 'UI Icons Iconify'
+type: module
+description: 'Provide Iconify support in UI Icons.'
+package: User interface Icon packs
+core_version_requirement: ^10 || ^11
+dependencies:
+  - ui_icons:ui_icons

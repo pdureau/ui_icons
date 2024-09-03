@@ -7,7 +7,7 @@ namespace Drupal\ui_icons\Plugin\IconExtractor;
 use Drupal\Core\StringTranslation\TranslatableMarkup;
 use Drupal\ui_icons\Attribute\IconExtractor;
 use Drupal\ui_icons\Exception\IconPackConfigErrorException;
-use Drupal\ui_icons\Plugin\IconExtractorPluginBase;
+use Drupal\ui_icons\Plugin\IconExtractorPluginFinderBase;
 use Drupal\ui_icons\PluginForm\IconPackExtractorForm;
 
 /**
@@ -21,7 +21,7 @@ use Drupal\ui_icons\PluginForm\IconPackExtractorForm;
     'settings' => IconPackExtractorForm::class,
   ]
 )]
-class SvgSpriteExtractor extends IconExtractorPluginBase {
+class SvgSpriteExtractor extends IconExtractorPluginFinderBase {
 
   /**
    * {@inheritdoc}

@@ -11,7 +11,7 @@ use Drupal\Tests\UnitTestCase;
 use Drupal\ui_icons\Exception\IconPackConfigErrorException;
 use Drupal\ui_icons\IconFinder;
 use Drupal\ui_icons\Plugin\IconExtractor\ManualExtractor;
-use Drupal\ui_icons\Plugin\IconExtractorPluginInterface;
+use Drupal\ui_icons\Plugin\IconExtractorPluginBaseInterface;
 
 /**
  * Tests ui_icons manual extractor plugin.
@@ -111,7 +111,7 @@ class ManualExtractorTest extends UnitTestCase {
       $iconFinder,
     );
 
-    $this->assertInstanceOf(IconExtractorPluginInterface::class, $manualExtractorPlugin);
+    $this->assertInstanceOf(IconExtractorPluginBaseInterface::class, $manualExtractorPlugin);
     $this->assertSame('Test', $manualExtractorPlugin->label());
     $this->assertSame('Test description', $manualExtractorPlugin->description());
 
@@ -136,7 +136,7 @@ class ManualExtractorTest extends UnitTestCase {
       $this->createMock(IconFinder::class),
     );
 
-    $this->assertInstanceOf(IconExtractorPluginInterface::class, $manualExtractorPlugin);
+    $this->assertInstanceOf(IconExtractorPluginBaseInterface::class, $manualExtractorPlugin);
 
     // Test buildConfigurationForm with no change because of no 'settings';.
     $form = ['foo'];
@@ -161,7 +161,7 @@ class ManualExtractorTest extends UnitTestCase {
       $this->createMock(IconFinder::class),
     );
 
-    $this->assertInstanceOf(IconExtractorPluginInterface::class, $manualExtractorPlugin);
+    $this->assertInstanceOf(IconExtractorPluginBaseInterface::class, $manualExtractorPlugin);
 
     $form_state = $this->createMock(FormStateInterface::class);
     $form_state->method('getValue')->willReturn(['foo' => ['#default_value' => 'bar']]);

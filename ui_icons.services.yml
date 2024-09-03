@@ -15,7 +15,7 @@ services:
     class: Drupal\ui_icons\Plugin\IconExtractorPluginManager
     parent: default_plugin_manager
     arguments: ['@plugin_form.factory']
-  Drupal\ui_icons\Plugin\IconExtractorPluginInterface: '@plugin.manager.ui_icons_extractor'
+  Drupal\ui_icons\Plugin\IconExtractorPluginBaseInterface: '@plugin.manager.ui_icons_extractor'
 
   ui_icons.twig_extension:
     class: Drupal\ui_icons\Template\IconTwigExtension

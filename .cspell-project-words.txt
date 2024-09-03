@@ -22,3 +22,9 @@ Grimreaper
 Dureau
 pdureau
 Beyris
+Iconify
+meteocons
+fxemoji
+emojione
+fdevicon
+unjs

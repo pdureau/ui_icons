@@ -10,7 +10,6 @@ icon_pack_example_drupal_core:
       - /core/themes/claro/images/src/{icon_id}.svg
       - /core/themes/olivero/images/{icon_id}.svg
       - /core/profiles/demo_umami/themes/umami/components/header/icons/{icon_id}.svg
-      - /core/profiles/demo_umami/themes/umami/images/svg/{icon_id}.svg
       - /core/misc/{icon_id}.png
       - /core/modules/media/images/icons/{icon_id}.png
       - /core/profiles/demo_umami/themes/umami/images/classy/icons/{icon_id}.png
@@ -21,12 +20,6 @@ icon_pack_example_drupal_core:
       - /core/misc/icons/{icon_id}.gif
       - /core/misc/{icon_id}.gif
       - /core/tests/fixtures/files/{icon_id}.gif
-      # # Example from node_modules if installed.
-      # - /core/node_modules/loadjs/test/assets/{icon_id}.gif
-      # - /core/node_modules/@ckeditor/ckeditor5-core/theme/icons/{icon_id}.svg
-      # - /core/node_modules/nightwatch/lib/reporter/reporters/html/assets/images/{icon_id}.svg
-      # # Some sprites seems included
-      # - /core/node_modules/jquery-ui/dist/themes/{group}/images/{icon_id}.png
   settings:
     width:
       title: "Width"

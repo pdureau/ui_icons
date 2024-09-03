@@ -6,7 +6,6 @@ namespace Drupal\ui_icons_example\Form;
 
 use Drupal\Core\Form\FormBase;
 use Drupal\Core\Form\FormStateInterface;
-use Drupal\ui_icons\Plugin\IconExtractorPluginManager;
 use Drupal\ui_icons\Plugin\IconPackManagerInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
@@ -25,7 +24,6 @@ final class IconExampleForm extends FormBase {
 
   public function __construct(
     private readonly IconPackManagerInterface $pluginManagerIconPack,
-    private readonly IconExtractorPluginManager $iconPackExtractorManager,
   ) {}
 
   /**
@@ -34,7 +32,6 @@ final class IconExampleForm extends FormBase {
   public static function create(ContainerInterface $container): self {
     return new static(
       $container->get('plugin.manager.ui_icons_pack'),
-      $container->get('plugin.manager.ui_icons_extractor'),
     );
   }
 

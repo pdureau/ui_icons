@@ -164,7 +164,7 @@ class IconFinder implements ContainerInjectionInterface {
   private function findFiles(string $dir, string $mask, bool $group_position_end): array {
     $options = [
       'recurse' => TRUE,
-      'min_depth' => $group_position_end ? 0 : 2,
+      'min_depth' => $group_position_end ? 0 : 1,
     ];
 
     try {
@@ -251,8 +251,8 @@ class IconFinder implements ContainerInjectionInterface {
    *
    * @param bool $has_group
    *   Indicates if a group is present.
-   * @param string|null $group
-   *   The group value (if present).
+   * @param string $group
+   *   The group value.
    * @param string $dirname
    *   The directory name.
    * @param string $base_relative_path
@@ -263,7 +263,7 @@ class IconFinder implements ContainerInjectionInterface {
    * @return string
    *   The generated Drupal URI.
    */
-  private function buildDrupalUri(bool $has_group, ?string $group, string $dirname, string $base_relative_path, string $filename): string {
+  private function buildDrupalUri(bool $has_group, string $group, string $dirname, string $base_relative_path, string $filename): string {
     $current_relative_path = $has_group ? str_replace(self::GROUP_PATTERN, $group, $dirname) : $dirname;
     $current_relative_path = $base_relative_path . $current_relative_path;
     $current_relative_path = sprintf('%s/%s', $current_relative_path, $filename);
@@ -283,12 +283,12 @@ class IconFinder implements ContainerInjectionInterface {
    * @param string $dirname
    *   The directory name pattern.
    *
-   * @return string|null
-   *   The determined group or null.
+   * @return string
+   *   The determined group or empty.
    */
-  private function determineGroup(string $uri, bool $has_group, bool $group_position_end, string $dirname): ?string {
+  private function determineGroup(string $uri, bool $has_group, bool $group_position_end, string $dirname): string {
     if (!$has_group) {
-      return NULL;
+      return '';
     }
 
     if ($group_position_end) {
@@ -297,7 +297,7 @@ class IconFinder implements ContainerInjectionInterface {
 
     $pattern = str_replace(self::GROUP_PATTERN, '(?P<group>.+)?', $dirname);
     preg_match('@' . $pattern . '@', $uri, $matches);
-    return $matches['group'] ?? NULL;
+    return $matches['group'] ?? '';
   }
 
 }
