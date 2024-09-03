@@ -47,14 +47,16 @@ class IconifyApi implements IconifyApiInterface {
     }
     catch (ClientException | ServerException $e) {
       $errorType = $e instanceof ClientException ? 'client' : 'server';
-      $this->logger->error('Iconify ' . $errorType . ' error for @collection: @error', ['@collection' => $collection, '@error' => $e->getResponse()]);
+      $param = ['@collection' => $collection, '@error' => $e->getResponse()];
+      $this->logger->error('Iconify ' . $errorType . ' error for @collection: @error', $param);
       return [];
     }
 
     $icons_list = Json::decode((string) $response->getBody());
 
     if (!is_array($icons_list)) {
-      $this->logger->error('Iconify error for @collection: @error', ['@collection' => $collection, '@error' => (string) $response->getBody()]);
+      $param = ['@collection' => $collection, '@error' => (string) $response->getBody()];
+      $this->logger->error('Iconify error for @collection: @error', $param);
       return [];
     }
 
