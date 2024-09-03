@@ -84,6 +84,7 @@ class IconLinkWidget extends LinkWidget implements ContainerFactoryPluginInterfa
   public static function defaultSettings(): array {
     return [
       'allowed_icon_pack' => [],
+      'icon_selector' => 'icon_autocomplete',
       'icon_required' => TRUE,
       'icon_position' => FALSE,
       // Show settings is used by menu link implementation.
@@ -107,6 +108,13 @@ class IconLinkWidget extends LinkWidget implements ContainerFactoryPluginInterfa
       '#options' => $this->pluginManagerIconPack->listIconPackWithDescriptionOptions(),
       '#default_value' => $this->getSetting('allowed_icon_pack'),
       '#multiple' => TRUE,
+    ];
+
+    $elements['icon_selector'] = [
+      '#type' => 'select',
+      '#title' => $this->t('Icon selector'),
+      '#options' => $this->getPickerOptions(),
+      '#default_value' => $this->getSetting('icon_selector'),
     ];
 
     $elements['icon_required'] = [
@@ -146,6 +154,9 @@ class IconLinkWidget extends LinkWidget implements ContainerFactoryPluginInterfa
       $summary[] = $this->t('All icon sets available for selection');
     }
 
+    $icon_selector = $this->getSetting('icon_selector');
+    $summary[] = $this->t('Selector: @type', ['@type' => $this->getPickerOptions()[$icon_selector]]);
+
     if (TRUE === (bool) $settings['icon_required']) {
       $summary[] = $this->t('Icon is required');
     }
@@ -184,8 +195,9 @@ class IconLinkWidget extends LinkWidget implements ContainerFactoryPluginInterfa
     $label = $this->fieldDefinition->getLabel() ?? $this->t('Link');
     $field_name = $this->fieldDefinition->getName();
 
+    $icon_selector = $this->getSetting('icon_selector');
     $element['icon'] = [
-      '#type' => 'icon_autocomplete',
+      '#type' => $icon_selector,
       '#title' => $this->t('@name icon', ['@name' => $label]),
       '#description' => $this->t('Pick an Icon for this link.'),
       '#return_id' => TRUE,
@@ -243,6 +255,19 @@ class IconLinkWidget extends LinkWidget implements ContainerFactoryPluginInterfa
       'before' => $this->t('Before'),
       'after' => $this->t('After'),
       'icon_only' => $this->t('Icon only'),
+    ];
+  }
+
+  /**
+   * Get the icon selector options.
+   *
+   * @return \Drupal\Core\StringTranslation\TranslatableMarkup[]
+   *   An array of options for selectors options.
+   */
+  private function getPickerOptions(): array {
+    return [
+      'icon_autocomplete' => $this->t('Autocomplete'),
+      'icon_picker' => $this->t('Picker'),
     ];
   }
 
