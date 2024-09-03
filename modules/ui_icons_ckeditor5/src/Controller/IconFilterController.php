@@ -6,6 +6,7 @@ namespace Drupal\ui_icons_ckeditor5\Controller;
 
 use Drupal\Core\DependencyInjection\ContainerInjectionInterface;
 use Drupal\Core\Render\RendererInterface;
+use Drupal\ui_icons\IconDefinitionInterface;
 use Drupal\ui_icons\Plugin\IconPackManagerInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpFoundation\Request;
@@ -58,6 +59,10 @@ final class IconFilterController implements ContainerInjectionInterface {
     if (empty($settings)) {
       [$icon_pack_id] = explode(':', $icon_id);
       $settings = $this->pluginManagerIconPack->getExtractorFormDefaults($icon_pack_id);
+    }
+
+    if (!$icon instanceof IconDefinitionInterface) {
+      return (new Response('', 404));
     }
 
     $build = $icon->getRenderable($settings);
