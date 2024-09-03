@@ -197,7 +197,7 @@ ui_icons_iconify_programming:
   config:
     collections:
       - vscode-icons
-      - fdevicon
+      - devicon
       - unjs
   settings:
     width:
