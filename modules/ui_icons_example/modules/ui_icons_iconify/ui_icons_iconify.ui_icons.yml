@@ -76,7 +76,6 @@ ui_icons_iconify_circle_flags:
 ui_icons_iconify_geo:
   label: Geo
   enabled: true
-
   extractor: iconify
   config:
     collections:

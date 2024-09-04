@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Drupal\ui_icons_iconify;
+namespace Drupal\ui_icons_iconify_api;
 
 use Drupal\Component\Serialization\Json;
 use GuzzleHttp\ClientInterface;

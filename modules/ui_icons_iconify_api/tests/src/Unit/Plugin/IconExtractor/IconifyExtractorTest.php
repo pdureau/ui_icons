@@ -2,13 +2,13 @@
 
 declare(strict_types=1);
 
-namespace Drupal\Tests\ui_icons_iconify\Unit\Plugin\IconExtractor;
+namespace Drupal\Tests\ui_icons_iconify_api\Unit\Plugin\IconExtractor;
 
 use Drupal\Tests\ui_icons\Unit\IconUnitTestCase;
 use Drupal\ui_icons\Exception\IconPackConfigErrorException;
-use Drupal\ui_icons_iconify\IconifyApi;
-use Drupal\ui_icons_iconify\IconifyApiInterface;
-use Drupal\ui_icons_iconify\Plugin\IconExtractor\IconifyExtractor;
+use Drupal\ui_icons_iconify_api\IconifyApi;
+use Drupal\ui_icons_iconify_api\IconifyApiInterface;
+use Drupal\ui_icons_iconify_api\Plugin\IconExtractor\IconifyExtractor;
 
 /**
  * Tests for the Iconify extractor plugin.
@@ -22,14 +22,14 @@ class IconifyExtractorTest extends IconUnitTestCase {
   /**
    * The Iconify API service.
    *
-   * @var \Drupal\ui_icons_iconify\IconifyApiInterface|\PHPUnit\Framework\MockObject\MockObject
+   * @var \Drupal\ui_icons_iconify_api\IconifyApiInterface|\PHPUnit\Framework\MockObject\MockObject
    */
   protected $iconifyApi;
 
   /**
    * The Iconify extractor plugin.
    *
-   * @var \Drupal\ui_icons_iconify\Plugin\IconExtractor\IconifyExtractor
+   * @var \Drupal\ui_icons_iconify_api\Plugin\IconExtractor\IconifyExtractor
    */
   protected $iconifyExtractor;
 

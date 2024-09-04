@@ -2,11 +2,11 @@
 
 declare(strict_types=1);
 
-namespace Drupal\Tests\ui_icons_iconify\Unit;
+namespace Drupal\Tests\ui_icons_iconify_api\Unit;
 
 use Drupal\Component\Serialization\Json;
 use Drupal\Tests\UnitTestCase;
-use Drupal\ui_icons_iconify\IconifyApi;
+use Drupal\ui_icons_iconify_api\IconifyApi;
 use GuzzleHttp\ClientInterface;
 use GuzzleHttp\Exception\ClientException;
 use GuzzleHttp\Exception\ServerException;
@@ -41,7 +41,7 @@ class IconifyApiTest extends UnitTestCase {
   /**
    * The Iconify API service.
    *
-   * @var \Drupal\ui_icons_iconify\IconifyApi
+   * @var \Drupal\ui_icons_iconify_api\IconifyApi
    */
   protected $iconifyApi;
 

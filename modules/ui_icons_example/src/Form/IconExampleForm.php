@@ -6,6 +6,7 @@ namespace Drupal\ui_icons_example\Form;
 
 use Drupal\Core\Form\FormBase;
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\Url;
 use Drupal\ui_icons\Plugin\IconPackManagerInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
@@ -50,6 +51,15 @@ final class IconExampleForm extends FormBase {
 
     $form = [];
     $form['#tree'] = TRUE;
+
+    $form['notice'] = [
+      '#markup' => $this->t(
+        'See <a href="@url">Build example page</a> for Render API.',
+        [
+          '@url' => Url::fromRoute('ui_icons_example.build_example')->toString(),
+        ],
+      ),
+    ];
 
     $form['icon_pack'] = [
       '#type' => 'details',

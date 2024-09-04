@@ -1,5 +1,23 @@
-ui_icons.icon_pack_options.ui_icons_iconify:
-  type: ui_icons.icon_pack_options_default
+ui_icons.icon_pack_options.ui_icons_iconify_flags:
+  type: ui_icons.ui_icons_iconify_default
+
+ui_icons.icon_pack_options.ui_icons_iconify_circle_flags:
+  type: ui_icons.ui_icons_iconify_default
+
+ui_icons.icon_pack_options.ui_icons_iconify_geo:
+  type: ui_icons.ui_icons_iconify_default
+
+ui_icons.icon_pack_options.ui_icons_iconify_animated:
+  type: ui_icons.ui_icons_iconify_default
+
+ui_icons.icon_pack_options.ui_icons_iconify_emoji:
+  type: ui_icons.ui_icons_iconify_default
+
+ui_icons.icon_pack_options.ui_icons_iconify_programming:
+  type: ui_icons.ui_icons_iconify_default
+
+ui_icons.ui_icons_iconify_default:
+  type: mapping
   label: 'Iconify settings'
   constraints:
     FullyValidatable: ~
@@ -19,16 +37,10 @@ ui_icons.icon_pack_options.ui_icons_iconify:
     flip:
       label: 'Flip'
       type: string
-      # enum:
-      #   - original
-      #   - horizontal
-      #   - vertical
-      #   - horizontal,vertical
+      constraints:
+        NotBlank: []
     rotate:
       label: 'Rotate'
       type: string
-      # enum:
-      #   - 0deg
-      #   - 90deg
-      #   - 180deg
-      #   - 270deg
+      constraints:
+        NotBlank: []

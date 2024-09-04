@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Drupal\ui_icons_iconify\Plugin\IconExtractor;
+namespace Drupal\ui_icons_iconify_api\Plugin\IconExtractor;
 
 use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
 use Drupal\Core\StringTranslation\TranslatableMarkup;
@@ -10,8 +10,8 @@ use Drupal\ui_icons\Attribute\IconExtractor;
 use Drupal\ui_icons\Exception\IconPackConfigErrorException;
 use Drupal\ui_icons\Plugin\IconExtractorPluginBase;
 use Drupal\ui_icons\PluginForm\IconPackExtractorForm;
-use Drupal\ui_icons_iconify\IconifyApi;
-use Drupal\ui_icons_iconify\IconifyApiInterface;
+use Drupal\ui_icons_iconify_api\IconifyApi;
+use Drupal\ui_icons_iconify_api\IconifyApiInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
@@ -36,7 +36,7 @@ class IconifyExtractor extends IconExtractorPluginBase implements ContainerFacto
    *   The plugin_id for the plugin instance.
    * @param mixed $plugin_definition
    *   The plugin implementation definition.
-   * @param \Drupal\ui_icons_iconify\IconifyApiInterface $iconifyApi
+   * @param \Drupal\ui_icons_iconify_api\IconifyApiInterface $iconifyApi
    *   The Iconify API service.
    */
   public function __construct(
