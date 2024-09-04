@@ -6,11 +6,46 @@ namespace Drupal\ui_icons_picker\Element;
 
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Render\Attribute\FormElement;
+use Drupal\Core\StringTranslation\TranslatableMarkup;
 use Drupal\Core\Url;
 use Drupal\ui_icons\Element\IconAutocomplete;
 
 /**
  * Provides a form element to select an icon with a fancy picker.
+ *
+ * Properties:
+ * - #default_value: (string) Icon value as icon_pack_id:icon_id.
+ * - #show_settings: (bool) Enable extractor settings, default FALSE.
+ * - #default_settings: (array) Settings for the extractor settings.
+ * - #settings_title: (string) Extractor settings details title.
+ * - #allowed_icon_pack: (array) Icon pack to limit the selection.
+ * - #return_id: (bool) Form return icon id instead of icon object as default.
+ *
+ * Some base properties from FormElementBase.
+ * - #description: (string) Help or description text for the input element.
+ * - #placeholder: (string) Placeholder text for the input, default to
+ *   'Click to select an Icon'.
+ * - #required: (bool) Whether or not input is required on the element.
+ * - #size: (int): Textfield size, default 55.
+ *
+ * Global properties applied to the parent element:
+ * - #attributes': (array) Attributes to the global element.
+ *
+ * @see web/core/lib/Drupal/Core/Render/Element/FormElementBase.php
+ *
+ * Usage example:
+ * @code
+ * $form['icon'] = [
+ *   '#type' => 'icon_picker',
+ *   '#title' => $this->t('Select icon'),
+ *   '#default_value' => 'my_icon_pack:my_default_icon',
+ *   '#allowed_icon_pack' => [
+ *     'my_icon_pack,
+ *     'other_icon_pack',
+ *   ],
+ *   '#show_settings' => TRUE,
+ * ];
+ * @endcode
  */
 #[FormElement('icon_picker')]
 class IconPicker extends IconAutocomplete {
@@ -32,6 +67,7 @@ class IconPicker extends IconAutocomplete {
   public static function processIcon(array &$element, FormStateInterface $form_state, array &$complete_form): array {
     $element = parent::processIcon($element, $form_state, $complete_form);
 
+    $element['icon_id']['#placeholder'] = $element['#placeholder'] ?? new TranslatableMarkup('Click to select an Icon');
     $element['icon_id']['#attached'] = [
       'library' => [
         'ui_icons_picker/picker',
