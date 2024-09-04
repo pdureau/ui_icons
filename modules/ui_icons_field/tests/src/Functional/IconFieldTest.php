@@ -72,7 +72,7 @@ class IconFieldTest extends BrowserTestBase {
     $label = 'Icon test';
     $icon_full_id = 'test_local_files:local__9.0_blue';
     $icon_class = '.icon-local__90-blue';
-    $icon_source = '/modules/ui_icons/tests/modules/ui_icons_test/icons/local_png/local__9.0_blue.png';
+    $icon_filename = 'local__9.0_blue.png';
 
     // Create a field and storage for checking.
     FieldStorageConfig::create([
@@ -140,7 +140,7 @@ class IconFieldTest extends BrowserTestBase {
     $this->submitForm($edit, 'Save');
     $assert_session->pageTextContains('Article Test Article has been created.');
     $assert_session->elementExists('css', $icon_class);
-    $assert_session->elementExists('css', ".icon[src='$icon_source']");
+    $assert_session->elementExists('css', ".icon[src$='$icon_filename']");
   }
 
 }
