@@ -18,11 +18,11 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  * Plugin implementation of the ui_icons_extractor.
  */
 #[IconExtractor(
-  id: "iconify",
-  label: new TranslatableMarkup("Iconify"),
-  description: new TranslatableMarkup("Provide Iconify list of Icons."),
+  id: 'iconify',
+  label: new TranslatableMarkup('Iconify'),
+  description: new TranslatableMarkup('Provide Iconify list of Icons.'),
   forms: [
-    "settings" => IconPackExtractorForm::class,
+    'settings' => IconPackExtractorForm::class,
   ]
 )]
 class IconifyExtractor extends IconExtractorPluginBase implements ContainerFactoryPluginInterface {
@@ -61,7 +61,7 @@ class IconifyExtractor extends IconExtractorPluginBase implements ContainerFacto
       $configuration,
       $plugin_id,
       $plugin_definition,
-      $container->get("ui_icons_iconify.iconify_api")
+      $container->get('ui_icons_iconify.iconify_api')
     );
   }
 

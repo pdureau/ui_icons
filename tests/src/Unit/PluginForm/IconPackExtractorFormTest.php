@@ -97,35 +97,35 @@ class TestPluginWithForm implements PluginWithFormsInterface {
   /**
    * {@inheritdoc}
    */
-  public function getPluginId() {
+  public function getPluginId(): string {
     return 'test';
   }
 
   /**
    * {@inheritdoc}
    */
-  public function getPluginDefinition() {
+  public function getPluginDefinition(): array {
     return [];
   }
 
   /**
    * {@inheritdoc}
    */
-  public function hasFormClass($operation) {
+  public function hasFormClass($operation): bool {
     return TRUE;
   }
 
   /**
    * {@inheritdoc}
    */
-  public function getFormClass($operation) {
+  public function getFormClass($operation): string {
     return 'form_class';
   }
 
   /**
    * {@inheritdoc}
    */
-  public function buildConfigurationForm(array $form, FormStateInterface $form_state) {
+  public function buildConfigurationForm(array $form, FormStateInterface $form_state): array {
     $form['plugin_build_form'] = 'plugin_build_form';
     return $form;
   }
@@ -133,14 +133,14 @@ class TestPluginWithForm implements PluginWithFormsInterface {
   /**
    * {@inheritdoc}
    */
-  public function validateConfigurationForm(array &$form, FormStateInterface $form_state) {
+  public function validateConfigurationForm(array &$form, FormStateInterface $form_state): void {
     $form['plugin_validate_form'] = 'plugin_validate_form';
   }
 
   /**
    * {@inheritdoc}
    */
-  public function submitConfigurationForm(array &$form, FormStateInterface $form_state) {
+  public function submitConfigurationForm(array &$form, FormStateInterface $form_state): void {
     $form['plugin_submit_form'] = 'plugin_submit_form';
   }
 

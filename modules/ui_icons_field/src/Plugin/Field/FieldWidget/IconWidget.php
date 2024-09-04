@@ -25,7 +25,7 @@ class IconWidget extends WidgetBase implements ContainerFactoryPluginInterface {
   /**
    * {@inheritdoc}
    */
-  public static function defaultSettings() {
+  public static function defaultSettings(): array {
     return [
       'icon_selector' => 'icon_autocomplete',
     ] + parent::defaultSettings();
@@ -34,7 +34,7 @@ class IconWidget extends WidgetBase implements ContainerFactoryPluginInterface {
   /**
    * {@inheritdoc}
    */
-  public function settingsForm(array $form, FormStateInterface $form_state) {
+  public function settingsForm(array $form, FormStateInterface $form_state): array {
     $element = [];
 
     $element['icon_selector'] = [
@@ -50,7 +50,7 @@ class IconWidget extends WidgetBase implements ContainerFactoryPluginInterface {
   /**
    * {@inheritdoc}
    */
-  public function settingsSummary() {
+  public function settingsSummary(): array {
     $summary = [];
 
     $icon_selector = $this->getSetting('icon_selector');

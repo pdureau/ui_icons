@@ -82,7 +82,7 @@ class IconType extends FieldItemBase {
   /**
    * {@inheritdoc}
    */
-  public static function defaultFieldSettings() {
+  public static function defaultFieldSettings(): array {
     return [
       'allowed_icon_pack' => [],
     ] + parent::defaultFieldSettings();
@@ -91,7 +91,7 @@ class IconType extends FieldItemBase {
   /**
    * {@inheritdoc}
    */
-  public function fieldSettingsForm(array $form, FormStateInterface $form_state) {
+  public function fieldSettingsForm(array $form, FormStateInterface $form_state): array {
     $options = $this->getIconPackManager()->listIconPackOptions();
 
     $elements = [
@@ -116,7 +116,7 @@ class IconType extends FieldItemBase {
   /**
    * {@inheritdoc}
    */
-  public static function fieldSettingsToConfigData(array $settings) {
+  public static function fieldSettingsToConfigData(array $settings): array {
     $settings['allowed_icon_pack'] = array_filter($settings['allowed_icon_pack']);
     return $settings;
   }
@@ -132,7 +132,7 @@ class IconType extends FieldItemBase {
   /**
    * {@inheritdoc}
    */
-  public static function generateSampleValue(FieldDefinitionInterface $field_definition) {
+  public static function generateSampleValue(FieldDefinitionInterface $field_definition): array {
     $allowed_icon_pack = $field_definition->getSetting('allowed_icon_pack');
     $icons = \Drupal::service('plugin.manager.ui_icons_pack')->listIconOptions($allowed_icon_pack);
 
