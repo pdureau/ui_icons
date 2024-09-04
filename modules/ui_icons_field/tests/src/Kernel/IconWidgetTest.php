@@ -83,6 +83,19 @@ class IconWidgetTest extends KernelTestBase {
     $this->assertEmpty($element['value']['#allowed_icon_pack']);
     $this->assertFalse($element['value']['#show_settings']);
     $this->assertFalse($element['value']['#required']);
+
+    // Test that the field can be attached to an entity.
+    $entity = EntityTest::create([
+      'name' => 'sample entity 2',
+    ]);
+    $entity->icon = [
+      'target_id' => 'test_local_files:local__9.0_blue',
+    ];
+    $entity->save();
+
+    // Reload the entity and check that the field value is correct.
+    $entity = EntityTest::load($entity->id());
+    $this->assertEquals('test_local_files:local__9.0_blue', $entity->icon->target_id);
   }
 
   /**
