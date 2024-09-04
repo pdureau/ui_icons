@@ -13,6 +13,17 @@ field.value.ui_icon:
       sequence:
         type: ui_icons.icon_pack_options.[%key]
 
+field.field_settings.ui_icon:
+  type: mapping
+  label: 'Icon settings'
+  mapping:
+    allowed_icon_pack:
+      type: sequence
+      label: 'Icon Pack limitation for selection'
+      sequence:
+        type: string
+        label: 'Icon Pack id'
+
 field.formatter.settings.icon_formatter:
   type: mapping
   label: 'icon formatter settings'
@@ -46,15 +57,9 @@ field.widget.settings.icon_widget:
   constraints:
     FullyValidatable: ~
   mapping:
-    allowed_icon_pack:
-      type: sequence
-      label: 'Icon Pack limitation for selection'
-      sequence:
-        type: string
-        label: 'Icon Pack id'
-    show_settings:
-      type: boolean
-      label: 'Show extractor settings'
+    icon_selector:
+      type: string
+      label: 'Icon FormElement name'
 
 field.widget.settings.icon_link_widget:
   type: field.widget.settings.link_default
@@ -77,3 +82,6 @@ field.widget.settings.icon_link_widget:
     icon_position:
       type: boolean
       label: 'Allow icon pack display selection'
+    icon_selector:
+      type: string
+      label: 'Icon FormElement name'
