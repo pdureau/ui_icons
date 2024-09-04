@@ -1,5 +1,5 @@
 icon_pack_example_drupal_core:
-  label: Example Drupal core Icons
+  label: Drupal core Icons
   description: Drupal core icons available within Drupal.
   extractor: path
   config:

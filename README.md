@@ -9,14 +9,118 @@ See: [Installing Modules](https://www.drupal.org/docs/extending-drupal/installin
 
 ## USAGE
 
-To add an **Icon Pack**, you need to declare in your module or theme a specific
-file:
+To add an **Icon Pack**, you need to declare in your **module** or **theme** a
+specific file with suffix ***.ui_icons.yml**:
 
 - my_module_name.ui_icons.yml
 - my_theme_name.ui_icons.yml
 
 This module include a lot of examples, it's recommended to use them as a
 starting point.
+
+### IMPLEMENTATION
+
+Different submodules provide implementations for Field UI, Field Link, Menu,
+CKEditor, UI Patterns, Twig, Render API, Form API.
+
+#### Field UI
+
+Enable `UI Icons Fields` module to add a new field of type **Icon** available
+with specific options and formatter.
+
+For integration with field of type **Link**, be sure to select the `Link Icon`
+widget and formatter under **Manage form display** and **Manage display**.
+
+For support with [Link Attributes widget](https://www.drupal.org/project/link_attributes),
+enable `UI Icons Link attributes` module.
+
+#### Menu
+
+Enable `UI Icons for Menu` module to be able to add an Icon to a menu item.
+
+After enabling the module, edit a menu item to have access to the Icon
+selection.
+
+#### CKEditor
+
+Enable the `UI Icons CKEditor 5` module, go to:
+
+- Administration >> Configuration >> Content authoring
+
+Configure your text format to add the `Icon` button and enable the `Embed icon`
+filter.
+
+#### UI Patterns
+
+Enable the submodule `UI Icons for UI Patterns` to allow usage with
+[UI Patterns 1 or 2](https://www.drupal.org/project/ui_patterns).
+
+#### Twig
+
+`UI Icons` module provide a specific Twig function is available anywhere:
+
+```twig
+{{ icon('my_pack_id', 'my_icon_id', {setting_1: "val 1", setting_2: "val 2}) }}
+```
+
+#### Render API
+
+`UI Icons` module provide a `RenderElement` with type: `ui_icon` to allow usage
+of an icon with the Drupal Render API.
+
+```php
+$build['icon'] = [
+  '#type' => 'ui_icon',
+  '#icon_pack' => 'my_icon_pack_id',
+  '#icon' => 'my_icon_id',
+  '#settings' => [
+    'width' => 64,
+  ],
+];
+```
+
+Specific properties:
+
+- `#icon_pack`: (string) Icon Pack provider plugin id.
+- `#icon`: (string) Id of the icon.
+- `#settings`: (array) Settings sent to the inline Twig template.
+
+#### FORM API
+
+`UI Icons` module provide a `FormElement` with type `icon_autocomplete` to be
+used with the Drupal Form API.
+
+```php
+$form['icon'] = [
+  '#type' => 'icon_autocomplete',
+  '#title' => $this->t('Select icon'),
+  '#default_value' => 'my_icon_pack:my_default_icon',
+  '#allowed_icon_pack' => [
+    'my_icon_pack',
+    'other_icon_pack',
+  ],
+  '#show_settings' => TRUE,
+];
+```
+
+Specific properties:
+
+- `#default_value`: (string) Icon value as icon_pack_id:icon_id.
+- `#show_settings`: (bool) Enable extractor settings, default FALSE.
+- `#default_settings`: (array) Settings for the extractor settings.
+- `#settings_title`: (string) Extractor settings details title.
+- `#allowed_icon_pack`: (array) Icon pack to limit the selection.
+- `#return_id`: (bool) Form return icon id instead of icon object as default.
+
+Some base properties from `FormElementBase`:
+
+- `#description`: (string) Help or description text for the input element.
+- `#placeholder`: (string) Placeholder text for the input.
+- `#required`: (bool) Whether or not input is required on the element.
+- `#size`: (int): Textfield size, default 55.
+- `#attributes`: (array) Attributes to the global element.
+
+Submodule `UI Icons Picker` provide a more fancy selector of type `icon_picker`.
 
 ### ADD AN ICON PACK
 
@@ -84,7 +188,9 @@ Available variables in the template:
 
 The `settings` key allow to define any setting specific to the Icon Pack that
 will be generated as a Drupal Form when the Icon is used and pass to the
-Twig template. The format follow the [JSON Schema reference](https://json-schema.org/understanding-json-schema/reference/type).
+Twig template.
+
+The format follow the [JSON Schema reference](https://json-schema.org/understanding-json-schema/reference/type).
 
 For example a common usage is to include a `size` or `width` and `height` option
 to control the icon. For example:
@@ -107,7 +213,7 @@ This will allow the user to fill a `width` and `height` form alongside the Icon
 form. And the value will be passed to the `template`, so you can use them:
 
 ```twig
-<img class="icon icon-{{ icon_id }}" src="{{ source }}" width="{{ width|default(24) }}" height="{{ height|default(24) }}">
+<img class="icon icon-{{ icon_id|clean_class }}" src="{{ source }}" width="{{ width|default(24) }}" height="{{ height|default(24) }}">
 ```
 
 It is highly recommended to provide default in the Twig template as default
@@ -123,4 +229,5 @@ Current maintainers:
 
 Supporting organizations:
 
-- [Beyris](https://www.drupal.org/beyris) - We are leading impactful open-source projects and we are providing coding, training, audit and consulting.
+- [Beyris](https://www.drupal.org/beyris) - We are leading impactful open-source
+projects and we are providing coding, training, audit and consulting.

@@ -1,5 +1,5 @@
 name: 'UI Icons'
 type: module
-description: 'Core icon management for Drupal.'
+description: 'Core Icons management for Drupal.'
 package: User interface
 core_version_requirement: ^10.3 || ^11

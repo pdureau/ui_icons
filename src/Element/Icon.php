@@ -17,7 +17,7 @@ use Drupal\Core\Render\Element\RenderElementBase;
  *
  * Usage Example:
  * @code
- * $build['ui_icon'] = [
+ * $build['icon'] = [
  *   '#type' => 'ui_icon',
  *   '#icon_pack' => 'material_symbols',
  *   '#icon' => 'home',

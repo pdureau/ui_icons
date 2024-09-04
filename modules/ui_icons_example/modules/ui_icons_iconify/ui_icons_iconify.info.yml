@@ -1,7 +1,8 @@
-name: 'Ui Icons DSFR'
+name: 'Ui Icons Iconify'
 type: module
-description: 'DSFR icons pack, see README for installation.'
+description: 'Iconify pack, see README for installation.'
 package: User interface Icon packs
 core_version_requirement: ^10.3 || ^11
 dependencies:
   - ui_icons:ui_icons
+  - ui_icons:ui_icons_iconify_api

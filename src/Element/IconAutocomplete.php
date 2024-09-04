@@ -36,18 +36,18 @@ use Symfony\Component\HttpFoundation\Request;
  * - #size: (int): Textfield size, default 55.
  *
  * Global properties applied to the parent element:
- * - #attributes': (array) Attributes to the global element.
+ * - #attributes: (array) Attributes to the global element.
  *
  * @see web/core/lib/Drupal/Core/Render/Element/FormElementBase.php
  *
  * Usage example:
  * @code
- * $form['icon_autocomplete'] = [
+ * $form['icon'] = [
  *   '#type' => 'icon_autocomplete',
  *   '#title' => $this->t('Select icon'),
  *   '#default_value' => 'my_icon_pack:my_default_icon',
  *   '#allowed_icon_pack' => [
- *     'my_icon_pack,
+ *     'my_icon_pack',
  *     'other_icon_pack',
  *   ],
  *   '#show_settings' => TRUE,

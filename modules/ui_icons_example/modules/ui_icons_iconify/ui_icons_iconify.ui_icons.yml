@@ -1,0 +1,230 @@
+# Collections from https://icon-sets.iconify.design/
+ui_icons_iconify_flags:
+  label: Flags
+  enabled: true
+  extractor: iconify
+  config:
+    collections:
+      - flag
+  settings:
+    width:
+      title: "Width"
+      description: "Set a width for this icon."
+      type: "integer"
+      default: 24
+    height:
+      title: "Height"
+      description: "Set a height for this icon."
+      type: "integer"
+      default: 24
+    flip:
+      title: "Flip"
+      type: "text"
+      enum:
+        - original
+        - horizontal
+        - vertical
+        - horizontal,vertical
+    rotate:
+      title: "Rotate"
+      type: "text"
+      enum:
+        - 0deg
+        - 90deg
+        - 180deg
+        - 270deg
+  template: >
+    <img src="{{ source }}?width={{ width|default(24) }}&height={{ height|default(24) }}&rotate={{ rotate }}&flip={{ flip }}" />
+
+ui_icons_iconify_circle_flags:
+  label: Circle flags
+  enabled: true
+  extractor: iconify
+  config:
+    collections:
+      - circle-flags
+  settings:
+    width:
+      title: "Width"
+      description: "Set a width for this icon."
+      type: "integer"
+      default: 24
+    height:
+      title: "Height"
+      description: "Set a height for this icon."
+      type: "integer"
+      default: 24
+    flip:
+      title: "Flip"
+      type: "text"
+      enum:
+        - original
+        - horizontal
+        - vertical
+        - horizontal,vertical
+    rotate:
+      title: "Rotate"
+      type: "text"
+      enum:
+        - 0deg
+        - 90deg
+        - 180deg
+        - 270deg
+  template: >
+    <img src="{{ source }}?width={{ width|default(24) }}&height={{ height|default(24) }}&rotate={{ rotate }}&flip={{ flip }}" />
+
+ui_icons_iconify_geo:
+  label: Geo
+  enabled: true
+
+  extractor: iconify
+  config:
+    collections:
+      - geo
+      - gis
+  settings:
+    width:
+      title: "Width"
+      description: "Set a width for this icon."
+      type: "integer"
+      default: 24
+    height:
+      title: "Height"
+      description: "Set a height for this icon."
+      type: "integer"
+      default: 24
+    flip:
+      title: "Flip"
+      type: "text"
+      enum:
+        - original
+        - horizontal
+        - vertical
+        - horizontal,vertical
+    rotate:
+      title: "Rotate"
+      type: "text"
+      enum:
+        - 0deg
+        - 90deg
+        - 180deg
+        - 270deg
+  template: >
+    <img src="{{ source }}?width={{ width|default(24) }}&height={{ height|default(24) }}&rotate={{ rotate }}&flip={{ flip }}" />
+
+ui_icons_iconify_animated:
+  label: Animated
+  enabled: true
+  extractor: iconify
+  config:
+    collections:
+      - line-md
+      - meteocons
+      - svg-spinners
+  settings:
+    width:
+      title: "Width"
+      description: "Set a width for this icon."
+      type: "integer"
+      default: 24
+    height:
+      title: "Height"
+      description: "Set a height for this icon."
+      type: "integer"
+      default: 24
+    flip:
+      title: "Flip"
+      type: "text"
+      enum:
+        - original
+        - horizontal
+        - vertical
+        - horizontal,vertical
+    rotate:
+      title: "Rotate"
+      type: "text"
+      enum:
+        - 0deg
+        - 90deg
+        - 180deg
+        - 270deg
+  template: >
+    <img src="{{ source }}?width={{ width|default(24) }}&height={{ height|default(24) }}&rotate={{ rotate }}&flip={{ flip }}" />
+
+ui_icons_iconify_emoji:
+  label: Emoji
+  enabled: true
+  extractor: iconify
+  config:
+    collections:
+      - fluent-emoji
+      - fxemoji
+      - emojione-v1
+  settings:
+    width:
+      title: "Width"
+      description: "Set a width for this icon."
+      type: "integer"
+      default: 32
+    height:
+      title: "Height"
+      description: "Set a height for this icon."
+      type: "integer"
+      default: 32
+    flip:
+      title: "Flip"
+      type: "text"
+      enum:
+        - original
+        - horizontal
+        - vertical
+        - horizontal,vertical
+    rotate:
+      title: "Rotate"
+      type: "text"
+      enum:
+        - 0deg
+        - 90deg
+        - 180deg
+        - 270deg
+  template: >
+    <img src="{{ source }}?width={{ width|default(32) }}&height={{ height|default(32) }}&rotate={{ rotate }}&flip={{ flip }}" />
+
+ui_icons_iconify_programming:
+  label: Programming
+  enabled: true
+  extractor: iconify
+  config:
+    collections:
+      - vscode-icons
+      - devicon
+      - unjs
+  settings:
+    width:
+      title: "Width"
+      description: "Set a width for this icon."
+      type: "integer"
+      default: 32
+    height:
+      title: "Height"
+      description: "Set a height for this icon."
+      type: "integer"
+      default: 32
+    flip:
+      title: "Flip"
+      type: "text"
+      enum:
+        - original
+        - horizontal
+        - vertical
+        - horizontal,vertical
+    rotate:
+      title: "Rotate"
+      type: "text"
+      enum:
+        - 0deg
+        - 90deg
+        - 180deg
+        - 270deg
+  template: >
+    <img src="{{ source }}?width={{ width|default(32) }}&height={{ height|default(32) }}&rotate={{ rotate }}&flip={{ flip }}" />

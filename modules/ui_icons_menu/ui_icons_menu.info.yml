@@ -1,7 +1,8 @@
-name: 'UI Icons Menu'
+name: 'UI Icons for Menu'
 type: module
-description: 'Provide menu integration.'
+description: 'Menu UI integration of Icons.'
 package: User interface
 core_version_requirement: ^10.3 || ^11
 dependencies:
+  - drupal:menu_ui
   - ui_icons_field:ui_icons_field

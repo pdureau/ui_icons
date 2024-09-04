@@ -1,0 +1,34 @@
+ui_icons.icon_pack_options.ui_icons_iconify:
+  type: ui_icons.icon_pack_options_default
+  label: 'Iconify settings'
+  constraints:
+    FullyValidatable: ~
+  mapping:
+    width:
+      type: integer
+      label: 'Width'
+      constraints:
+        Range:
+          min: 0
+    height:
+      type: integer
+      label: 'Height'
+      constraints:
+        Range:
+          min: 0
+    flip:
+      label: 'Flip'
+      type: string
+      # enum:
+      #   - original
+      #   - horizontal
+      #   - vertical
+      #   - horizontal,vertical
+    rotate:
+      label: 'Rotate'
+      type: string
+      # enum:
+      #   - 0deg
+      #   - 90deg
+      #   - 180deg
+      #   - 270deg
