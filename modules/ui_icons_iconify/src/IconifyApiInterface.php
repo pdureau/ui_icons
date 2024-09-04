@@ -16,7 +16,7 @@ interface IconifyApiInterface {
    *   The collection name.
    *
    * @return array
-   *   The icons id list from 'uncategorized' Iconify response.
+   *   The icons id list from 'uncategorized' or flat 'categories' response.
    *
    * @throws \GuzzleHttp\Exception\ClientException
    * @throws \GuzzleHttp\Exception\ServerException
