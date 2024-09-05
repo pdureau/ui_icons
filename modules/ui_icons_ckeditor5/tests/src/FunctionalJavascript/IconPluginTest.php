@@ -1,0 +1,232 @@
+<?php
+
+declare(strict_types=1);
+
+namespace Drupal\Tests\ui_icons_ckeditor5\Functional;
+
+use Behat\Mink\Element\NodeElement;
+use Drupal\ckeditor5\Plugin\Editor\CKEditor5;
+use Drupal\editor\Entity\Editor;
+use Drupal\filter\Entity\FilterFormat;
+use Drupal\FunctionalJavascriptTests\WebDriverTestBase;
+use Drupal\Tests\ckeditor5\Traits\CKEditor5TestTrait;
+use Symfony\Component\Validator\ConstraintViolation;
+
+/**
+ * Test the UI icons CKEditor features.
+ *
+ * @group ui_icons
+ */
+class IconPluginTest extends WebDriverTestBase {
+
+  use CKEditor5TestTrait;
+
+  /**
+   * Icon pack from ui_icons_test module.
+   */
+  private const ICON_PACK_NAME = 'test_local_files';
+
+  /**
+   * {@inheritdoc}
+   */
+  protected static $modules = [
+    'node',
+    'ui_icons',
+    'ui_icons_ckeditor5',
+    'ui_icons_test',
+  ];
+
+  /**
+   * {@inheritdoc}
+   */
+  protected $defaultTheme = 'starterkit_theme';
+
+  /**
+   * {@inheritdoc}
+   */
+  protected function setUp(): void {
+    parent::setUp();
+
+    FilterFormat::create([
+      'format' => 'test_format',
+      'name' => 'Test format',
+      'filters' => [
+        'icon_embed' => [
+          'status' => TRUE,
+          'allowed_icon_pack' => [self::ICON_PACK_NAME => self::ICON_PACK_NAME],
+        ],
+      ],
+    ])->save();
+    Editor::create([
+      'editor' => 'ckeditor5',
+      'format' => 'test_format',
+      'image_upload' => [
+        'status' => FALSE,
+      ],
+      'settings' => [
+        'toolbar' => [
+          'items' => [
+            'icon',
+            'sourceEditing',
+          ],
+        ],
+        'plugins' => [
+          'ckeditor5_sourceEditing' => [
+            'allowed_tags' => [],
+          ],
+        ],
+      ],
+    ])->save();
+
+    $this->assertSame([], array_map(
+      function (ConstraintViolation $v) {
+        return (string) $v->getMessage();
+      },
+      iterator_to_array(CKEditor5::validatePair(
+        Editor::load('test_format'),
+        FilterFormat::load('test_format')
+      ))
+    ));
+
+    $this->drupalCreateContentType(['type' => 'page']);
+
+    $this->drupalLogin($this->drupalCreateUser([
+      'administer filters',
+      'create page content',
+      'edit own page content',
+      'use text format test_format',
+      'bypass node access',
+    ]));
+  }
+
+  /**
+   * Provide values for testIconPlugin.
+   */
+  public static function providerIconPlugin(): array {
+    return [
+      'icon' => [
+        'icon_id' => self::ICON_PACK_NAME . ':local__9.0_blue',
+        'icon_class' => 'icon icon-local__90-blue',
+        'icon_filename' => 'local__9.0_blue.png',
+        'fill_settings' => FALSE,
+        'settings' => [
+          'width' => '32',
+          'height' => '33',
+          'title' => 'default title',
+        ],
+      ],
+      'icon with settings' => [
+        'icon_id' => self::ICON_PACK_NAME . ':local__9.0_black',
+        'icon_class' => 'icon icon-local__90-black',
+        'icon_filename' => 'local__9.0_black.png',
+        'fill_settings' => TRUE,
+        'settings' => [
+          'width' => '98',
+          'height' => '99',
+          'title' => 'Test title',
+        ],
+      ],
+    ];
+  }
+
+  /**
+   * Test the CKEditor Icon plugin.
+   *
+   * @dataProvider providerIconPlugin
+   */
+  public function testIconPlugin(string $icon_id, string $icon_class, string $icon_filename, bool $fill_settings, array $settings): void {
+    $page = $this->getSession()->getPage();
+    $assert_session = $this->assertSession();
+
+    $this->drupalGet('node/add/page');
+    $this->waitForEditor();
+
+    // Ensure that CKEditor 5 is focused.
+    $this->click('.ck-content');
+
+    $this->assertEditorButtonEnabled('Insert Icon');
+    $this->pressEditorButton('Insert Icon');
+
+    // Our modal appear with input selector.
+    $this->assertNotEmpty($assert_session->waitForElementVisible('css', '#drupal-modal'));
+    $input = $assert_session->waitForElementVisible('css', '[name="icon[icon_id]"]');
+    $this->assertNotNull($input);
+
+    // Make sure the input field can have focus and we can type into it.
+    $input->setValue($icon_id);
+
+    $assert_session->assertExpectedAjaxRequest(2);
+
+    // @phpcs:disable
+    // @todo test autocomplete list result?
+    // $this->getSession()->getDriver()->keyDown($input->getXpath(), ' ');
+    // $this->assertSession()->waitOnAutocomplete();
+    // $suggestions_markup = $page->find('css', 'ul.ui-autocomplete')->getHtml();
+    // $this->assertStringContainsString('', $suggestions_markup);
+    // @phpcs:enable
+
+    $icon_preview = $assert_session->elementExists('css', '.ui-icons-preview-icon img');
+    $this->assertNotNull($icon_preview);
+    // Autocomplete preview has own settings.
+    $this->assertIconValues($icon_preview, $icon_filename, $icon_class, []);
+
+    if (TRUE === $fill_settings) {
+      // Need to open settings to be able to interact.
+      $page->find('css', '.ui-icons-settings-wrapper details summary')->click();
+      $setting_name = '[name="icon[icon_settings][%s][%s]"]';
+      // Fill settings with value.
+      foreach ($settings as $key => $value) {
+        $assert_session->elementExists('css', sprintf($setting_name, self::ICON_PACK_NAME, $key))->setValue($value);
+      }
+    }
+
+    $assert_session->elementExists('css', '.ui-dialog-buttonpane')->pressButton('Save');
+
+    // Check the preview ajax request to display icon in CKEditor.
+    $assert_session->assertExpectedAjaxRequest(3);
+    $icon_ckeditor_preview = $assert_session->elementExists('css', '.drupal-icon span img');
+    $this->assertNotNull($icon_ckeditor_preview);
+    $this->assertIconValues($icon_ckeditor_preview, $icon_filename, $icon_class, $settings);
+
+    // Check the text filter <drupal-icon> inserted properly.
+    $xpath = new \DOMXPath($this->getEditorDataAsDom());
+    $drupal_icon = $xpath->query('//drupal-icon')[0];
+    $expected_attributes = [
+      'data-icon-id' => $icon_id,
+      'data-icon-settings' => json_encode($settings),
+    ];
+    foreach ($expected_attributes as $name => $expected) {
+      $this->assertSame($expected, $drupal_icon->getAttribute($name));
+    }
+
+    $this->submitForm([
+      'title[0][value]' => 'My test content',
+    ], 'Save');
+    $assert_session->pageTextContains('page My test content has been created');
+
+    $display_icon = $assert_session->elementExists('css', '.drupal-icon img');
+    $this->assertNotNull($display_icon);
+    $this->assertIconValues($display_icon, $icon_filename, $icon_class, $settings);
+  }
+
+  /**
+   * Test Icon values.
+   *
+   * @param \Behat\Mink\Element\NodeElement $element
+   *   The NodeElement whose icon values are to be asserted.
+   * @param string $filename
+   *   The expected filename that the 'src' attribute should end with.
+   * @param string $class
+   *   The expected class that the 'class' attribute should match.
+   * @param array $settings
+   *   An associative array of additional attributes and their expected values.
+   */
+  private function assertIconValues(NodeElement $element, string $filename, string $class, array $settings): void {
+    $this->assertStringEndsWith($filename, $element->getAttribute('src'));
+    $this->assertEquals($class, $element->getAttribute('class'));
+    foreach ($settings as $key => $expected) {
+      $this->assertSame($expected, $element->getAttribute($key));
+    }
+  }
+
+}

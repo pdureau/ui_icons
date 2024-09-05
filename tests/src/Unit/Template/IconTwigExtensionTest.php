@@ -12,6 +12,8 @@ use Twig\TwigFunction;
 
 /**
  * Test the class IconTwigExtension.
+ *
+ * @group ui_icons
  */
 class IconTwigExtensionTest extends TestCase {
 
