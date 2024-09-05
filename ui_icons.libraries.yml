@@ -5,3 +5,8 @@ ui_icons.autocomplete:
   css:
     component:
       css/icon.autocomplete.css: {}
+  dependencies:
+    - core/jquery
+    - core/drupal
+    - core/once
+    - core/drupal.autocomplete
