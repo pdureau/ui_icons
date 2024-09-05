@@ -19,12 +19,12 @@ function ui_icons_help(string $route_name, RouteMatchInterface $route_match): ?s
     case 'help.page.ui_icons':
       $output = '<h2>' . new TranslatableMarkup('About') . '</h2>';
       $output .= '<p>' . new TranslatableMarkup('UI Icons is a module that aims to simplify the front-end management of icons. For more information, see the <a href=":docs">online documentation for the UI Icons module</a>.', [
-        ':docs' => 'https://www.drupal.org/docs/develop/theming-drupal/using-ui-icons',
+        ':docs' => 'https://git.drupalcode.org/project/ui_icons/-/blob/1.0.x/README.md',
       ]) . '</p>';
       $output .= '<dl>';
       $output .= '<dt>' . new TranslatableMarkup('General') . '</dt>';
-      $output .= '<dd>' . new TranslatableMarkup('<a href=":docs">UI Icons</a> allow the declaration of icons in a Yaml file to be used globally on your website. The format allow to integrate many source provider for your icons and expose them in all Drupal display tools..', [
-        ':docs' => 'https://www.drupal.org/docs/develop/theming-drupal/using-ui-icons',
+      $output .= '<dd>' . new TranslatableMarkup('<a href=":docs">UI Icons</a> allow the declaration of icons in a Yaml file to be used globally on your website. The format allow to integrate many source provider for your icons and expose them in all Drupal display tools.', [
+        ':docs' => 'https://git.drupalcode.org/project/ui_icons/-/blob/1.0.x/README.md',
       ]) . '</dd>';
       $output .= '</dl>';
       return $output;
