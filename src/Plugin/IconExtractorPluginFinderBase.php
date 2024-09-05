@@ -15,7 +15,7 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 /**
  * Base class for ui_icons_extractor plugins.
  */
-abstract class IconExtractorPluginFinderBase extends IconExtractorPluginBase implements IconExtractorPluginBaseInterface, PluginWithFormsInterface, ContainerFactoryPluginInterface {
+abstract class IconExtractorPluginFinderBase extends IconExtractorPluginBase implements IconExtractorPluginFinderBaseInterface, PluginWithFormsInterface, ContainerFactoryPluginInterface {
 
   use StringTranslationTrait;
   use PluginWithFormsTrait;

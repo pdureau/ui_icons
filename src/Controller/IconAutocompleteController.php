@@ -22,9 +22,6 @@ class IconAutocompleteController extends ControllerBase {
 
   private const SEARCH_MIN_LENGTH = 2;
 
-  /**
-   * The controller constructor.
-   */
   public function __construct(
     private readonly IconPackManagerInterface $pluginManagerIconPack,
     private readonly RendererInterface $renderer,

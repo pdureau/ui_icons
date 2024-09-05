@@ -75,7 +75,14 @@ class IconEmbed extends FilterBase implements ContainerFactoryPluginInterface {
    * @param \Drupal\Core\Logger\LoggerChannelFactoryInterface $logger_factory
    *   The logger factory.
    */
-  public function __construct(array $configuration, $plugin_id, $plugin_definition, IconPackManagerInterface $plugin_manager_icon_pack, RendererInterface $renderer, LoggerChannelFactoryInterface $logger_factory) {
+  public function __construct(
+    array $configuration,
+    $plugin_id,
+    $plugin_definition,
+    IconPackManagerInterface $plugin_manager_icon_pack,
+    RendererInterface $renderer,
+    LoggerChannelFactoryInterface $logger_factory,
+  ) {
     parent::__construct($configuration, $plugin_id, $plugin_definition);
     $this->pluginManagerIconPack = $plugin_manager_icon_pack;
     $this->renderer = $renderer;

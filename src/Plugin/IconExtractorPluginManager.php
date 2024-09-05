@@ -24,11 +24,19 @@ class IconExtractorPluginManager extends DefaultPluginManager {
    */
   protected $pluginFormFactory;
 
-  /**
-   * Constructs the object.
-   */
-  public function __construct(\Traversable $namespaces, CacheBackendInterface $cache_backend, ModuleHandlerInterface $module_handler, PluginFormFactoryInterface $plugin_form_manager) {
-    parent::__construct('Plugin/IconExtractor', $namespaces, $module_handler, IconExtractorPluginBaseInterface::class, IconExtractor::class);
+  public function __construct(
+    \Traversable $namespaces,
+    CacheBackendInterface $cache_backend,
+    ModuleHandlerInterface $module_handler,
+    PluginFormFactoryInterface $plugin_form_manager,
+  ) {
+    parent::__construct(
+      'Plugin/IconExtractor',
+      $namespaces,
+      $module_handler,
+      IconExtractorPluginBaseInterface::class,
+      IconExtractor::class
+    );
     $this->alterInfo('ui_icons_extractor_info');
     $this->setCacheBackend($cache_backend, 'ui_icons_extractor_plugins');
     $this->pluginFormFactory = $plugin_form_manager;

@@ -337,7 +337,7 @@ class IconPackManager extends DefaultPluginManager implements IconPackManagerInt
    * @param array $definition
    *   The definition.
    *
-   *   return array
+   * @return array
    *   Discovered icons.
    */
   private function getIconsFromDefinition(array $definition): array {

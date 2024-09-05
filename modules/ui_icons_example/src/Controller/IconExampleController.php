@@ -15,9 +15,6 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  */
 final class IconExampleController extends ControllerBase {
 
-  /**
-   * The controller constructor.
-   */
   public function __construct(
     private readonly IconPackManagerInterface $pluginManagerIconPack,
   ) {}

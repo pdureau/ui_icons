@@ -89,14 +89,6 @@ class IconFinder implements ContainerInjectionInterface {
   private const GROUP_PATTERN = '{group}';
   private const ICON_ID_PATTERN = '{icon_id}';
 
-  /**
-   * Constructs a new IconFinder.
-   *
-   * @param \Drupal\Core\File\FileSystemInterface $fileSystem
-   *   The file system service.
-   * @param \Drupal\Core\File\FileUrlGeneratorInterface $fileUrlGenerator
-   *   The file url generator service.
-   */
   public function __construct(
     private readonly FileSystemInterface $fileSystem,
     private readonly FileUrlGeneratorInterface $fileUrlGenerator,

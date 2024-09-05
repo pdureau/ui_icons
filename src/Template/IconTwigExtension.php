@@ -13,9 +13,6 @@ use Twig\TwigFunction;
  */
 class IconTwigExtension extends AbstractExtension {
 
-  /**
-   * Constructs the extension object.
-   */
   public function __construct(
     private readonly IconPackManagerInterface $pluginManagerIconPack,
   ) {}

@@ -60,7 +60,15 @@ class IconLinkWithAttributesWidget extends IconLinkWidget implements ContainerFa
     protected IconPackManagerInterface $pluginManagerIconPack,
     protected LinkAttributesManager $linkAttributesManager,
   ) {
-    parent::__construct($plugin_id, $plugin_definition, $field_definition, $settings, $third_party_settings, $pluginManagerIconPack);
+    parent::__construct(
+      $plugin_id,
+      $plugin_definition,
+      $field_definition,
+      $settings,
+      $third_party_settings,
+      $pluginManagerIconPack
+    );
+    // Required by LinkWithAttributesWidgetTrait.
     $this->linkAttributesManager = $linkAttributesManager;
   }
 
