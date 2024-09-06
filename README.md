@@ -1,6 +1,8 @@
 ## INTRODUCTION
 
-The UI Icons module is a generic icon manager.
+The UI Icons module is a generic icon manager for Drupal.
+
+It aims to seamlessly integrate most third-party icon packs into Drupal.
 
 ## INSTALLATION
 
@@ -12,18 +14,18 @@ See: [Installing Modules](https://www.drupal.org/docs/extending-drupal/installin
 To add an **Icon Pack**, you need to declare in your **module** or **theme** a
 specific file with suffix ***.ui_icons.yml**:
 
-- my_module_name.ui_icons.yml
-- my_theme_name.ui_icons.yml
+- MY_MODULE_NAME.ui_icons.yml
+- MY_THEME_NAME.ui_icons.yml
 
 This module include a lot of examples, it's recommended to use them as a
 starting point.
 
 ### IMPLEMENTATION
 
-Different submodules provide implementations for Field UI, Field Link, Menu,
-CKEditor, UI Patterns, Twig, Render API, Form API.
+Different submodules provide implementations for Field, Field Link, Menu,
+CKEditor, Twig, Render API, Form API and UI Patterns.
 
-#### Field UI
+#### FIELD UI
 
 Enable `UI Icons Fields` module to add a new field of type **Icon** available
 with specific options and formatter.
@@ -32,16 +34,16 @@ For integration with field of type **Link**, be sure to select the `Link Icon`
 widget and formatter under **Manage form display** and **Manage display**.
 
 For support with [Link Attributes widget](https://www.drupal.org/project/link_attributes),
-enable `UI Icons Link attributes` module.
+enable `UI Icons Link Attributes` module.
 
-#### Menu
+#### MENU
 
 Enable `UI Icons for Menu` module to be able to add an Icon to a menu item.
 
 After enabling the module, edit a menu item to have access to the Icon
 selection.
 
-#### CKEditor
+#### CKEDITOR
 
 Enable the `UI Icons CKEditor 5` module, go to:
 
@@ -50,20 +52,26 @@ Enable the `UI Icons CKEditor 5` module, go to:
 Configure your text format to add the `Icon` button and enable the `Embed icon`
 filter.
 
-#### UI Patterns
+#### UI PATTERNS
 
 Enable the submodule `UI Icons for UI Patterns` to allow usage with
 [UI Patterns 1 or 2](https://www.drupal.org/project/ui_patterns).
 
-#### Twig
+#### TWIG
 
 `UI Icons` module provide a specific Twig function is available anywhere:
 
 ```twig
-{{ icon('my_pack_id', 'my_icon_id', {setting_1: "val 1", setting_2: "val 2}) }}
+{{ icon('my_icon_pack_id', 'my_icon_id') }}
 ```
 
-#### Render API
+With settings if needed:
+
+```twig
+{{ icon('my_icon_pack_id', 'my_icon_id', {width: 64, height: 64}) }}
+```
+
+#### RENDER API
 
 `UI Icons` module provide a `RenderElement` with type: `ui_icon` to allow usage
 of an icon with the Drupal Render API.
@@ -75,6 +83,7 @@ $build['icon'] = [
   '#icon' => 'my_icon_id',
   '#settings' => [
     'width' => 64,
+    'height' => 64,
   ],
 ];
 ```
@@ -94,9 +103,9 @@ used with the Drupal Form API.
 $form['icon'] = [
   '#type' => 'icon_autocomplete',
   '#title' => $this->t('Select icon'),
-  '#default_value' => 'my_icon_pack:my_default_icon',
+  '#default_value' => 'my_icon_pack_id:my_icon_id_default',
   '#allowed_icon_pack' => [
-    'my_icon_pack',
+    'my_icon_pack_id',
     'other_icon_pack',
   ],
   '#show_settings' => TRUE,
@@ -127,7 +136,7 @@ Submodule `UI Icons Picker` provide a more fancy selector of type `icon_picker`.
 The definition file can one or multiple definitions following this structure:
 
 ```yaml
-ICON_PACK_MACHINE_NAME:
+_ICON_PACK_MACHINE_NAME_:
   label: STRING # REQUIRED
   description: STRING # Optional
   enabled: BOOL # Optional
@@ -143,8 +152,10 @@ ICON_PACK_MACHINE_NAME:
   library: STRING # Optional, Drupal library machine name
 ```
 
-This module provide multiple extractors, you an provide other extractor with
+The main module provide multiple extractors, you an provide other extractor with
 other modules or custom code, @see IconExtractorPluginBaseInterface.
+
+#### CORE EXTRACTORS
 
 Available extractors with this module:
 
@@ -152,8 +163,8 @@ Available extractors with this module:
 - `svg`: icons as svg files
 - `svg_sprite`: icons in a svg sprite file
 
-For these extractors, you must provide a `config:sources` array to indicate the
-physical path(s) to the icons.
+You must provide a `config:sources` array to indicate the physical path(s) to
+the icons.
 
 If the path do not start with a slash `/`, it will resolve to the module or
 theme, else it will resolve to Drupal web root.
@@ -174,6 +185,13 @@ Icons located in the Drupal web root `libraries` folder.
 Icons located in the Module or Theme where the *.ui_icons.yml file exist:
 `my_module/assets/icons/`
 
+#### OTHER EXTRACTOR
+
+- [Iconify](https://iconify.design) with `UI Icons Iconify API` and
+`UI Icons Iconify` example module to show how to declare Iconify collections.
+
+#### TEMPLATE
+
 The key `template` provide a Twig template to render the Icon.
 Available variables in the template:
 
@@ -185,6 +203,8 @@ Available variables in the template:
 - `content`: For some extractors the HTML string content of the icon, used by
   `svg` extractors.
 - Any other variable from `settings` definition, see below
+
+#### SETTINGS
 
 The `settings` key allow to define any setting specific to the Icon Pack that
 will be generated as a Drupal Form when the Icon is used and pass to the

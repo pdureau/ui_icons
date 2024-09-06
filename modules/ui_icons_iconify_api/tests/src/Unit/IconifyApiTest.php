@@ -19,8 +19,6 @@ use Psr\Log\LoggerInterface;
  * Tests for the Iconify API service.
  *
  * @group ui_icons
- *
- * phpcs:disable Drupal.Commenting.FunctionComment.Missing
  */
 class IconifyApiTest extends UnitTestCase {
 
@@ -57,6 +55,9 @@ class IconifyApiTest extends UnitTestCase {
     $this->iconifyApi = new IconifyApi($this->httpClient, $this->logger);
   }
 
+  /**
+   * Test the getIconsByCollection method.
+   */
   public function testGetIconsByCollectionSuccess(): void {
     $collection = 'test-collection';
     $response_data = [
@@ -80,6 +81,9 @@ class IconifyApiTest extends UnitTestCase {
     $this->assertEquals(['icon-1', 'icon-2'], $icons);
   }
 
+  /**
+   * Test the getIconsByCollection method.
+   */
   public function testGetIconsByCollectionCategoriesSuccess(): void {
     $collection = 'test-collection';
     $response_data = [
@@ -107,6 +111,9 @@ class IconifyApiTest extends UnitTestCase {
     $this->assertEquals(['icon-1', 'icon-2', 'icon-3', 'icon-4'], $icons);
   }
 
+  /**
+   * Test the getIconsByCollection method.
+   */
   public function testGetIconsByCollectionInvalidResponse(): void {
     $collection = 'test-collection';
     $response = new Response(200, [], 'invalid-json');
@@ -132,6 +139,9 @@ class IconifyApiTest extends UnitTestCase {
     $this->assertEquals([], $icons);
   }
 
+  /**
+   * Test the getIconsByCollection method.
+   */
   public function testGetIconsByCollectionClientException(): void {
     $collection = 'test-collection';
     $this->httpClient
@@ -148,6 +158,9 @@ class IconifyApiTest extends UnitTestCase {
     $this->assertEquals([], $icons);
   }
 
+  /**
+   * Test the getIconsByCollection method.
+   */
   public function testGetIconsByCollectionServerException(): void {
     $collection = 'test-collection';
     $this->httpClient

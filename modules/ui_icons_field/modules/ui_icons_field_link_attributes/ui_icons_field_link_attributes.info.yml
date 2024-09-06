@@ -1,6 +1,6 @@
-name: 'UI Icons Link attributes'
+name: 'UI Icons Link Attributes'
 type: module
-description: 'Field of type link attributes integration.'
+description: 'Field of type Link Attributes integration.'
 package: Field types
 core_version_requirement: ^10.3 || ^11
 dependencies:

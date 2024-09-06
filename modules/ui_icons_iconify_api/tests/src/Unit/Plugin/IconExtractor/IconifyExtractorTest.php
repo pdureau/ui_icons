@@ -14,8 +14,6 @@ use Drupal\ui_icons_iconify_api\Plugin\IconExtractor\IconifyExtractor;
  * Tests for the Iconify extractor plugin.
  *
  * @group ui_icons
- *
- * phpcs:disable Drupal.Commenting.FunctionComment.Missing
  */
 class IconifyExtractorTest extends IconUnitTestCase {
 
@@ -59,6 +57,9 @@ class IconifyExtractorTest extends IconUnitTestCase {
     );
   }
 
+  /**
+   * Test the discoverIcons method.
+   */
   public function testDiscoverIconsSuccess(): void {
     $this->iconifyApi
       ->expects($this->exactly(2))
@@ -103,6 +104,9 @@ class IconifyExtractorTest extends IconUnitTestCase {
     $this->assertEquals($expected_icons, $icons);
   }
 
+  /**
+   * Test the discoverIcons method.
+   */
   public function testDiscoverIconsEmptyCollections(): void {
     $this->iconifyApi
       ->expects($this->exactly(2))
@@ -113,6 +117,9 @@ class IconifyExtractorTest extends IconUnitTestCase {
     $this->assertEquals([], $icons);
   }
 
+  /**
+   * Test the discoverIcons method.
+   */
   public function testDiscoverIconsMissingCollections(): void {
     $configuration = [
       'icon_pack_id' => 'test_icon_pack',
