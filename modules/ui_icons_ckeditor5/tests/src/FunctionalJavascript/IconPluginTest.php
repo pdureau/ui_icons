@@ -166,6 +166,7 @@ class IconPluginTest extends WebDriverTestBase {
     // @phpcs:enable
 
     $icon_preview = $assert_session->elementExists('css', '.ui-icons-preview-icon img');
+
     $this->assertNotNull($icon_preview);
     // Autocomplete preview has own settings.
     $this->assertIconValues($icon_preview, $icon_filename, $icon_class, []);
@@ -184,7 +185,8 @@ class IconPluginTest extends WebDriverTestBase {
 
     // Check the preview ajax request to display icon in CKEditor.
     $assert_session->assertExpectedAjaxRequest(3);
-    $icon_ckeditor_preview = $assert_session->elementExists('css', '.drupal-icon span img');
+    $icon_ckeditor_preview = $assert_session->waitForElementVisible('css', '.ck-content .drupal-icon span img');
+
     $this->assertNotNull($icon_ckeditor_preview);
     $this->assertIconValues($icon_ckeditor_preview, $icon_filename, $icon_class, $settings);
 
@@ -205,6 +207,7 @@ class IconPluginTest extends WebDriverTestBase {
     $assert_session->pageTextContains('page My test content has been created');
 
     $display_icon = $assert_session->elementExists('css', '.drupal-icon img');
+
     $this->assertNotNull($display_icon);
     $this->assertIconValues($display_icon, $icon_filename, $icon_class, $settings);
   }

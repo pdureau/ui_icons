@@ -8,6 +8,8 @@ use Drupal\KernelTests\KernelTestBase;
 use Drupal\ui_icons_text\Plugin\Filter\IconEmbed;
 
 /**
+ * Test the text filter.
+ *
  * @group ui_icons
  */
 class IconEmbedFilterTest extends KernelTestBase {

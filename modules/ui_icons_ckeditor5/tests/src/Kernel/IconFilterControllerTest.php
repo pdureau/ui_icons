@@ -10,6 +10,8 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 /**
+ * Test the IconFilterController.
+ *
  * @group ui_icons
  */
 class IconFilterControllerTest extends KernelTestBase {
