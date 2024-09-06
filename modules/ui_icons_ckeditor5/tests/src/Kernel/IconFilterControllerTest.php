@@ -10,8 +10,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 /**
- * @coversDefaultClass \Drupal\ui_icons_ckeditor5\Controller\IconFilterController
- * @group ui_icons_ckeditor5
+ * @group ui_icons
  */
 class IconFilterControllerTest extends KernelTestBase {
 
@@ -52,7 +51,7 @@ class IconFilterControllerTest extends KernelTestBase {
   }
 
   /**
-   * @covers ::preview
+   * Test the preview method.
    */
   public function testPreview(): void {
     $icon_id = self::ICON_PACK_NAME . ':local__9.0_blue';

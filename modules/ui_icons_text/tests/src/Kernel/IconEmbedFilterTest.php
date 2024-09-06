@@ -8,8 +8,7 @@ use Drupal\KernelTests\KernelTestBase;
 use Drupal\ui_icons_text\Plugin\Filter\IconEmbed;
 
 /**
- * @coversDefaultClass \Drupal\ui_icons_text\Plugin\Filter\IconEmbed
- * @group ui_icons_text
+ * @group ui_icons
  */
 class IconEmbedFilterTest extends KernelTestBase {
 
@@ -70,7 +69,7 @@ class IconEmbedFilterTest extends KernelTestBase {
   }
 
   /**
-   * @covers ::process
+   * Test the process method.
    */
   public function testProcess(): void {
     $icon_full_id = self::ICON_PACK_NAME . ':local__9.0_blue';
