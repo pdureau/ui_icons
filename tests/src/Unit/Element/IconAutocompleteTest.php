@@ -348,13 +348,16 @@ class IconAutocompleteTest extends IconUnitTestCase {
       ->willReturn(['icon' => ['icon_id' => 'foo:baz']]);
 
     // The test is to expect the setError().
-    $form_state->method('setError')
+    $form_state
+      ->expects($this->once())
+      ->method('setError')
       ->with($element['icon_id'], new TranslatableMarkup('Icon for %title is invalid: %icon.<br>Please search again and select a result in the list.', [
         '%title' => $element['icon_id']['#title'],
         '%icon' => 'foo:baz',
       ]));
 
     IconAutocomplete::validateIcon($element, $form_state, $complete_form);
+
   }
 
   /**
@@ -391,7 +394,9 @@ class IconAutocompleteTest extends IconUnitTestCase {
     $this->container->set('plugin.manager.ui_icons_pack', $ui_icons_pack_plugin_manager);
 
     // The test is to expect the setError().
-    $form_state->method('setError')
+    $form_state
+      ->expects($this->once())
+      ->method('setError')
       ->with($element['icon_id'], new TranslatableMarkup('Icon for %title is not valid anymore because it is part of icon pack: %icon_pack_id. This field limit icon pack to: %limit.', [
         '%title' => $element['icon_id']['#title'],
         '%icon_pack_id' => $icon_pack_id,
