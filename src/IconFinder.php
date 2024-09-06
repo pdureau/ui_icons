@@ -82,7 +82,7 @@ use Drupal\Core\File\FileUrlGeneratorInterface;
  * ]
  * @endcode
  */
-class IconFinder implements ContainerInjectionInterface {
+class IconFinder implements ContainerInjectionInterface, IconFinderInterface {
 
   use AutowireTrait;
 
