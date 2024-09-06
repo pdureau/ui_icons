@@ -11,35 +11,21 @@
    */
   Drupal.behaviors.IconAutocompleteSelect = {
     attach(context) {
-      const iconSelectors = once(
+      once(
         'setIconPreview',
         '.ui-icons-wrapper .ui-icons-input-wrapper input',
         context,
-      );
-
-      if (!iconSelectors || iconSelectors.length === 0) {
-        return;
-      }
-
-      iconSelectors.forEach((iconSelector) => {
-        const selector = jQuery(iconSelector);
-
-        if (typeof selector.autocomplete() !== 'function') {
-          return;
-        }
-
-        // Current Drupal core autocomplete is based on jQuery UI.
-        // Change autocomplete trigger to 3 characters and set delay a bit
-        // longer from 300 to 500.
-        // @see https://api.jqueryui.com/autocomplete/
-        const options = {
-          // @todo check if autofocus first result is a good idea.
-          // autoFocus: true,
-          delay: 500,
-          minLength: 2,
-        };
-        selector.autocomplete('option', options);
-      });
+      )
+        .filter(
+          (iconSelector) =>
+            typeof $(iconSelector).autocomplete() === 'function',
+        )
+        .forEach((iconSelector) => {
+          $(iconSelector).autocomplete('option', {
+            delay: 500,
+            minLength: 2,
+          });
+        });
     },
   };
 })(jQuery, Drupal, once);
