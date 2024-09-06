@@ -8,7 +8,7 @@ use Drupal\Core\File\FileSystemInterface;
 use Drupal\Core\File\FileUrlGeneratorInterface;
 use Drupal\ui_icons\Exception\IconPackConfigErrorException;
 use Drupal\ui_icons\IconFinder;
-use Drupal\ui_icons\Plugin\IconExtractor\ManualExtractor;
+use Drupal\ui_icons\Plugin\IconExtractor\PathExtractor;
 use PHPUnit\Framework\TestCase;
 
 /**
@@ -42,7 +42,7 @@ class IconFinderTest extends TestCase {
     $fileSystem->method('scanDirectory')->willReturn($file_objects);
 
     $iconFinder = new IconFinder($fileSystem, $fileUrlGenerator);
-    $extractorPlugin = new ManualExtractor(
+    $extractorPlugin = new PathExtractor(
       [],
       'test_extractor',
       [],
@@ -249,7 +249,7 @@ class IconFinderTest extends TestCase {
     $fileSystem->method('scanDirectory')->will($this->throwException(new \Exception()));
 
     $iconFinder = new IconFinder($fileSystem, $fileUrlGenerator);
-    $extractorPlugin = new ManualExtractor(
+    $extractorPlugin = new PathExtractor(
       [],
       'test_extractor',
       [],
@@ -276,7 +276,7 @@ class IconFinderTest extends TestCase {
     $fileSystem = $this->createMock(FileSystemInterface::class);
     $iconFinder = new IconFinder($fileSystem, $fileUrlGenerator);
 
-    $extractorPlugin = new ManualExtractor(
+    $extractorPlugin = new PathExtractor(
       [],
       'test_extractor',
       [],
@@ -298,7 +298,7 @@ class IconFinderTest extends TestCase {
     $fileSystem = $this->createMock(FileSystemInterface::class);
 
     $iconFinder = new IconFinder($fileSystem, $fileUrlGenerator);
-    $extractorPlugin = new ManualExtractor(
+    $extractorPlugin = new PathExtractor(
       [],
       'test_extractor',
       [],

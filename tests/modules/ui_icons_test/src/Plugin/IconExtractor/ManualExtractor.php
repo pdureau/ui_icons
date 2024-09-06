@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Drupal\ui_icons\Plugin\IconExtractor;
+namespace Drupal\ui_icons_test\Plugin\IconExtractor;
 
 use Drupal\Core\StringTranslation\TranslatableMarkup;
 use Drupal\ui_icons\Attribute\IconExtractor;
@@ -13,7 +13,7 @@ use Drupal\ui_icons\PluginForm\IconPackExtractorForm;
 /**
  * Plugin implementation of the ui_icons_extractor.
  *
- * @todo used for tests, but not well defined for real case usage.
+ * @todo was used for tests, not well defined for real case usage for now.
  */
 #[IconExtractor(
   id: 'manual',
