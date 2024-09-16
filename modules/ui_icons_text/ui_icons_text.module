@@ -102,13 +102,16 @@ function ui_icons_text_filter_format_edit_form_validate($form, FormStateInterfac
     if ($allowed['drupal-icon'] === FALSE) {
       $missing_attributes = $required_attributes;
     }
+    elseif (isset($allowed['drupal-icon']['*'])) {
+      $missing_attributes = FALSE;
+    }
     else {
       $missing_attributes = array_diff($required_attributes, array_keys($allowed['drupal-icon']));
     }
 
     if ($missing_attributes) {
       $form_state->setError($form['filters']['settings']['filter_html']['allowed_html'], t('The <code>&lt;drupal-icon&gt;</code> tag in the allowed HTML tags is missing the following attributes: <code>%list</code>.', [
-        '%list' => implode(', ', $missing_attributes),
+        '%list' => implode(' ', $missing_attributes),
       ]));
     }
 
