@@ -10,7 +10,7 @@ use Drupal\ui_icons\IconDefinition;
 /**
  * Interface for ui_icons_extractor plugins.
  */
-interface IconExtractorPluginBaseInterface extends PluginFormInterface {
+interface IconExtractorInterface extends PluginFormInterface {
 
   /**
    * Get a list of all the icons available for this extractor.

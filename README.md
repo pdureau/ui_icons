@@ -153,7 +153,7 @@ _ICON_PACK_MACHINE_NAME_:
 ```
 
 The main module provide multiple extractors, you an provide other extractor with
-other modules or custom code, @see IconExtractorPluginBaseInterface.
+other modules or custom code, @see IconExtractorInterface.
 
 #### CORE EXTRACTORS
 

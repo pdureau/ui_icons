@@ -34,7 +34,7 @@ class IconExtractorPluginManager extends DefaultPluginManager {
       'Plugin/IconExtractor',
       $namespaces,
       $module_handler,
-      IconExtractorPluginBaseInterface::class,
+      IconExtractorInterface::class,
       IconExtractor::class
     );
     $this->alterInfo('ui_icons_extractor_info');
@@ -74,7 +74,7 @@ class IconExtractorPluginManager extends DefaultPluginManager {
     if (!isset($icon_pack_configuration['settings'])) {
       return NULL;
     }
-    /** @var \Drupal\ui_icons\Plugin\IconExtractorPluginBaseInterface $plugin */
+    /** @var \Drupal\ui_icons\Plugin\IconExtractorInterface $plugin */
     $plugin = $this->createInstance($icon_pack_configuration['extractor'], $icon_pack_configuration);
     return $this->getPluginForm($plugin);
   }
@@ -82,13 +82,13 @@ class IconExtractorPluginManager extends DefaultPluginManager {
   /**
    * Retrieves the plugin form for a given icon extractor.
    *
-   * @param \Drupal\ui_icons\Plugin\IconExtractorPluginBaseInterface $icon_extractor
+   * @param \Drupal\ui_icons\Plugin\IconExtractorInterface $icon_extractor
    *   The ui icons extractor plugin.
    *
    * @return \Drupal\Core\Plugin\PluginFormInterface
    *   The plugin form for this plugin.
    */
-  protected function getPluginForm(IconExtractorPluginBaseInterface $icon_extractor): PluginFormInterface {
+  protected function getPluginForm(IconExtractorInterface $icon_extractor): PluginFormInterface {
     if ($icon_extractor instanceof PluginWithFormsInterface) {
       return $this->pluginFormFactory->createInstance($icon_extractor, 'settings');
     }

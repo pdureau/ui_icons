@@ -15,13 +15,13 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 /**
  * Base class for ui_icons_extractor plugins.
  */
-abstract class IconExtractorPluginFinderBase extends IconExtractorPluginBase implements IconExtractorPluginFinderBaseInterface, PluginWithFormsInterface, ContainerFactoryPluginInterface {
+abstract class IconExtractorWithFinder extends IconExtractorBase implements IconExtractorWithFinderInterface, PluginWithFormsInterface, ContainerFactoryPluginInterface {
 
   use StringTranslationTrait;
   use PluginWithFormsTrait;
 
   /**
-   * Constructs a IconExtractorPluginFinderBase object.
+   * Constructs a IconExtractorWithFinder object.
    *
    * @param array $configuration
    *   A configuration array containing information about the plugin instance.

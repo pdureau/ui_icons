@@ -8,7 +8,7 @@ use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
 use Drupal\Core\StringTranslation\TranslatableMarkup;
 use Drupal\ui_icons\Attribute\IconExtractor;
 use Drupal\ui_icons\Exception\IconPackConfigErrorException;
-use Drupal\ui_icons\Plugin\IconExtractorPluginBase;
+use Drupal\ui_icons\Plugin\IconExtractorBase;
 use Drupal\ui_icons\PluginForm\IconPackExtractorForm;
 use Drupal\ui_icons_iconify_api\IconifyApi;
 use Drupal\ui_icons_iconify_api\IconifyApiInterface;
@@ -25,7 +25,7 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
     'settings' => IconPackExtractorForm::class,
   ]
 )]
-class IconifyExtractor extends IconExtractorPluginBase implements ContainerFactoryPluginInterface {
+class IconifyExtractor extends IconExtractorBase implements ContainerFactoryPluginInterface {
 
   /**
    * Constructs a IconifyExtractor object.

@@ -7,7 +7,7 @@ namespace Drupal\ui_icons\Plugin;
 /**
  * Interface for ui_icons_extractor plugins.
  */
-interface IconExtractorPluginFinderBaseInterface extends IconExtractorPluginBaseInterface {
+interface IconExtractorWithFinderInterface extends IconExtractorInterface {
 
   /**
    * Create files from sources config.

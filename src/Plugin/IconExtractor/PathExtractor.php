@@ -7,7 +7,7 @@ namespace Drupal\ui_icons\Plugin\IconExtractor;
 use Drupal\Core\StringTranslation\TranslatableMarkup;
 use Drupal\ui_icons\Attribute\IconExtractor;
 use Drupal\ui_icons\Exception\IconPackConfigErrorException;
-use Drupal\ui_icons\Plugin\IconExtractorPluginFinderBase;
+use Drupal\ui_icons\Plugin\IconExtractorWithFinder;
 use Drupal\ui_icons\PluginForm\IconPackExtractorForm;
 
 /**
@@ -21,7 +21,7 @@ use Drupal\ui_icons\PluginForm\IconPackExtractorForm;
     'settings' => IconPackExtractorForm::class,
   ]
 )]
-class PathExtractor extends IconExtractorPluginFinderBase {
+class PathExtractor extends IconExtractorWithFinder {
 
   /**
    * {@inheritdoc}

@@ -29,7 +29,7 @@ interface IconFinderInterface {
   /**
    * Wrapper tho the file url generator.
    *
-   * To avoid injection in IconExtractorPluginBase.
+   * To avoid injection in IconExtractorBase.
    *
    * @param string $uri
    *   The uri to process.

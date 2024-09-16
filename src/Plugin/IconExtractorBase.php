@@ -15,7 +15,7 @@ use Drupal\ui_icons\IconDefinition;
 /**
  * Base class for ui_icons_extractor plugins.
  */
-abstract class IconExtractorPluginBase extends PluginBase implements IconExtractorPluginBaseInterface, PluginWithFormsInterface {
+abstract class IconExtractorBase extends PluginBase implements IconExtractorInterface, PluginWithFormsInterface {
 
   use StringTranslationTrait;
   use PluginWithFormsTrait;
