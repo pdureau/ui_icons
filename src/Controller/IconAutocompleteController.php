@@ -153,8 +153,7 @@ class IconAutocompleteController extends ControllerBase {
    */
   private function createResultEntry(string $icon_id, IconDefinitionInterface $icon): array {
     $label = sprintf('%s (%s)', $icon->getLabel(), $icon->getIconPackLabel());
-    // @todo width and height could not be used in definition.
-    $icon_renderable = $icon->getRenderable(['width' => 24, 'height' => 24]);
+    $icon_renderable = $icon->getPreview(['size' => 24]);
     $renderable = $this->renderer->renderInIsolation($icon_renderable);
     $param = ['@icon' => $renderable, '@name' => $label];
     $label = new FormattableMarkup('<span class="ui-menu-icon">@icon</span> @name', $param);

@@ -19,7 +19,22 @@ class IconFilterControllerTest extends KernelTestBase {
   /**
    * Icon pack from ui_icons_test module.
    */
-  private const ICON_PACK_NAME = 'test_local_files';
+  private const TEST_ICON_PACK_ID = 'test';
+
+  /**
+   * Icon from ui_icons_test module.
+   */
+  private const TEST_ICON_ID = 'test_drupal_logo_blue';
+
+  /**
+   * Icon filename from ui_icons_test module.
+   */
+  private const TEST_ICON_FILENAME = 'test_drupal_logo_blue.png';
+
+  /**
+   * Icon class from ui_icons_test module.
+   */
+  private const TEST_ICON_CLASS = 'test_drupal_logo_blue';
 
   /**
    * {@inheritdoc}
@@ -56,9 +71,7 @@ class IconFilterControllerTest extends KernelTestBase {
    * Test the preview method.
    */
   public function testPreview(): void {
-    $icon_id = self::ICON_PACK_NAME . ':local__9.0_blue';
-    $icon_class = 'icon-local__90-blue';
-    $icon_filename = 'local__9.0_blue.png';
+    $icon_id = self::TEST_ICON_PACK_ID . ':' . self::TEST_ICON_ID;
 
     // Test case 1: Valid icon request.
     $request = new Request(['icon_id' => $icon_id]);
@@ -66,8 +79,8 @@ class IconFilterControllerTest extends KernelTestBase {
 
     $this->assertEquals(200, $response->getStatusCode());
     $this->assertStringContainsString('<img', $response->getContent());
-    $this->assertStringContainsString($icon_class, $response->getContent());
-    $this->assertStringContainsString($icon_filename, $response->getContent());
+    $this->assertStringContainsString(self::TEST_ICON_CLASS, $response->getContent());
+    $this->assertStringContainsString(self::TEST_ICON_FILENAME, $response->getContent());
 
     // Test case 2: Valid icon request with settings.
     $settings = json_encode(['width' => 100, 'height' => 100]);

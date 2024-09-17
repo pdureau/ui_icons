@@ -23,6 +23,7 @@ class IconTwigExtension extends AbstractExtension {
   public function getFunctions(): array {
     return [
       new TwigFunction('icon', [$this, 'getIconRenderable']),
+      new TwigFunction('icon_preview', [$this, 'getIconPreview']),
     ];
   }
 
@@ -46,6 +47,28 @@ class IconTwigExtension extends AbstractExtension {
     }
 
     return $icon->getRenderable($settings ?? []);
+  }
+
+  /**
+   * Get an icon preview.
+   *
+   * @param string $icon_pack_id
+   *   The icon set ID.
+   * @param string $icon_id
+   *   The icon ID.
+   * @param array $settings
+   *   An array of settings for the icon.
+   *
+   * @return array
+   *   The icon renderable.
+   */
+  public function getIconPreview(string $icon_pack_id, string $icon_id, ?array $settings = []): array {
+    $icon = $this->pluginManagerIconPack->getIcon($icon_pack_id . ':' . $icon_id);
+    if (!$icon) {
+      return [];
+    }
+
+    return $icon->getPreview($settings ?? []);
   }
 
 }

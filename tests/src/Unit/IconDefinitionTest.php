@@ -30,21 +30,47 @@ class IconDefinitionTest extends IconUnitTestCase {
     ]);
 
     $expected = [
-      '#type' => 'inline_template',
-      '#template' => 'test_template',
-      '#attached' => ['library' => ['test_library']],
-      '#context' => [
-        'icon_id' => 'test_icon_pack:test',
-        'source' => '/foo/bar',
-        'content' => 'test_content',
-        'icon_pack_label' => 'Baz',
+      '#type' => 'ui_icon',
+      '#icon_pack' => 'test_icon_pack',
+      '#icon' => 'test_icon_pack:test',
+      '#settings' => [
         'foo' => 'bar',
-        'icon_label' => 'Test icon pack:test',
-        'icon_full_id' => 'test_icon_pack:test_icon_pack:test',
       ],
     ];
 
     $actual = $icon->getRenderable(['foo' => 'bar']);
+
+    $this->assertEquals($expected, $actual);
+  }
+
+  /**
+   * Test the getPreview method.
+   */
+  public function testGetPreview(): void {
+    $icon = self::createIcon([
+      'icon_id' => 'test_icon_pack:test',
+      'source' => '/foo/bar',
+      'icon_pack_id' => 'test_icon_pack',
+      'icon_pack_label' => 'Baz',
+      'template' => 'test_template',
+      'library' => 'test_library',
+      'content' => 'test_content',
+      'group' => 'test_group',
+    ]);
+
+    $expected = [
+      '#theme' => 'icon_preview',
+      '#id' => 'test_icon_pack:test',
+      '#extractor' => '',
+      '#label' => 'Test icon pack:test - test_icon_pack',
+      '#pack_label' => 'Baz',
+      '#source' => '/foo/bar',
+      '#settings' => ['foo' => 'bar'],
+      '#library' => 'test_library',
+      '#attached' => ['library' => ['test_library']],
+    ];
+
+    $actual = $icon->getPreview(['foo' => 'bar']);
 
     $this->assertEquals($expected, $actual);
   }

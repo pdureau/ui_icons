@@ -27,6 +27,9 @@ use Drupal\ui_icons\IconDefinitionInterface;
  *   MACHINE_NAME:
  *     label: STRING
  *     description: STRING
+ *     links:
+ *       - DOCUMENTATION
+ *     version: 1.0.0
  *     enabled: BOOL
  *     extractor: MACHINE_NAME
  *     config:
@@ -36,27 +39,27 @@ use Drupal\ui_icons\IconDefinitionInterface;
  *         KEY: VALUE
  *         ...
  *     template: STRING
+ *     preview: STRING
  *     library: STRING
  * @endcode
  * For example:
  * @code
  * my_icon_pack:
- *   label: 'My icons'
- *   description: 'My UI Icons pack to use everywhere.'
+ *   label: "My icons"
+ *   description: "My UI Icons pack to use everywhere."
  *   extractor: svg
  *   config:
  *     sources:
  *       - icons/{icon_id}.svg
  *       - icons_grouped/{group}/{icon_id}.svg
  *   settings:
- *     width:
- *       title: 'Width'
- *       type: 'integer'
- *     height:
- *       title: 'Height'
- *       type: 'integer'
- *   template: '<img src={{ source }} title='{{ title }}' width='{{ width|default(32) }}' height='{{ height|default(32) }}'/>'
- *   library: 'my_theme/my_lib'
+ *     size:
+ *       title: "Size"
+ *       type: "integer"
+ *       default: 32
+ *   template: >
+ *     <img src={{ source }} width="{{ size|default(32) }}" height="{{ size|default(32) }}"/>
+ *   library: "my_theme/my_lib"
  * @endcode
  *
  * @see plugin_api
@@ -300,6 +303,9 @@ class IconPackManager extends DefaultPluginManager implements IconPackManagerInt
     }
 
     // @todo replace with json validation.
+    if (!isset($definition['template'])) {
+      throw new IconPackConfigErrorException('Missing `template:` key in your definition!');
+    }
     if (!isset($definition['extractor'])) {
       throw new IconPackConfigErrorException('Missing `extractor:` key in your definition!');
     }
@@ -309,8 +315,8 @@ class IconPackManager extends DefaultPluginManager implements IconPackManagerInt
     }
 
     $relative_path = $this->moduleHandler->moduleExists($definition['provider'])
-    ? $this->moduleHandler->getModule($definition['provider'])->getPath()
-    : $this->themeHandler->getTheme($definition['provider'])->getPath();
+      ? $this->moduleHandler->getModule($definition['provider'])->getPath()
+      : $this->themeHandler->getTheme($definition['provider'])->getPath();
 
     // Provide path information for extractor.
     $definition += [

@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Drupal\ui_icons\Element;
 
+use Drupal\Component\Render\FormattableMarkup;
 use Drupal\Core\Render\Attribute\RenderElement;
 use Drupal\Core\Render\Element\RenderElementBase;
 
@@ -61,7 +62,26 @@ class Icon extends RenderElementBase {
     if (!$icon) {
       return $element;
     }
-    $element['inline-template'] = $icon->getRenderable($element['#settings'] ?? []);
+
+    $context = [
+      'icon_id' => $icon->getIconId(),
+      'source' => $icon->getSource(),
+    ];
+
+    if ($content = $icon->getContent()) {
+      $context['content'] = new FormattableMarkup($content, []);
+    }
+
+    $element['inline-template'] = [
+      '#type' => 'inline_template',
+      '#template' => $icon->getTemplate(),
+      // @todo array_merge to define priority?
+      '#context' => $context + $element['#settings'],
+    ];
+
+    if ($icon->getLibrary()) {
+      $element['inline-template']['#attached'] = ['library' => [$icon->getLibrary()]];
+    }
 
     return $element;
   }

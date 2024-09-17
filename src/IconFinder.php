@@ -10,9 +10,9 @@ use Drupal\Core\File\FileSystemInterface;
 use Drupal\Core\File\FileUrlGeneratorInterface;
 
 /**
- * UI Icons finder for icon files under specific paths.
+ * UI Icons finder for icon files under specific paths or urls.
  *
- * Handle our `sources` format to describe paths.
+ * Handle our `sources` format to describe paths or urls, for paths:
  * Will search files with specific extension and extract `icon_id` and optional
  * `group` if set.
  * The `group` can be anywhere in the path and the `icon_id` can be a part of
@@ -23,64 +23,7 @@ use Drupal\Core\File\FileUrlGeneratorInterface;
  * The result Icon definition will be passed to the Extractor to prepare the
  * Icon to be returned as renderable.
  *
- * For example we have a definition file is in my_theme as
- * `my_theme.ui_icons.yml`, containing these `sources`:
- *
- * @code
- * sources:
- *   - assets/icons/{icon_id}.svg
- * @endcode
- * /DRUPAL_ROOT/web/themes/my_theme/icons/my_icon.svg
- * @code
- * [
- *   'icon_id' => 'my_icon',
- *   'relative_path' => '/themes/my_theme/icons/my_icon.svg',
- *   'absolute_path' => '/DRUPAL_ROOT/web/themes/my_theme/icons/my_icon.svg',
- *   'group' => NULL,
- * ]
- * @endcode
- *
- * @code
- * sources:
- *   - icons/prefix-{icon_id}.svg
- * @endcode
- * /DRUPAL_ROOT/web/themes/my_theme/icons/prefix-icon.svg
- * @code
- * [
- *   'icon_id' => 'icon',
- *   'relative_path' => '/themes/my_theme/icons/prefix-icon.svg',
- *   'absolute_path' => '/DRUPAL_ROOT/web/themes/my_theme/icons/prefix-icon.svg',
- *   'group' => NULL,
- * ],
- * @endcode
- *
- * @code
- * sources:
- *   - icons/{group}/{icon_id}.svg
- * @endcode
- * /DRUPAL_ROOT/web/themes/my_theme/icons/some_group/my_icon.svg
- * @code
- * [
- *   'icon_id' => 'my_icon',
- *   'relative_path' => '/themes/my_theme/icons/some_group/my_icon.svg',
- *   'absolute_path' => '/DRUPAL_ROOT/web/themes/my_theme/icons/some_group/my_icon.svg',
- *   'group' => 'some_group',
- * ]
- * @endcode
- *
- * @code
- * sources:
- *   - /libraries/my_library/icons/{group}/{icon_id}.svg
- * @endcode
- * /DRUPAL_ROOT/web/libraries/my_library/icons/other_group/lib_icon.svg
- * @code
- * [
- *   'icon_id' => 'lib_icon',
- *   'relative_path' => '/libraries/my_library/icons/other_group/lib_icon.svg',
- *   'absolute_path' => '/DRUPAL_ROOT/web/libraries/my_library/icons/other_group/lib_icon.svg',
- *   'group' => 'other_group',
- * ]
- * @endcode
+ * For urls the source will be the direct url to the resource.
  */
 class IconFinder implements ContainerInjectionInterface, IconFinderInterface {
 

@@ -1,69 +1,180 @@
-test_local_files:
-  label: Local files
-  description: Local files relative available.
+test:
+  label: Test icons
+  description: Local files relative available for test.
+  links:
+    - https://www.drupal.org/project/ui_icons
+  version: 1.0.0
+  license: GPL-2.0-or-later
   extractor: path
   config:
     sources:
       - icons/local_png/{icon_id}.png
       - icons/local_png_group/{group}/{icon_id}.png
-  # Default are used for tests.
+  # For tests keep same name attribute as HTMl fore easier IconPluginTest.
   settings:
     width:
-      title: 'Width'
-      type: 'integer'
+      title: "Width"
+      type: "integer"
       default: 32
     height:
-      title: 'Height'
-      type: 'integer'
+      title: "Height"
+      type: "integer"
       default: 33
-    title:
-      title: 'Title'
-      type: string
-      default: 'default title'
+    alt:
+      title: "Alt text"
+      type: "string"
+      default: "Default alt"
+  template: >
+    <img
+      class="icon icon-{{ icon_id|clean_class }}"
+      src="{{ source }}"
+      width="{{ width|default(32) }}"
+      height="{{ height|default(33) }}"
+      {% if alt is empty %}
+        role="presentation"
+      {% else %}
+        alt="{{ alt }}"
+      {% endif %}
+    >
 
-test_local_svg:
-  label: SVG manual
-  description: Local svg files.
+test_svg:
+  label: Test SVG
   extractor: svg
   config:
     sources:
-      - icons/local_svg/{icon_id}.svg
+      - icons/local_svg/prefix_{icon_id}_suffix.svg
       - icons/local_svg_group/{group}/{icon_id}.svg
-  # No default for tests.
+      - icons/local_svg_group/{group}/sub_group/{icon_id}.svg
   settings:
-    width:
-      title: 'Width'
-      type: 'integer'
-    height:
-      title: 'Height'
-      type: 'integer'
-    title:
-      title: 'Title'
-      type: 'string'
-      examples:
-        - "The first example may be used as a placeholder"
+    size:
+      title: "Size"
+      type: "integer"
+    alt:
+      title: "Alt text"
+      type: "string"
   template: >
-    <svg xmlns="http://www.w3.org/2000/svg" width="{{ width }}" height="{{ height }}" fill="currentColor" viewBox="0 0 {{ width }} {{ height }}">
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      fill="currentColor"
+      viewBox="0 0 163.83 124.92"
+      width="{{ size|default(32) }}"
+      height="{{ size|default(32) }}"
+      {% if alt is empty %}
+        aria-hidden="true"
+        role="img"
+      {% else %}
+        aria-label="{{ alt }}"
+      {% endif %}
+    >
       {{ content }}
     </svg>
 
-test_local_svg_sprite:
+test_svg_sprite:
   label: Small sprite
-  description: Local svg sprite file.
   extractor: svg_sprite
-  settings:
-    width:
-      title: 'Width'
-      type: 'integer'
-    height:
-      title: 'Height'
-      type: 'integer'
   config:
     sources:
       - icons/sprite/{icon_id}.svg
-  template: '<svg width="{{ width }}" height="{{ height }}" fill="currentColor"><use xlink:href="{{ source }}#{{ icon_id }}"/></svg>'
+  settings:
+    width:
+      title: "Width"
+      type: "integer"
+      default: 32
+    height:
+      title: "Height"
+      type: "integer"
+      default: 32
+    alt:
+      title: "Alt text"
+      type: "string"
+  template: >
+    <svg
+      fill="currentColor"
+      width="{{ width|default(32) }}"
+      height="{{ height|default(32) }}"
+      role="img"
+      {% if alt is empty %}
+        aria-hidden="true"
+      {% else %}
+        aria-label="{{ alt }}"
+        aria-labelledby="{{ icon_id }}"
+      {% endif %}
+    >
+      <title id="{{ icon_id }}">{{ title }}</title>
+      <use xlink:href="{{ source }}#{{ icon_id }}"/>
+    </svg>
 
-test_disabled_icon_pack:
+test_settings:
+  label: Test settings
+  extractor: path
+  config:
+    sources:
+      - icons/settings/{icon_id}.svg
+  settings:
+    width:
+      title: "Width"
+      description: "Set a width for this icon."
+      type: "integer"
+      default: 32
+    height:
+      title: "Height"
+      description: "Set a height for this icon."
+      type: "integer"
+      default: 33
+    title:
+      title: "Title"
+      type: "string"
+      description: "Set a title on hover for this icon."
+      default: "Default title"
+    alt:
+      title: "Alt text"
+      type: "string"
+      description: "Accessibility alternative text, leave empty for decorative icon."
+      default: "Default alt"
+    select:
+      title: "Test select"
+      description: "Test for a select with enum property."
+      type: "integer"
+      # enum: [100, 200, 300, 400, 500, 600, 700, 800, 900]
+      default: 400
+    boolean:
+      title: "Test boolean"
+      description: "Test for a boolean property."
+      type: "boolean"
+      default: true
+    decimal:
+      title: "Test decimal"
+      description: "Test for a decimal with step property."
+      type: "number"
+      default: 66.66
+    #   multipleOf: 0.01
+    number:
+      title: "Test number min/max/step"
+      description: "Test for number with constraints."
+      type: "integer"
+      default: 30
+      minimum: 10
+      maximum: 100
+    #   multipleOf: 10
+  template: >
+    <img
+      class="icon icon-{{ icon_id|clean_class }}"
+      src="{{ source }}"
+      title="{{ title }}"
+      {% if alt is empty %}
+        role="presentation"
+      {% else %}
+        alt="{{ alt }}"
+      {% endif %}
+      width="{{ width|default(32) }}"
+      height="{{ height|default(32) }}"
+      data-select="{{ select }}"
+      data-boolean="{{ boolean }}"
+      data-decimal="{{ decimal }}"
+      data-number="{{ number }}"
+    >
+
+test_disabled:
   label: Disabled
   extractor: path
   enabled: false
@@ -72,9 +183,16 @@ test_disabled_icon_pack:
       - icons/local_png/{icon_id}.png
   settings:
     title:
-      title: 'Title'
-      type: 'string'
-      default: 'default title'
+      title: "Title"
+      type: "string"
+      default: "default title"
+  template: >
+    <img
+      class="icon icon-{{ icon_id|clean_class }}"
+      src="{{ source }}"
+      width="32"
+      height="32"
+    >
 
 test_no_icons:
   label: No Icons
@@ -84,13 +202,27 @@ test_no_icons:
       - invalid_path/{icon_id}.png
   settings:
     title:
-      title: 'Title'
-      type: 'string'
-      default: 'default title'
+      title: "Title"
+      type: "string"
+      default: "default title"
+  template: >
+    <img
+      class="icon icon-{{ icon_id|clean_class }}"
+      src="{{ source }}"
+      width="32"
+      height="32"
+    >
 
 test_no_settings:
   label: No Settings
   extractor: path
   config:
     sources:
-      - icons/local_png/{icon_id}.png
+      - icons/no_settings/{icon_id}.svg
+  template: >
+    <img
+      class="icon icon-{{ icon_id|clean_class }}"
+      src="{{ source }}"
+      width="32"
+      height="32"
+    >

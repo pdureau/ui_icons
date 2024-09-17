@@ -4,15 +4,12 @@ declare(strict_types=1);
 
 namespace Drupal\ui_icons;
 
-use Drupal\Component\Render\FormattableMarkup;
 use Drupal\ui_icons\Exception\IconDefinitionInvalidDataException;
 
 /**
  * Handle a UI Icon definition.
  */
 class IconDefinition implements IconDefinitionInterface {
-
-  private const DEFAULT_TEMPLATE = '<img class="icon icon-{{ icon_id|clean_class }}" src="{{ source }}" title="{{ title|default(name) }}" alt="{{ alt|default(name) }}" width="{{ width|default(24) }}" height="{{ height|default(24) }}">';
 
   /**
    * Constructor for IconDefinition.
@@ -79,8 +76,28 @@ class IconDefinition implements IconDefinitionInterface {
   /**
    * {@inheritdoc}
    */
-  public function getContent(): string {
-    return $this->data['content'] ?? '';
+  public function getContent(): ?string {
+    if (!isset($this->data['content'])) {
+      return NULL;
+    }
+    if (empty($this->data['content'])) {
+      return NULL;
+    }
+    return $this->data['content'];
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getTemplate(): string {
+    return $this->data['template'];
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getLibrary(): ?string {
+    return $this->data['library'] ?? NULL;
   }
 
   /**
@@ -100,26 +117,49 @@ class IconDefinition implements IconDefinitionInterface {
   /**
    * {@inheritdoc}
    */
-  public function getRenderable(array $options = []): array {
-    $context = [
-      'icon_label' => $this->getLabel(),
-      'icon_full_id' => $this->getId(),
-      'icon_id' => $this->icon_id,
-      'source' => $this->source,
-      'content' => new FormattableMarkup($this->getContent(), []),
-      'icon_pack_label' => $this->getIconPackLabel(),
+  public function getRenderable(array $settings = []): array {
+    return [
+      '#type' => 'ui_icon',
+      '#icon_pack' => $this->getIconPackId(),
+      '#icon' => $this->getIconId(),
+      '#settings' => $settings,
     ];
+  }
 
-    $template = $this->data['template'] ?? self::DEFAULT_TEMPLATE;
+  /**
+   * {@inheritdoc}
+   */
+  public function getPreview(array $settings = []): array {
+    $label = sprintf('%s - %s', $this->getLabel(), $this->getIconPackId());
+
+    if ($preview = $this->data['preview'] ?? NULL) {
+      return [
+        '#type' => 'inline_template',
+        '#template' => $preview,
+        '#context' => [
+          'id' => $this->getIconId(),
+          'label' => $label,
+          'pack_label' => $this->getIconPackLabel(),
+          'source' => $this->getSource(),
+          'extractor' => $this->data['extractor'] ?? '',
+          'settings' => $settings,
+        ],
+      ];
+    }
 
     $renderable = [
-      '#type' => 'inline_template',
-      '#template' => $template,
-      '#context' => $context + $options,
+      '#theme' => 'icon_preview',
+      '#id' => $this->getIconId(),
+      '#extractor' => $this->data['extractor'] ?? '',
+      '#label' => $label,
+      '#pack_label' => $this->getIconPackLabel(),
+      '#source' => $this->getSource(),
+      '#settings' => $settings,
+      '#library' => $this->getLibrary(),
     ];
 
-    if (!empty($this->data['library'])) {
-      $renderable['#attached'] = ['library' => [$this->data['library']]];
+    if ($this->getLibrary()) {
+      $renderable['#attached'] = ['library' => [$this->getLibrary()]];
     }
 
     return $renderable;

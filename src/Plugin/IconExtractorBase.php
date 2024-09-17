@@ -81,6 +81,8 @@ abstract class IconExtractorBase extends PluginBase implements IconExtractorInte
       'template' => $definition['template'] ?? NULL,
       'library' => $definition['library'] ?? NULL,
       'content' => $definition['content'] ?? '',
+      'extractor' => $definition['extractor'] ?? '',
+      'preview' => $definition['preview'] ?? '',
     ];
   }
 

@@ -45,15 +45,17 @@ class IconTwigExtensionTest extends TestCase {
   public function testGetFunctions(): void {
     $functions = $this->iconTwigExtension->getFunctions();
     $this->assertIsArray($functions);
-    $this->assertCount(1, $functions);
+    $this->assertCount(2, $functions);
     $this->assertInstanceOf(TwigFunction::class, $functions[0]);
     $this->assertEquals('icon', $functions[0]->getName());
+    $this->assertInstanceOf(TwigFunction::class, $functions[1]);
+    $this->assertEquals('icon_preview', $functions[1]->getName());
   }
 
   /**
    * Test the getIconRenderable method.
    */
-  public function testGetIconRenderableReturnsEmptyArrayWhenIconNotFound(): void {
+  public function testGetIconRenderableIconNotFound(): void {
     $this->pluginManagerIconPack
       ->method('getIcon')
       ->willReturn(NULL);
@@ -66,18 +68,39 @@ class IconTwigExtensionTest extends TestCase {
   /**
    * Test the getIconRenderable method.
    */
-  public function testGetIconRenderableReturnsRenderableArray(): void {
+  public function testGetIconRenderable(): void {
+    $settings = ['foo' => 'bar'];
     $iconMock = $this->createMock(IconDefinitionInterface::class);
     $iconMock->method('getRenderable')
-      ->willReturn(['rendered_icon']);
+      ->with($settings)
+      ->willReturn(['rendered_icon'] + $settings);
 
     $this->pluginManagerIconPack
       ->method('getIcon')
       ->willReturn($iconMock);
 
-    $result = $this->iconTwigExtension->getIconRenderable('icon_pack_id', 'icon_id');
+    $result = $this->iconTwigExtension->getIconRenderable('icon_pack_id', 'icon_id', $settings);
     $this->assertIsArray($result);
-    $this->assertEquals(['rendered_icon'], $result);
+    $this->assertEquals(['rendered_icon'] + $settings, $result);
+  }
+
+  /**
+   * Test the getIconPreview method.
+   */
+  public function testGetIconPreview(): void {
+    $settings = ['foo' => 'bar'];
+    $iconMock = $this->createMock(IconDefinitionInterface::class);
+    $iconMock->method('getPreview')
+      ->with($settings)
+      ->willReturn(['preview_icon'] + $settings);
+
+    $this->pluginManagerIconPack
+      ->method('getIcon')
+      ->willReturn($iconMock);
+
+    $result = $this->iconTwigExtension->getIconPreview('icon_pack_id', 'icon_id', $settings);
+    $this->assertIsArray($result);
+    $this->assertEquals(['preview_icon'] + $settings, $result);
   }
 
 }

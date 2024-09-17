@@ -14,6 +14,25 @@ use Drupal\Tests\BrowserTestBase;
  * @group ui_icons
  */
 class IconFieldTest extends BrowserTestBase {
+  /**
+   * Icon pack from ui_icons_test module.
+   */
+  private const TEST_ICON_PACK_ID = 'test';
+
+  /**
+   * Icon from ui_icons_test module.
+   */
+  private const TEST_ICON_ID = 'test_drupal_logo_blue';
+
+  /**
+   * Icon filename from ui_icons_test module.
+   */
+  private const TEST_ICON_FILENAME = 'test_drupal_logo_blue.png';
+
+  /**
+   * Icon class from ui_icons_test module.
+   */
+  private const TEST_ICON_CLASS = '.icon-test-drupal-logo-blue';
 
   /**
    * {@inheritdoc}
@@ -68,9 +87,7 @@ class IconFieldTest extends BrowserTestBase {
    */
   public function testIconFieldSave(): void {
     $label = 'Icon test';
-    $icon_full_id = 'test_local_files:local__9.0_blue';
-    $icon_class = '.icon-local__90-blue';
-    $icon_filename = 'local__9.0_blue.png';
+    $icon_full_id = self:: TEST_ICON_PACK_ID . ':' . self::TEST_ICON_ID;
 
     // Create a field and storage for checking.
     FieldStorageConfig::create([
@@ -92,7 +109,7 @@ class IconFieldTest extends BrowserTestBase {
 
     // Check if field settings are available.
     $this->drupalGet('/admin/structure/types/manage/article/fields/node.article.' . $this->fieldName);
-    $assert_session->fieldExists('settings[allowed_icon_pack][test_local_files]');
+    $assert_session->fieldExists(sprintf('settings[allowed_icon_pack][%s]', self:: TEST_ICON_PACK_ID));
 
     /** @var \Drupal\Core\Entity\EntityDisplayRepositoryInterface $display_repository */
     $display_repository = \Drupal::service('entity_display.repository');
@@ -137,8 +154,8 @@ class IconFieldTest extends BrowserTestBase {
     $this->drupalGet('/node/add/article');
     $this->submitForm($edit, 'Save');
     $assert_session->pageTextContains('Article Test Article has been created.');
-    $assert_session->elementExists('css', $icon_class);
-    $assert_session->elementExists('css', ".icon[src$='$icon_filename']");
+    $assert_session->elementExists('css', self::TEST_ICON_CLASS);
+    $assert_session->elementExists('css', sprintf(".icon[src$='%s']", self::TEST_ICON_FILENAME));
   }
 
 }

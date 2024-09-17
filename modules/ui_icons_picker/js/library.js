@@ -46,8 +46,9 @@
       // Move the icon instead of label in each radio.
       const iconPickerPreview = once('setIconPreview', '.icon-radio', context);
       iconPickerPreview.forEach((element) => {
+        // See templates/icon-preview.html.twig for css selector.
         const iconPreview = document.querySelector(
-          `.icon-preview[data-icon-id='${element.value}']`,
+          `.icon-preview[data-icon-id='${element.value}'] .icon-preview-wrapper .icon`,
         );
         if (!iconPreview || typeof element.labels[0] === 'undefined') {
           return;

@@ -1,5 +1,0 @@
-ui_icons_example.form_example:
-  title: 'Ui Icons Form example'
-  description: 'Examples of UI Icons forms'
-  route_name: ui_icons_example.form_example
-  parent: system.themes_page

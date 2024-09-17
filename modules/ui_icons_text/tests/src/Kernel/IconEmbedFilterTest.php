@@ -17,7 +17,22 @@ class IconEmbedFilterTest extends KernelTestBase {
   /**
    * Icon pack from ui_icons_test module.
    */
-  private const ICON_PACK_NAME = 'test_local_files';
+  private const TEST_ICON_PACK_ID = 'test';
+
+  /**
+   * Icon from ui_icons_test module.
+   */
+  private const TEST_ICON_ID = 'test_drupal_logo_blue';
+
+  /**
+   * Icon filename from ui_icons_test module.
+   */
+  private const TEST_ICON_FILENAME = 'test_drupal_logo_blue.png';
+
+  /**
+   * Icon class from ui_icons_test module.
+   */
+  private const TEST_ICON_CLASS = 'test_drupal_logo_blue';
 
   /**
    * {@inheritdoc}
@@ -74,9 +89,7 @@ class IconEmbedFilterTest extends KernelTestBase {
    * Test the process method.
    */
   public function testProcess(): void {
-    $icon_full_id = self::ICON_PACK_NAME . ':local__9.0_blue';
-    $icon_class = 'icon-local__90-blue';
-    $icon_filename = 'local__9.0_blue.png';
+    $icon_full_id = self::TEST_ICON_PACK_ID . ':' . self::TEST_ICON_ID;
 
     // Test case 1: No icon tags.
     $text = '<p>This is a test paragraph without icons.</p>';
@@ -87,8 +100,8 @@ class IconEmbedFilterTest extends KernelTestBase {
     $text = '<p>This is a test with an icon: <drupal-icon data-icon-id="' . $icon_full_id . '" /></p>';
     $result = $this->filter->process($text, 'en');
     $this->assertStringContainsString('<span class="drupal-icon">', $result->getProcessedText());
-    $this->assertStringContainsString($icon_class, $result->getProcessedText());
-    $this->assertStringContainsString($icon_filename, $result->getProcessedText());
+    $this->assertStringContainsString(self::TEST_ICON_CLASS, $result->getProcessedText());
+    $this->assertStringContainsString(self::TEST_ICON_FILENAME, $result->getProcessedText());
 
     // Test case 3: Invalid icon ID.
     $text = '<p>This is a test with an invalid icon: <drupal-icon data-icon-id="invalid:icon" /></p>';
@@ -106,8 +119,8 @@ class IconEmbedFilterTest extends KernelTestBase {
     $text = '<p>This is a test with an icon and settings: <drupal-icon data-icon-id="' . $icon_full_id . '" data-icon-settings=\'{"width":100}\' /></p>';
     $result = $this->filter->process($text, 'en');
     $this->assertStringContainsString('<span class="drupal-icon">', $result->getProcessedText());
-    $this->assertStringContainsString($icon_class, $result->getProcessedText());
-    $this->assertStringContainsString($icon_filename, $result->getProcessedText());
+    $this->assertStringContainsString(self::TEST_ICON_CLASS, $result->getProcessedText());
+    $this->assertStringContainsString(self::TEST_ICON_FILENAME, $result->getProcessedText());
     $this->assertStringContainsString('width="100"', $result->getProcessedText());
   }
 

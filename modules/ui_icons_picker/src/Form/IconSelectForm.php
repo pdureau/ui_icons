@@ -81,12 +81,7 @@ final class IconSelectForm extends FormBase {
       $icons_list = array_filter($icons_list, fn($id) => str_contains($id, $search), ARRAY_FILTER_USE_KEY);
     }
 
-    $display_settings = [
-      'width' => 32,
-      'height' => 32,
-    ];
-
-    $icons = $this->filterIcons($icons_list, $allowed_icon_pack, $display_settings);
+    $icons = $this->filterIcons($icons_list, $allowed_icon_pack);
     $pager = $this->createPager($modal_state['page'], count($icons));
     $icons = array_slice($icons, $pager['offset'], self::NUM_PER_PAGE);
 
@@ -176,7 +171,7 @@ final class IconSelectForm extends FormBase {
         ],
         'icon' => $icon,
       ];
-      $options[$icon_full_id] = $icon['#context']['icon_label'] ?? '';
+      $options[$icon_full_id] = $icon['#label'];
     }
 
     $form['list']['icon_full_id'] = [
@@ -399,13 +394,11 @@ final class IconSelectForm extends FormBase {
    *   The list of icons to filter.
    * @param string $icon_pack
    *   The icon packs to filter by.
-   * @param array $display_settings
-   *   The display options for the icons.
    *
    * @return array
    *   The filtered list of icons.
    */
-  private function filterIcons(array $icons_list, string $icon_pack = '', array $display_settings = []): array {
+  private function filterIcons(array $icons_list, string $icon_pack = ''): array {
     if (!empty($icon_pack)) {
       $icon_pack = explode('+', $icon_pack);
     }
@@ -415,7 +408,9 @@ final class IconSelectForm extends FormBase {
       if (!empty($icon_pack) && !in_array($icon->getIconPackId(), $icon_pack)) {
         continue;
       }
-      $icons[$id] = $icon->getRenderable($display_settings);
+      $icons[$id] = $icon->getPreview([
+        'size' => 32,
+      ]);
     }
 
     return $icons;

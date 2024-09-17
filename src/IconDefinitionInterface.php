@@ -69,10 +69,26 @@ interface IconDefinitionInterface {
   /**
    * Get the Icon content.
    *
-   * @return string
-   *   The icon content.
+   * @return string|null
+   *   The icon content if set.
    */
-  public function getContent(): string;
+  public function getContent(): ?string;
+
+  /**
+   * Get the Icon template.
+   *
+   * @return string
+   *   The icon template.
+   */
+  public function getTemplate(): string;
+
+  /**
+   * Get the Icon library.
+   *
+   * @return string|null
+   *   The icon library.
+   */
+  public function getLibrary(): ?string;
 
   /**
    * Get the Icon Pack id.
@@ -100,5 +116,16 @@ interface IconDefinitionInterface {
    *   The Icon renderable.
    */
   public function getRenderable(array $settings = []): array;
+
+  /**
+   * Get the Icon preview array.
+   *
+   * @param array $settings
+   *   Settings to pass to the renderable for context.
+   *
+   * @return array
+   *   The Icon preview.
+   */
+  public function getPreview(array $settings = []): array;
 
 }

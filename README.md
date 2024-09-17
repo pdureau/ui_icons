@@ -68,7 +68,7 @@ Enable the submodule `UI Icons for UI Patterns` to allow usage with
 With settings if needed:
 
 ```twig
-{{ icon('my_icon_pack_id', 'my_icon_id', {width: 64, height: 64}) }}
+{{ icon('my_icon_pack_id', 'my_icon_id', {size: 64}) }}
 ```
 
 #### RENDER API
@@ -82,8 +82,7 @@ $build['icon'] = [
   '#icon_pack' => 'my_icon_pack_id',
   '#icon' => 'my_icon_id',
   '#settings' => [
-    'width' => 64,
-    'height' => 64,
+    'size' => 64,
   ],
 ];
 ```
@@ -197,11 +196,6 @@ Available variables in the template:
 
 - `source`: The Icon path or url resolved
 - `icon_id`: The Icon name extracted
-- `icon_label`: The Icon label generated from the icon_id
-- `icon_full_id`: The Icon ID as icon_pack_id:icon_id
-- `icon_pack_label`: The Icon pack label
-- `content`: For some extractors the HTML string content of the icon, used by
-  `svg` extractors.
 - Any other variable from `settings` definition, see below
 
 #### SETTINGS
@@ -217,23 +211,18 @@ to control the icon. For example:
 
 ```yaml
 settings:
-  width:
-    title: "Width"
-    description: "Set a width for this icon."
-    type: "integer"
-    default: 40
-  height:
-    title: "Height"
-    description: "Set a height for this icon."
+  size:
+    title: "Size"
+    description: "Set a size for this icon."
     type: "integer"
     default: 40
 ```
 
-This will allow the user to fill a `width` and `height` form alongside the Icon
-form. And the value will be passed to the `template`, so you can use them:
+This will allow the user to fill a `size` form alongside the Icon form. And the
+value will be passed to the `template`, so you can use them:
 
 ```twig
-<img class="icon icon-{{ icon_id|clean_class }}" src="{{ source }}" width="{{ width|default(24) }}" height="{{ height|default(24) }}">
+<img class="icon icon-{{ icon_id|clean_class }}" src="{{ source }}" width="{{ size|default(24) }}" height="{{ size|default(24) }}">
 ```
 
 It is highly recommended to provide default in the Twig template as default

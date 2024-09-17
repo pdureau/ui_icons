@@ -40,6 +40,16 @@ function ui_icons_theme(array $existing, string $type, string $theme, string $pa
     'input__icon' => [
       'render element' => 'element',
     ],
+    'icon_preview' => [
+      'variables' => [
+        'id' => NULL,
+        'label' => NULL,
+        'pack_label' => NULL,
+        'source' => NULL,
+        'extractor' => NULL,
+        'settings' => [],
+      ],
+    ],
   ];
 }
 

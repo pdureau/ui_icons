@@ -24,7 +24,37 @@ class IconPluginTest extends WebDriverTestBase {
   /**
    * Icon pack from ui_icons_test module.
    */
-  private const ICON_PACK_NAME = 'test_local_files';
+  private const TEST_ICON_PACK_ID = 'test';
+
+  /**
+   * Icon from ui_icons_test module.
+   */
+  private const TEST_ICON_ID_1 = 'test_drupal_logo_blue';
+
+  /**
+   * Icon filename from ui_icons_test module.
+   */
+  private const TEST_ICON_FILENAME_1 = 'test_drupal_logo_blue.png';
+
+  /**
+   * Icon class from ui_icons_test module.
+   */
+  private const TEST_ICON_CLASS_1 = 'icon icon-test-drupal-logo-blue';
+
+  /**
+   * Icon from ui_icons_test module.
+   */
+  private const TEST_ICON_ID_2 = 'test_drupal_logo_white';
+
+  /**
+   * Icon filename from ui_icons_test module.
+   */
+  private const TEST_ICON_FILENAME_2 = 'test_drupal_logo_white.png';
+
+  /**
+   * Icon class from ui_icons_test module.
+   */
+  private const TEST_ICON_CLASS_2 = 'icon icon-test-drupal-logo-white';
 
   /**
    * {@inheritdoc}
@@ -53,7 +83,7 @@ class IconPluginTest extends WebDriverTestBase {
       'filters' => [
         'icon_embed' => [
           'status' => TRUE,
-          'allowed_icon_pack' => [self::ICON_PACK_NAME => self::ICON_PACK_NAME],
+          'allowed_icon_pack' => [self::TEST_ICON_PACK_ID => self::TEST_ICON_PACK_ID],
         ],
       ],
     ])->save();
@@ -105,25 +135,26 @@ class IconPluginTest extends WebDriverTestBase {
   public static function providerIconPlugin(): array {
     return [
       'icon' => [
-        'icon_id' => self::ICON_PACK_NAME . ':local__9.0_blue',
-        'icon_class' => 'icon icon-local__90-blue',
-        'icon_filename' => 'local__9.0_blue.png',
+        'icon_id' => self::TEST_ICON_PACK_ID . ':' . self::TEST_ICON_ID_1,
+        'icon_class' => self::TEST_ICON_CLASS_1,
+        'icon_filename' => self::TEST_ICON_FILENAME_1,
         'fill_settings' => FALSE,
+        // @see tests/modules/ui_icons_test/ui_icons_test.ui_icons.yml
         'settings' => [
           'width' => '32',
           'height' => '33',
-          'title' => 'default title',
+          'alt' => 'Default alt',
         ],
       ],
       'icon with settings' => [
-        'icon_id' => self::ICON_PACK_NAME . ':local__9.0_black',
-        'icon_class' => 'icon icon-local__90-black',
-        'icon_filename' => 'local__9.0_black.png',
+        'icon_id' => self::TEST_ICON_PACK_ID . ':' . self::TEST_ICON_ID_2,
+        'icon_class' => self::TEST_ICON_CLASS_2,
+        'icon_filename' => self::TEST_ICON_FILENAME_2,
         'fill_settings' => TRUE,
         'settings' => [
           'width' => '98',
           'height' => '99',
-          'title' => 'Test title',
+          'alt' => 'Test alt',
         ],
       ],
     ];
@@ -168,8 +199,8 @@ class IconPluginTest extends WebDriverTestBase {
     $icon_preview = $assert_session->elementExists('css', '.ui-icons-preview-icon img');
 
     $this->assertNotNull($icon_preview);
-    // Autocomplete preview has own settings.
-    $this->assertIconValues($icon_preview, $icon_filename, $icon_class, []);
+    // Autocomplete preview has own settings and preview class.
+    $this->assertIconValues($icon_preview, $icon_filename, 'icon icon-preview', []);
 
     if (TRUE === $fill_settings) {
       // Need to open settings to be able to interact.
@@ -177,7 +208,7 @@ class IconPluginTest extends WebDriverTestBase {
       $setting_name = '[name="icon[icon_settings][%s][%s]"]';
       // Fill settings with value.
       foreach ($settings as $key => $value) {
-        $assert_session->elementExists('css', sprintf($setting_name, self::ICON_PACK_NAME, $key))->setValue($value);
+        $assert_session->elementExists('css', sprintf($setting_name, self::TEST_ICON_PACK_ID, $key))->setValue($value);
       }
     }
 

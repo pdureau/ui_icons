@@ -108,9 +108,11 @@ abstract class IconUnitTestCase extends UnitTestCase {
       [
         'icon_pack_id' => $data['icon_pack_id'] ?? '',
         'icon_pack_label' => $data['icon_pack_label'] ?? '',
-        'template' => $data['template'] ?? '',
-        'library' => $data['library'] ?? '',
+        'template' => $data['template'] ?? NULL,
+        'library' => $data['library'] ?? NULL,
         'content' => $data['content'] ?? '',
+        'extractor' => $data['extractor'] ?? '',
+        'preview' => $data['preview'] ?? '',
       ],
       $data['group'] ?? NULL,
     );
