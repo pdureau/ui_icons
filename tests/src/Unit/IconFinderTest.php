@@ -6,346 +6,116 @@ namespace Drupal\Tests\ui_icons\Unit;
 
 use Drupal\Core\File\FileSystemInterface;
 use Drupal\Core\File\FileUrlGeneratorInterface;
-use Drupal\ui_icons\Exception\IconPackConfigErrorException;
+use Drupal\Tests\UnitTestCase;
 use Drupal\ui_icons\IconFinder;
-use Drupal\ui_icons\Plugin\IconExtractor\PathExtractor;
-use PHPUnit\Framework\TestCase;
 
 /**
- * Tests IconFinder class used by extractor plugin.
+ * Tests IconFinder class.
+ *
+ * @todo move path tests from IconExtractorWithFinderTest.
  *
  * @group ui_icons
  */
-class IconFinderTest extends TestCase {
+class IconFinderTest extends UnitTestCase {
 
   /**
-   * Test method getFilesFromSources.
+   * The file system mock.
    *
-   * @param string $source
-   *   The source path.
-   * @param array $files
-   *   The file path, name and filename.
-   * @param array $expected
-   *   The result expected for all the files.
-   *
-   * @dataProvider providerFilesFromSource
+   * @var \Drupal\Core\File\FileSystemInterface
    */
-  public function testGetFilesFromSources(string $source, array $files, array $expected): void {
-    $fileUrlGenerator = $this->createMock(FileUrlGeneratorInterface::class);
-    $fileUrlGenerator->method('generateString')->willReturnCallback(fn ($arg) => $arg);
+  private FileSystemInterface $fileSystem;
 
-    $fileSystem = $this->createMock(FileSystemInterface::class);
-    $file_objects = [];
-    foreach ($files as $file) {
-      $file_objects[] = new DummySplFileFinfo($file[0], $file[1], $file[2]);
-    }
-    $fileSystem->method('scanDirectory')->willReturn($file_objects);
+  /**
+   * The IconFinder instance.
+   *
+   * @var \Drupal\ui_icons\IconFinder
+   */
+  private IconFinder $iconFinder;
 
-    $iconFinder = new IconFinder($fileSystem, $fileUrlGenerator);
-    $extractorPlugin = new PathExtractor(
-      [],
-      'test_extractor',
-      [],
-      $iconFinder,
+  /**
+   * The file system mock.
+   *
+   * @var \Drupal\Core\File\FileSystemInterface
+   */
+  private FileUrlGeneratorInterface $fileUrlGenerator;
+
+  /**
+   * {@inheritdoc}
+   */
+  protected function setUp(): void {
+    parent::setUp();
+
+    $this->fileSystem = $this->createMock(FileSystemInterface::class);
+    $this->fileUrlGenerator = $this->createMock(FileUrlGeneratorInterface::class);
+
+    $this->iconFinder = new IconFinder(
+      $this->fileSystem,
+      $this->fileUrlGenerator
     );
-
-    $paths = [
-      'drupal_root' => '/_ROOT_/web',
-      'absolute_path' => '/_ROOT_/web/modules/my_module',
-      'relative_path' => 'modules/my_module',
-    ];
-    $actual = $extractorPlugin->getFilesFromSources(
-      [$source], $paths
-    );
-    $this->assertEquals($expected, $actual);
   }
 
   /**
-   * Provides data for testGetFilesFromSource.
+   * Test the getFilesFromHttpUrl method.
+   *
+   * @param string $url
+   *   The url to test.
+   * @param bool $expected_result
+   *   The expected result.
+   * @param string $expected_icon_id
+   *   The expected icon id.
+   *
+   * @dataProvider providerGetFilesFromHttpUrl
+   */
+  public function testGetFilesFromHttpUrl(string $url, bool $expected_result, string $expected_icon_id = ''): void {
+    $result = $this->iconFinder->getFilesFromSource($url, '', '', '');
+
+    if ($expected_result) {
+      $this->assertArrayHasKey('icon', $result);
+      $this->assertEquals($expected_icon_id, $result['icon']['icon_id']);
+      $this->assertEquals($url, $result['icon']['absolute_path']);
+    }
+    else {
+      $this->assertEmpty($result);
+    }
+  }
+
+  /**
+   * Provider for the getFilesFromHttpUrl method.
    *
    * @return array
-   *   Provide test data as:
-   *   - source path
-   *   - files with paths, name and filename
-   *   - result array of files data expected
+   *   The data to test.
    */
-  public static function providerFilesFromSource(): array {
+  public static function providerGetFilesFromHttpUrl(): array {
     return [
-      'no files' => [
-        'foo/{icon_id}.svg',
-        [],
-        [],
-      ],
-      'file relative to definition without icon_id' => [
-        'foo/BAR.svg',
-        [
-          [
-            '/_ROOT_/web/modules/my_module/foo/BAR.svg',
-            'BAR.svg',
-            'BAR',
-          ],
-        ],
-        [
-          'BAR' => [
-            'icon_id' => 'BAR',
-            'relative_path' => 'modules/my_module/foo/BAR.svg',
-            'absolute_path' => '/_ROOT_/web/modules/my_module/foo/BAR.svg',
-            'group' => NULL,
-          ],
-        ],
-      ],
-      'file relative to definition' => [
-        'foo/{icon_id}.svg',
-        [
-          [
-            '/_ROOT_/web/modules/my_module/foo/BAR.svg',
-            'BAR.svg',
-            'BAR',
-          ],
-          [
-            '/_ROOT_/web/modules/my_module/foo/BAZ.svg',
-            'BAZ.svg',
-            'BAZ',
-          ],
-        ],
-        [
-          'BAR' => [
-            'icon_id' => 'BAR',
-            'relative_path' => 'modules/my_module/foo/BAR.svg',
-            'absolute_path' => '/_ROOT_/web/modules/my_module/foo/BAR.svg',
-            'group' => NULL,
-          ],
-          'BAZ' => [
-            'icon_id' => 'BAZ',
-            'relative_path' => 'modules/my_module/foo/BAZ.svg',
-            'absolute_path' => '/_ROOT_/web/modules/my_module/foo/BAZ.svg',
-            'group' => NULL,
-          ],
-        ],
-      ],
-      'file with group relative to definition' => [
-        'foo/{group}/{icon_id}.svg',
-        [
-          [
-            '/_ROOT_/web/modules/my_module/foo/GROUP/BAR.svg',
-            'BAR.svg',
-            'BAR',
-          ],
-          [
-            '/_ROOT_/web/modules/my_module/foo/GROUP/BAZ.svg',
-            'BAZ.svg',
-            'BAZ',
-          ],
-        ],
-        [
-          'BAR' => [
-            'icon_id' => 'BAR',
-            'relative_path' => 'modules/my_module/foo/GROUP/BAR.svg',
-            'absolute_path' => '/_ROOT_/web/modules/my_module/foo/GROUP/BAR.svg',
-            'group' => 'GROUP',
-          ],
-          'BAZ' => [
-            'icon_id' => 'BAZ',
-            'relative_path' => 'modules/my_module/foo/GROUP/BAZ.svg',
-            'absolute_path' => '/_ROOT_/web/modules/my_module/foo/GROUP/BAZ.svg',
-            'group' => 'GROUP',
-          ],
-        ],
-      ],
-      'file relative to drupal root' => [
-        '/foo/{icon_id}.svg',
-        [
-          [
-            '/_ROOT_/web/foo/BAR.svg',
-            'BAR.svg',
-            'BAR',
-          ],
-        ],
-        [
-          'BAR' => [
-            'icon_id' => 'BAR',
-            'relative_path' => '/foo/BAR.svg',
-            'absolute_path' => '/_ROOT_/web/foo/BAR.svg',
-            'group' => NULL,
-          ],
-        ],
-      ],
-      'file with group relative to drupal root' => [
-        '/foo/{group}/{icon_id}.svg',
-        [
-          [
-            '/_ROOT_/web/foo/GROUP/BAR.svg',
-            'BAR.svg',
-            'BAR',
-          ],
-        ],
-        [
-          'BAR' => [
-            'icon_id' => 'BAR',
-            'relative_path' => '/foo/GROUP/BAR.svg',
-            'absolute_path' => '/_ROOT_/web/foo/GROUP/BAR.svg',
-            'group' => 'GROUP',
-          ],
-        ],
-      ],
-      'file with name suffix' => [
-        'foo/{icon_id}-24.svg',
-        [
-          [
-            '/_ROOT_/web/modules/my_module/foo/bar-24.svg',
-            'bar-24.svg',
-            'bar-24',
-          ],
-        ],
-        [
-          'bar-24' => [
-            'icon_id' => 'bar',
-            'relative_path' => 'modules/my_module/foo/bar-24.svg',
-            'absolute_path' => '/_ROOT_/web/modules/my_module/foo/bar-24.svg',
-            'group' => NULL,
-          ],
-        ],
-      ],
-      'file with group higher in parent' => [
-        'foo/{group}/bar/{icon_id}.svg',
-        [
-          [
-            '/_ROOT_/web/modules/my_module/foo/GROUP/bar/BAR.svg',
-            'BAR.svg',
-            'BAR',
-          ],
-          [
-            '/_ROOT_/web/modules/my_module/foo/GROUP/bar/BAZ.svg',
-            'BAZ.svg',
-            'BAZ',
-          ],
-        ],
-        [
-          'BAR' => [
-            'icon_id' => 'BAR',
-            'relative_path' => 'modules/my_module/foo/GROUP/bar/BAR.svg',
-            'absolute_path' => '/_ROOT_/web/modules/my_module/foo/GROUP/bar/BAR.svg',
-            'group' => 'GROUP',
-          ],
-          'BAZ' => [
-            'icon_id' => 'BAZ',
-            'relative_path' => 'modules/my_module/foo/GROUP/bar/BAZ.svg',
-            'absolute_path' => '/_ROOT_/web/modules/my_module/foo/GROUP/bar/BAZ.svg',
-            'group' => 'GROUP',
-          ],
-        ],
-      ],
+      ['http://example.com/icons/icon.svg', TRUE, 'icon'],
+      ['https://example.com/icons/icon.svg', TRUE, 'icon'],
+      ['path/to/icon.svg', FALSE],
+      ['/path/to/icon.svg', FALSE],
     ];
   }
 
   /**
-   * Test method getFilesFromSources for a missing dir.
+   * Test the extractIconId method.
    */
-  public function testGetFilesFromSourcesMissingDir(): void {
-    $fileUrlGenerator = $this->createMock(FileUrlGeneratorInterface::class);
-    $fileUrlGenerator->method('generateString')->willReturnCallback(fn ($arg) => $arg);
+  public function testExtractIconId(): void {
+    $method = new \ReflectionMethod(IconFinder::class, 'extractIconId');
+    $method->setAccessible(TRUE);
 
-    $fileSystem = $this->createMock(FileSystemInterface::class);
-    $fileSystem->method('scanDirectory')->will($this->throwException(new \Exception()));
-
-    $iconFinder = new IconFinder($fileSystem, $fileUrlGenerator);
-    $extractorPlugin = new PathExtractor(
-      [],
-      'test_extractor',
-      [],
-      $iconFinder,
-    );
-
-    $paths = [
-      'drupal_root' => '/_ROOT_/web',
-      'absolute_path' => '/_ROOT_/web/modules/my_module',
-      'relative_path' => 'modules/my_module',
-    ];
-    $actual = $extractorPlugin->getFilesFromSources(
-      ['/foo/bar.svg'], $paths
-    );
-
-    $this->assertEquals([], $actual);
+    $this->assertEquals('icon', $method->invoke($this->iconFinder, '{icon_id}.svg', 'icon.svg'));
+    $this->assertEquals('my-icon', $method->invoke($this->iconFinder, 'prefix-{icon_id}.svg', 'prefix-my-icon.svg'));
+    $this->assertNull($method->invoke($this->iconFinder, 'static-name.svg', 'different-name.svg'));
   }
 
   /**
-   * Test method getFilesFromSources for a missing sources.
+   * Test the determineGroup method.
    */
-  public function testGetFilesFromSourcesExceptionSources(): void {
-    $fileUrlGenerator = $this->createMock(FileUrlGeneratorInterface::class);
-    $fileSystem = $this->createMock(FileSystemInterface::class);
-    $iconFinder = new IconFinder($fileSystem, $fileUrlGenerator);
+  public function testDetermineGroup(): void {
+    $method = new \ReflectionMethod(IconFinder::class, 'determineGroup');
+    $method->setAccessible(TRUE);
 
-    $extractorPlugin = new PathExtractor(
-      [],
-      'test_extractor',
-      [],
-      $iconFinder,
-    );
-
-    $this->expectException(IconPackConfigErrorException::class);
-    $this->expectExceptionMessage('Missing `config: sources` in your definition, extractor test_extractor require this value.');
-    $extractorPlugin->getFilesFromSources(
-      [], []
-    );
-  }
-
-  /**
-   * Test method getFilesFromSources for a missing path.
-   */
-  public function testGetFilesFromSourcesExceptionPath(): void {
-    $fileUrlGenerator = $this->createMock(FileUrlGeneratorInterface::class);
-    $fileSystem = $this->createMock(FileSystemInterface::class);
-
-    $iconFinder = new IconFinder($fileSystem, $fileUrlGenerator);
-    $extractorPlugin = new PathExtractor(
-      [],
-      'test_extractor',
-      [],
-      $iconFinder,
-    );
-
-    $this->expectException(IconPackConfigErrorException::class);
-    $this->expectExceptionMessage('Could not retrieve paths for extractor test_extractor.');
-    $extractorPlugin->getFilesFromSources(
-      ['/foo/bar.svg'], []
-    );
-  }
-
-}
-
-/**
- * Dummy class to simulate SPL.
- *
- * @codeCoverageIgnore
- */
-class DummySplFileFinfo {
-
-  public function __construct(
-    public string $uri,
-    public string $filename,
-    public string $name,
-  ) {}
-
-  /**
-   * Get uri.
-   */
-  public function uri(): string {
-    return $this->uri;
-  }
-
-  /**
-   * Get name.
-   */
-  public function name(): string {
-    return $this->name;
-  }
-
-  /**
-   * Get filename.
-   */
-  public function filename(): string {
-    return $this->filename;
+    $this->assertEquals('group1', $method->invoke($this->iconFinder, '/path/to/group1/icon.svg', TRUE, TRUE, '{group}'));
+    $this->assertEquals('group2', $method->invoke($this->iconFinder, '/path/to/group2/subdir/icon.svg', TRUE, FALSE, '/path/to/{group}/subdir'));
+    $this->assertEquals('', $method->invoke($this->iconFinder, '/path/to/icon.svg', FALSE, FALSE, ''));
   }
 
 }

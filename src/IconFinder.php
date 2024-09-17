@@ -97,7 +97,44 @@ class IconFinder implements ContainerInjectionInterface, IconFinderInterface {
   /**
    * {@inheritdoc}
    */
+  public function fileUrlGenerateString(string $uri): string {
+    return $this->fileUrlGenerator->generateString($uri);
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getFileContents(string $uri): string {
+    return \file_get_contents($uri);
+  }
+
+  /**
+   * {@inheritdoc}
+   */
   public function getFilesFromSource(string $source, string $drupal_root, string $definition_absolute_path, string $definition_relative_path): array {
+    if (FALSE !== filter_var($source, FILTER_VALIDATE_URL)) {
+      return $this->getFilesFromHttpUrl($source);
+    }
+
+    return $this->getFilesFromLocalPath($source, $drupal_root, $definition_absolute_path, $definition_relative_path);
+  }
+
+  /**
+   * Get files from a local path.
+   *
+   * @param string $source
+   *   The path or url.
+   * @param string $drupal_root
+   *   The Drupal root.
+   * @param string $definition_absolute_path
+   *   The current definition absolute path.
+   * @param string $definition_relative_path
+   *   The current definition relative path.
+   *
+   * @return array
+   *   List of files with metadata.
+   */
+  private function getFilesFromLocalPath(string $source, string $drupal_root, string $definition_absolute_path, string $definition_relative_path): array {
     $is_absolute = str_starts_with($source, '/');
     $path_info = pathinfo($source);
 
@@ -127,17 +164,25 @@ class IconFinder implements ContainerInjectionInterface, IconFinderInterface {
   }
 
   /**
-   * {@inheritdoc}
+   * Get files from an HTTP URL.
+   *
+   * @param string $source
+   *   The path or url.
+   *
+   * @return array
+   *   List of files with metadata.
    */
-  public function fileUrlGenerateString(string $uri): string {
-    return $this->fileUrlGenerator->generateString($uri);
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function getFileContents(string $uri): string {
-    return \file_get_contents($uri);
+  private function getFilesFromHttpUrl(string $source): array {
+    $path_info = pathinfo($source);
+    $file = (object) [
+      'uri' => $source,
+      'filename' => $path_info['basename'],
+      'name' => $path_info['filename'],
+    ];
+    $files = [
+      $source => $file,
+    ];
+    return $this->createFileArray($files, FALSE, FALSE, '', $path_info);
   }
 
   /**
