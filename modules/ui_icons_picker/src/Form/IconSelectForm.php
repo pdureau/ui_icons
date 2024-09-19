@@ -221,7 +221,12 @@ final class IconSelectForm extends FormBase {
    * {@inheritdoc}
    */
   public function validateForm(array &$form, FormStateInterface $form_state): void {
-    $clicked_button = end($form_state->getTriggeringElement()['#parents']);
+    $triggering_element = $form_state->getTriggeringElement();
+    if (!isset($triggering_element['#parents'])) {
+      return;
+    }
+
+    $clicked_button = end($triggering_element['#parents']);
     if ('submit' !== $clicked_button) {
       return;
     }

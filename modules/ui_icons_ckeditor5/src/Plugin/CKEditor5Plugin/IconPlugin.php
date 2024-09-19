@@ -17,12 +17,17 @@ class IconPlugin extends CKEditor5PluginDefault {
    * {@inheritdoc}
    */
   public function getDynamicPluginConfig(array $static_plugin_config, EditorInterface $editor): array {
+    $filterFormat = $editor->getFilterFormat();
+    if (NULL === $filterFormat) {
+      return [];
+    }
+
     // This plugin is only loaded when icon_embed is enabled.
-    assert($editor->getFilterFormat()->filters()->has('icon_embed'));
+    assert($filterFormat->filters()->has('icon_embed'));
 
     $dynamic_plugin_config = $static_plugin_config;
     $dynamic_plugin_config['icon']['dialogURL'] = Url::fromRoute('ui_icons_ckeditor5.icon_dialog')
-      ->setRouteParameter('filter_format', $editor->getFilterFormat()->id())
+      ->setRouteParameter('filter_format', $filterFormat->id())
       ->toString(TRUE)
       ->getGeneratedUrl();
     return $dynamic_plugin_config;

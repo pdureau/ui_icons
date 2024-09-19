@@ -1,19 +1,19 @@
 parameters:
 	ignoreErrors:
 		-
+			message: "#^Call to an undefined method Drupal\\\\filter\\\\FilterPluginCollection\\|Drupal\\\\filter\\\\Plugin\\\\FilterInterface\\:\\:has\\(\\)\\.$#"
+			count: 1
+			path: modules/ui_icons_ckeditor5/src/Plugin/CKEditor5Plugin/IconPlugin.php
+
+		-
 			message: "#^Access to an undefined property Drupal\\\\Core\\\\Field\\\\FieldItemInterface\\:\\:\\$target_id\\.$#"
 			count: 1
 			path: modules/ui_icons_field/src/Plugin/Field/FieldWidget/IconWidget.php
 
 		-
-			message: "#^Attribute class Drupal\\\\ui_patterns\\\\Attribute\\\\Source does not exist\\.$#"
+			message: "#^Function ui_icons_menu_help\\(\\) has no return type specified\\.$#"
 			count: 1
-			path: modules/ui_icons_patterns/src/Plugin/UiPatterns/Source/IconRenderableSource.php
-
-		-
-			message: "#^Call to an undefined method Drupal\\\\ui_icons_patterns\\\\Plugin\\\\UiPatterns\\\\Source\\\\IconRenderableSource\\:\\:getSetting\\(\\)\\.$#"
-			count: 1
-			path: modules/ui_icons_patterns/src/Plugin/UiPatterns/Source/IconRenderableSource.php
+			path: modules/ui_icons_menu/ui_icons_menu.module
 
 		-
 			message: "#^Parameter \\#1 \\$array of static method Drupal\\\\Component\\\\Utility\\\\NestedArray\\:\\:getValue\\(\\) is passed by reference, so it expects variables only\\.$#"
@@ -36,17 +36,17 @@ parameters:
 			path: modules/ui_icons_picker/src/Form/IconSelectForm.php
 
 		-
-			message: "#^\\\\Drupal calls should be avoided in classes, use dependency injection instead$#"
-			count: 1
-			path: modules/ui_icons_picker/src/Form/IconSelectForm.php
-
-		-
 			message: "#^Method Drupal\\\\ui_icons_text\\\\Plugin\\\\Filter\\\\IconEmbed\\:\\:tips\\(\\) should return string\\|null but returns Drupal\\\\Core\\\\StringTranslation\\\\TranslatableMarkup\\.$#"
 			count: 2
 			path: modules/ui_icons_text/src/Plugin/Filter/IconEmbed.php
 
 		-
 			message: "#^Call to an undefined method Drupal\\\\Core\\\\Form\\\\FormInterface\\:\\:getEntity\\(\\)\\.$#"
+			count: 1
+			path: modules/ui_icons_text/ui_icons_text.module
+
+		-
+			message: "#^Call to an undefined method Drupal\\\\filter\\\\FilterPluginCollection\\|Drupal\\\\filter\\\\Plugin\\\\FilterInterface\\:\\:get\\(\\)\\.$#"
 			count: 1
 			path: modules/ui_icons_text/ui_icons_text.module
 
@@ -61,6 +61,31 @@ parameters:
 			path: src/Form/IconExtractorSettingsForm.php
 
 		-
+			message: "#^Cannot access offset 'description' on array\\|Drupal\\\\Component\\\\Plugin\\\\Definition\\\\PluginDefinitionInterface\\.$#"
+			count: 1
+			path: src/Plugin/IconExtractorBase.php
+
+		-
+			message: "#^Cannot access offset 'label' on array\\|Drupal\\\\Component\\\\Plugin\\\\Definition\\\\PluginDefinitionInterface\\.$#"
+			count: 1
+			path: src/Plugin/IconExtractorBase.php
+
+		-
+			message: "#^Method Drupal\\\\ui_icons\\\\Plugin\\\\IconPackManager\\:\\:processDefinition\\(\\) has parameter \\$definition with no type specified\\.$#"
+			count: 1
+			path: src/Plugin/IconPackManager.php
+
+		-
+			message: "#^Method Drupal\\\\ui_icons\\\\Plugin\\\\IconPackManager\\:\\:processDefinition\\(\\) has parameter \\$plugin_id with no type specified\\.$#"
+			count: 1
+			path: src/Plugin/IconPackManager.php
+
+		-
 			message: "#^Access to an undefined property Drupal\\\\Core\\\\Plugin\\\\PluginFormInterface\\:\\:\\$plugin\\.$#"
+			count: 3
+			path: src/PluginForm/IconPackExtractorForm.php
+
+		-
+			message: "#^PHPDoc tag @var with type Drupal\\\\Core\\\\Plugin\\\\PluginFormInterface is not subtype of native type \\$this\\(Drupal\\\\ui_icons\\\\PluginForm\\\\IconPackExtractorForm\\)\\.$#"
 			count: 3
 			path: src/PluginForm/IconPackExtractorForm.php

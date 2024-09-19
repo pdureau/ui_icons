@@ -165,7 +165,9 @@ final class LibrarySearchForm extends FormBase {
    */
   public function submitForm(array &$form, FormStateInterface $form_state): void {
     $session = $this->getRequest()->getSession();
-    if ('reset' === $form_state->getTriggeringElement()['#name']) {
+
+    $trigger = $form_state->getTriggeringElement();
+    if (isset($trigger['#name']) && 'reset' === $trigger['#name']) {
       $session->remove('ui_icons_library_search');
       return;
     }

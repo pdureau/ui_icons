@@ -10,7 +10,7 @@ use Drupal\Core\Form\FormStateInterface;
 /**
  * Implements hook_form_FORM_ID_alter().
  */
-function ui_icons_text_form_filter_format_edit_form_alter(array &$form, FormStateInterface $form_state, $form_id) {
+function ui_icons_text_form_filter_format_edit_form_alter(array &$form, FormStateInterface $form_state, string $form_id): void {
   // Add an additional validate callback so we can ensure the order of filters
   // is correct.
   $form['#validate'][] = 'ui_icons_text_filter_format_edit_form_validate';
@@ -19,7 +19,7 @@ function ui_icons_text_form_filter_format_edit_form_alter(array &$form, FormStat
 /**
  * Implements hook_form_FORM_ID_alter().
  */
-function ui_icons_text_form_filter_format_add_form_alter(array &$form, FormStateInterface $form_state, $form_id) {
+function ui_icons_text_form_filter_format_add_form_alter(array &$form, FormStateInterface $form_state, string $form_id): void {
   // Add an additional validate callback so we can ensure the order of filters
   // is correct.
   $form['#validate'][] = 'ui_icons_text_filter_format_edit_form_validate';
@@ -30,9 +30,10 @@ function ui_icons_text_form_filter_format_add_form_alter(array &$form, FormState
  *
  * This is a copy from media.module.
  */
-function ui_icons_text_filter_format_edit_form_validate($form, FormStateInterface $form_state) {
+function ui_icons_text_filter_format_edit_form_validate(array &$form, FormStateInterface $form_state): void {
+  $triggering_element = $form_state->getTriggeringElement();
 
-  if ($form_state->getTriggeringElement()['#name'] !== 'op') {
+  if (!isset($triggering_element['#name']) || 'op' !== $triggering_element['#name']) {
     return;
   }
 
@@ -79,6 +80,11 @@ function ui_icons_text_filter_format_edit_form_validate($form, FormStateInterfac
   $filter_html = clone $filter_format->filters()->get('filter_html');
   $filter_html->setConfiguration(['settings' => $form_state->getValue($filter_html_settings_path)]);
   $restrictions = $filter_html->getHTMLRestrictions();
+
+  if (FALSE === $restrictions) {
+    return;
+  }
+
   $allowed = $restrictions['allowed'];
 
   // Require `<drupal-icon>` HTML tag if filter_html is enabled.

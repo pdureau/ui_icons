@@ -150,7 +150,16 @@ class IconLinkFormatter extends LinkFormatter {
         // @todo is it possible to support form display?
         'default'
       );
-      $widget_settings = $form_display->getComponent($field_name)['settings'];
+      $component = $form_display->getComponent($field_name);
+      if (isset($component['settings'])) {
+        $widget_settings = $component['settings'];
+      }
+      else {
+        $widget_settings = [
+          'icon_position' => FALSE,
+          'allowed_icon_pack' => [],
+        ];
+      }
     }
 
     if (isset($widget_settings['icon_position']) && FALSE === $widget_settings['icon_position']) {

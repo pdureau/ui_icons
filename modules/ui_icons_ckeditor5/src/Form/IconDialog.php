@@ -32,10 +32,14 @@ final class IconDialog extends FormBase {
    *   A nested array form elements comprising the form.
    * @param \Drupal\Core\Form\FormStateInterface $form_state
    *   The current state of the form.
-   * @param \Drupal\filter\FilterFormatInterface $filter_format
+   * @param \Drupal\filter\FilterFormatInterface|null $filter_format
    *   The text editor format to which this dialog corresponds.
    */
   public function buildForm(array $form, FormStateInterface $form_state, ?FilterFormatInterface $filter_format = NULL): array {
+    if (NULL === $filter_format) {
+      return [];
+    }
+
     $form['#tree'] = TRUE;
     $form['#attached']['library'][] = 'editor/drupal.editor.dialog';
     $form['#prefix'] = '<div id="editor-icon-dialog-form">';

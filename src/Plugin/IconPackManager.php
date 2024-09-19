@@ -99,6 +99,10 @@ class IconPackManager extends DefaultPluginManager implements IconPackManagerInt
   public function getIcons(): array {
     $definitions = $this->getDefinitions();
 
+    if (NULL === $definitions) {
+      return [];
+    }
+
     $icons = [];
     foreach ($definitions as $definition) {
       if (!isset($definition['extractor'])) {
@@ -133,6 +137,10 @@ class IconPackManager extends DefaultPluginManager implements IconPackManagerInt
   public function listIconPackOptions(): array {
     $icon_pack_definition = $this->getDefinitions();
 
+    if (NULL === $icon_pack_definition) {
+      return [];
+    }
+
     $options = [];
     foreach ($icon_pack_definition as $icon_pack_id => $definition) {
       if (!isset($definition['_icons']['count'][$definition['extractor']])) {
@@ -154,6 +162,10 @@ class IconPackManager extends DefaultPluginManager implements IconPackManagerInt
    */
   public function listIconPackWithDescriptionOptions(): array {
     $icon_pack_definition = $this->getDefinitions();
+
+    if (NULL === $icon_pack_definition) {
+      return [];
+    }
 
     $options = [];
     foreach ($icon_pack_definition as $icon_pack_id => $definition) {
@@ -252,6 +264,10 @@ class IconPackManager extends DefaultPluginManager implements IconPackManagerInt
    */
   public function getExtractorPluginForms(array &$form, FormStateInterface $form_state, array $default_settings = [], array $allowed_icon_pack = [], bool $wrap_details = FALSE): void {
     $icon_pack = $this->getDefinitions();
+
+    if (NULL === $icon_pack) {
+      return;
+    }
 
     if (!empty($allowed_icon_pack)) {
       $icon_pack = array_intersect_key($icon_pack, $allowed_icon_pack);
@@ -352,6 +368,7 @@ class IconPackManager extends DefaultPluginManager implements IconPackManagerInt
       return [];
     }
 
+    /** @var \Drupal\ui_icons\Plugin\IconExtractorInterface $extractor */
     $extractor = $this->iconPackExtractorManager->createInstance($definition['extractor'], $definition);
     return $extractor->discoverIcons();
   }

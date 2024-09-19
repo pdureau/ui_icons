@@ -11,7 +11,6 @@ use Drupal\Core\Field\FormatterBase;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
 use Drupal\Core\StringTranslation\TranslatableMarkup;
-use Drupal\ui_icons\IconDefinitionInterface;
 use Drupal\ui_icons\Plugin\IconPackManagerInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
@@ -220,7 +219,7 @@ class IconFormatter extends FormatterBase implements ContainerFactoryPluginInter
       }
 
       $icon = $this->pluginManagerIconPack->getIcon($icon_id);
-      if ($icon === NULL || !$icon instanceof IconDefinitionInterface) {
+      if ($icon === NULL) {
         continue;
       }
 

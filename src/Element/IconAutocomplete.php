@@ -146,7 +146,7 @@ class IconAutocomplete extends FormElementBase {
     /** @var \Drupal\Core\Render\RendererInterface $renderer */
     $renderer = \Drupal::service('renderer');
 
-    $form_parents = explode('/', $request->query->get('element_parents'));
+    $form_parents = explode('/', (string) $request->query->get('element_parents'));
 
     // Sanitize form parents before using them.
     $form_parents = array_filter($form_parents, [Element::class, 'child']);

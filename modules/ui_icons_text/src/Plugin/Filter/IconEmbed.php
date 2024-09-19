@@ -146,7 +146,13 @@ class IconEmbed extends FilterBase implements ContainerFactoryPluginInterface {
     $dom = Html::load($text);
     $xpath = new \DOMXPath($dom);
 
-    foreach ($xpath->query('//drupal-icon[normalize-space(@data-icon-id)!=""]') as $node) {
+    $query = $xpath->query('//drupal-icon[normalize-space(@data-icon-id)!=""]');
+
+    if (FALSE === $query) {
+      return $result;
+    }
+
+    foreach ($query as $node) {
       /** @var \DOMElement $node */
       $icon_id = $node->getAttribute('data-icon-id');
 
@@ -304,21 +310,37 @@ class IconEmbed extends FilterBase implements ContainerFactoryPluginInterface {
   protected static function replaceNodeContent(\DOMNode &$node, $content): void {
     if (strlen((string) $content)) {
       // Load the content into a new DOMDocument and retrieve the DOM nodes.
-      $replacement_nodes = Html::load($content)->getElementsByTagName('body')
-        ->item(0)
-        ->childNodes;
+      $nodes = Html::load($content)->getElementsByTagName('body')
+        ->item(0);
+      if (NULL === $nodes) {
+        return;
+      }
+      $replacement_nodes = $nodes->childNodes;
     }
     else {
-      $replacement_nodes = [$node->ownerDocument->createTextNode('')];
+      $node_document = $node->ownerDocument;
+      if (NULL === $node_document) {
+        return;
+      }
+      $replacement_nodes = [$node_document->createTextNode('')];
+    }
+
+    $node_document = $node->ownerDocument;
+    if (NULL === $node_document) {
+      return;
+    }
+    $node_parent = $node->parentNode;
+    if (NULL === $node_parent) {
+      return;
     }
 
     foreach ($replacement_nodes as $replacement_node) {
       // Import the replacement node from the new DOMDocument into the original
       // one, importing also the child nodes of the replacement node.
-      $replacement_node = $node->ownerDocument->importNode($replacement_node, TRUE);
-      $node->parentNode->insertBefore($replacement_node, $node);
+      $replacement_node = $node_document->importNode($replacement_node, TRUE);
+      $node_parent->insertBefore($replacement_node, $node);
     }
-    $node->parentNode->removeChild($node);
+    $node_parent->removeChild($node);
   }
 
 }

@@ -48,7 +48,11 @@ class IconFinder implements ContainerInjectionInterface, IconFinderInterface {
    * {@inheritdoc}
    */
   public function getFileContents(string $uri): string {
-    return \file_get_contents($uri);
+    $content = \file_get_contents($uri);
+    if (FALSE === $content) {
+      return '';
+    }
+    return $content;
   }
 
   /**
@@ -81,6 +85,10 @@ class IconFinder implements ContainerInjectionInterface, IconFinderInterface {
     $is_absolute = str_starts_with($source, '/');
     $path_info = pathinfo($source);
 
+    if (!isset($path_info['dirname'])) {
+      return [];
+    }
+
     $group_position_end = TRUE;
     $group_position = strpos($path_info['dirname'], self::GROUP_PATTERN);
     $has_group = $group_position !== FALSE;
@@ -94,6 +102,10 @@ class IconFinder implements ContainerInjectionInterface, IconFinderInterface {
     }
 
     $path_search = $is_absolute ? $drupal_root . $path_search : $definition_absolute_path . '/' . $path_search;
+
+    if (!isset($path_info['extension'])) {
+      return [];
+    }
 
     $files = $this->findFiles($path_search, '#\\.' . $path_info['extension'] . '#', $group_position_end);
 
