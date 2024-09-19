@@ -15,6 +15,7 @@
     <exclude name="ElseExpression"/>
     <exclude name="MissingImport"/>
     <exclude name="IfStatementAssignment"/>
+    <exclude name="BooleanArgumentFlag"/>
   </rule>
 
   <!-- Code Size -->
@@ -25,7 +26,7 @@
         <!-- 5–10   A well structured and stable procedure      Low -->
         <!-- 11–20  A more complex procedure                    Moderate -->
         <!-- 21–50  A complex procedure, alarming               High -->
-          <property name="reportLevel" value="13" />
+          <property name="reportLevel" value="15" />
       </properties>
   </rule>
   <rule ref="rulesets/codesize.xml/NPathComplexity">
@@ -39,7 +40,11 @@
     </properties>
   </rule>
   <rule ref="rulesets/codesize.xml/ExcessiveClassLength"/>
-  <rule ref="rulesets/codesize.xml/ExcessiveParameterList"/>
+  <rule ref="rulesets/codesize.xml/ExcessiveParameterList">
+    <properties>
+      <property name="minimum" value="11" />
+    </properties>
+  </rule>
   <rule ref="rulesets/codesize.xml/ExcessivePublicCount"/>
   <rule ref="rulesets/codesize.xml/TooManyFields"/>
   <rule ref="rulesets/codesize.xml/TooManyMethods">

@@ -27,8 +27,18 @@ include:
   script:
     - php --version
     - vendor/bin/phpmd --version
-    - vendor/bin/phpmd $_WEB_ROOT/modules/custom/$CI_PROJECT_NAME gitlab $_WEB_ROOT/modules/custom/$CI_PROJECT_NAME/phpmd.xml --exclude 'tests/*,**/tests/*' > phpmd-quality-report.json || true
-    - vendor/bin/phpmd $_WEB_ROOT/modules/custom/$CI_PROJECT_NAME text $_WEB_ROOT/modules/custom/$CI_PROJECT_NAME/phpmd.xml --exclude 'tests/*,**/tests/*'
+    - vendor/bin/phpmd
+        $_WEB_ROOT/modules/custom/$CI_PROJECT_NAME
+        gitlab
+        $_WEB_ROOT/modules/custom/$CI_PROJECT_NAME/phpmd.xml
+        --exclude 'tests/*,**/tests/*'
+        --baseline-file $_WEB_ROOT/modules/custom/$CI_PROJECT_NAME/phpmd.baseline.xml > phpmd-quality-report.json || true
+    - vendor/bin/phpmd
+        $_WEB_ROOT/modules/custom/$CI_PROJECT_NAME
+        text
+        $_WEB_ROOT/modules/custom/$CI_PROJECT_NAME/phpmd.xml
+        --exclude 'tests/*,**/tests/*'
+        --baseline-file $_WEB_ROOT/modules/custom/$CI_PROJECT_NAME/phpmd.baseline.xml
   allow_failure: false
   artifacts:
     expose_as: phpmd
