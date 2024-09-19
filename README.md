@@ -11,7 +11,7 @@ See: [Installing Modules](https://www.drupal.org/docs/extending-drupal/installin
 
 ## DOCUMENTATION
 
-See [project page](https://www.drupal.org/project/ui_icons).
+See [online documentation](https://project.pages.drupalcode.org/ui_icons) or local [docs/index.md](./docs/index.md).
 
 ## MAINTAINERS
 

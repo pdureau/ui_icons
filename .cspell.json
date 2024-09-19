@@ -9,7 +9,8 @@
       "**/build/icon.js",
       "*.json",
       "phpstan.neon",
-      "phpmd.xml"
+      "phpmd.xml",
+      "mkdocs.yml"
     ],
     "dictionaries": [
       "dictionary",
