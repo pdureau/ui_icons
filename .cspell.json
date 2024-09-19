@@ -8,7 +8,8 @@
       "*.svg",
       "**/build/icon.js",
       "*.json",
-      "phpstan.neon"
+      "phpstan.neon",
+      "phpmd.xml"
     ],
     "dictionaries": [
       "dictionary",
