@@ -104,11 +104,11 @@ class IconPackManagerKernelTest extends KernelTestBase {
   public function testListIconPackOptions(): void {
     $actual = $this->pluginManagerIconPack->listIconPackOptions();
     $expected = [
-      'test' => 'Test icons (8)',
-      'test_svg' => 'Test SVG (8)',
-      'test_svg_sprite' => 'Small sprite (5)',
-      'test_settings' => 'Test settings (1)',
       'test_no_settings' => 'No Settings (1)',
+      'test_svg_sprite' => 'Small sprite (5)',
+      'test_svg' => 'Test SVG (8)',
+      'test' => 'Test icons (8)',
+      'test_settings' => 'Test settings (1)',
     ];
     $this->assertSame($expected, $actual);
   }
