@@ -61,6 +61,7 @@ abstract class IconExtractorBase extends PluginBase implements IconExtractorInte
    * {@inheritdoc}
    */
   public static function createIcon(string $icon_id, string $path, array $data, ?string $group = NULL): IconDefinition {
+    // @todo should not filter and allow the extractor any data.
     $data = self::filterDataFromDefinition($data);
     return IconDefinition::create($icon_id, $path, $data, $group);
   }

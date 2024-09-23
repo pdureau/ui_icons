@@ -10,6 +10,7 @@ use Drupal\Core\Extension\ModuleHandlerInterface;
 use Drupal\Core\Extension\ThemeHandlerInterface;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Form\SubformState;
+use Drupal\Core\KeyValueStore\KeyValueFactoryInterface;
 use Drupal\Core\Plugin\DefaultPluginManager;
 use Drupal\Core\Plugin\Discovery\ContainerDerivativeDiscoveryDecorator;
 use Drupal\Core\Plugin\Discovery\YamlDiscovery;
@@ -77,6 +78,8 @@ class IconPackManager extends DefaultPluginManager implements IconPackManagerInt
    *   The cache backend.
    * @param \Drupal\ui_icons\Plugin\IconExtractorPluginManager $iconPackExtractorManager
    *   The ui_icons plugin extractor service.
+   * @param \Drupal\Core\KeyValueStore\KeyValueFactoryInterface $keyValueFactory
+   *   The key value factory.
    * @param string $appRoot
    *   The application root.
    */
@@ -85,6 +88,7 @@ class IconPackManager extends DefaultPluginManager implements IconPackManagerInt
     protected ThemeHandlerInterface $themeHandler,
     CacheBackendInterface $cacheBackend,
     protected IconExtractorPluginManager $iconPackExtractorManager,
+    protected KeyValueFactoryInterface $keyValueFactory,
     protected string $appRoot,
   ) {
     $this->moduleHandler = $module_handler;
@@ -235,7 +239,16 @@ class IconPackManager extends DefaultPluginManager implements IconPackManagerInt
    * {@inheritdoc}
    */
   public function getDefinitions(): ?array {
-    $definitions = $this->getCachedDefinitions();
+    // Follow Twig development mode for cache.
+    $development_settings = $this->keyValueFactory->get('development_settings');
+    $twig_debug = $development_settings->get('twig_debug', FALSE);
+    $twig_cache_disable = $development_settings->get('twig_cache_disable', FALSE);
+    if ($twig_debug || $twig_cache_disable) {
+      $definitions = NULL;
+    }
+    else {
+      $definitions = $this->getCachedDefinitions();
+    }
 
     if (!isset($definitions)) {
       $definitions = $this->findDefinitions();
@@ -325,10 +338,6 @@ class IconPackManager extends DefaultPluginManager implements IconPackManagerInt
     }
     if (!isset($definition['extractor'])) {
       throw new IconPackConfigErrorException('Missing `extractor:` key in your definition!');
-    }
-    // @todo is it needed as an extractor plugin can exist without config key?
-    if (!isset($definition['config'])) {
-      throw new IconPackConfigErrorException('Missing `config:` key in your definition extractor!');
     }
 
     $relative_path = $this->moduleHandler->moduleExists($definition['provider'])
