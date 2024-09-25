@@ -5,11 +5,11 @@ declare(strict_types=1);
 namespace Drupal\Tests\ui_icons_ckeditor5\Functional;
 
 use Behat\Mink\Element\NodeElement;
+use Drupal\FunctionalJavascriptTests\WebDriverTestBase;
+use Drupal\Tests\ckeditor5\Traits\CKEditor5TestTrait;
 use Drupal\ckeditor5\Plugin\Editor\CKEditor5;
 use Drupal\editor\Entity\Editor;
 use Drupal\filter\Entity\FilterFormat;
-use Drupal\FunctionalJavascriptTests\WebDriverTestBase;
-use Drupal\Tests\ckeditor5\Traits\CKEditor5TestTrait;
 use Symfony\Component\Validator\ConstraintViolation;
 
 /**

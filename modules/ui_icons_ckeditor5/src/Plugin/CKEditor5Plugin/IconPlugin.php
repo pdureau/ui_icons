@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace Drupal\ui_icons_ckeditor5\Plugin\CKEditor5Plugin;
 
-use Drupal\ckeditor5\Plugin\CKEditor5PluginDefault;
 use Drupal\Core\Url;
+use Drupal\ckeditor5\Plugin\CKEditor5PluginDefault;
 use Drupal\editor\EditorInterface;
 
 /**
