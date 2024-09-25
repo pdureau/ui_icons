@@ -239,35 +239,28 @@ class IconPackManager extends DefaultPluginManager implements IconPackManagerInt
    * {@inheritdoc}
    */
   public function getDefinitions(): ?array {
-    // Follow Twig development mode for cache.
-    $development_settings = $this->keyValueFactory->get('development_settings');
-    $twig_debug = $development_settings->get('twig_debug', FALSE);
-    $twig_cache_disable = $development_settings->get('twig_cache_disable', FALSE);
-    if ($twig_debug || $twig_cache_disable) {
-      $definitions = NULL;
-    }
-    else {
-      $definitions = $this->getCachedDefinitions();
+    $definitions = $this->getCachedDefinitions();
+
+    if (NULL !== $definitions) {
+      return $definitions;
     }
 
-    if (!isset($definitions)) {
-      $definitions = $this->findDefinitions();
-      foreach ($definitions as $key => $definition) {
-        if (isset($definition['enabled']) && $definition['enabled'] === FALSE) {
-          unset($definitions[$key]);
-          continue;
-        }
-        $icons = $this->getIconsFromDefinition($definition);
-        $count_icons = count($icons);
-        $definitions[$key]['_icons'] = [
-          'list' => $icons,
-          'count' => [],
-        ];
-        $definitions[$key]['_icons']['count'][$definition['extractor']] = $count_icons;
+    $definitions = $this->findDefinitions();
+    foreach ($definitions as $key => $definition) {
+      if (isset($definition['enabled']) && $definition['enabled'] === FALSE) {
+        unset($definitions[$key]);
+        continue;
       }
-
-      $this->setCachedDefinitions($definitions);
+      $icons = $this->getIconsFromDefinition($definition);
+      $count_icons = count($icons);
+      $definitions[$key]['_icons'] = [
+        'list' => $icons,
+        'count' => [],
+      ];
+      $definitions[$key]['_icons']['count'][$definition['extractor']] = $count_icons;
     }
+
+    $this->setCachedDefinitions($definitions);
 
     return $definitions;
   }
