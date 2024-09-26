@@ -48,18 +48,20 @@
       iconPickerPreview.forEach((element) => {
         // See templates/icon-preview.html.twig for css selector.
         const iconPreview = document.querySelector(
-          `.icon-preview[data-icon-id='${element.value}']`,
+          `.icon-preview-wrapper[data-icon-id='${element.value}']`,
         );
-        if (!iconPreview || typeof element.labels[0] === 'undefined') {
-          return;
-        }
-        element.labels[0].textContent = '';
-        element.labels[0].prepend(iconPreview);
 
         // Submit when clicked any icon.
         element.addEventListener('click', function (event) {
           document.querySelector('.icon-ajax-select-submit').click();
         });
+
+        // Move preview to label.
+        if (!iconPreview || typeof element.labels[0] === 'undefined') {
+          return;
+        }
+        element.labels[0].textContent = '';
+        element.labels[0].prepend(iconPreview);
       });
     },
   };

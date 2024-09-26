@@ -1,6 +1,6 @@
 .icon-picker-modal__content .form-radios {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(40px, 1fr));
+  grid-template-columns: repeat(auto-fill, minmax(3rem, 1fr));
   grid-gap: 8px;
 }
 
@@ -40,20 +40,28 @@
   }
 }
 
-.icon-picker-modal__content .icon-preview {
+.icon-picker-modal__content .icon-preview-wrapper {
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 40px;
-  height: 40px;
-  margin: 0;
+  width: 3rem;
+  height: 3rem;
   cursor: pointer;
-  border: 1px solid #ced4da;
+  border: 1px solid var(--color-gray-100);
   border-radius: 4px;
   background-color: var(--color-gray-050);
 }
 
-.icon-picker-modal__content .icon-preview:hover {
+.icon-picker-modal__content .icon-preview-none {
+  border-color: transparent;
+  background-color: transparent;
+}
+
+.icon-picker-modal__content .icon-preview {
+  max-height: 2.8rem;
+}
+
+.icon-picker-modal__content .icon-preview-wrapper:hover {
   transition: background-color 100ms linear;
   background-color: var(--color-gray-300);
 }

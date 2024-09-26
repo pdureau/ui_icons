@@ -83,6 +83,7 @@ final class IconSelectForm extends FormBase {
 
     $icons = $this->filterIcons($icons_list, $allowed_icon_pack);
     $pager = $this->createPager($modal_state['page'], count($icons));
+    ksort($icons);
     $icons = array_slice($icons, $pager['offset'], self::NUM_PER_PAGE);
 
     $form['#prefix'] = '<div id="' . self::AJAX_WRAPPER_ID . '"><div id="' . self::MESSAGE_WRAPPER_ID . '"></div>';
@@ -159,19 +160,23 @@ final class IconSelectForm extends FormBase {
     ];
 
     $options = [];
-    foreach ($icons as $icon_full_id => $icon) {
-      $form['list']['icons_preview'][$icon_full_id] = [
+
+    // Empty icon to delete selection.
+    $options['_none_'] = '<div class="icon-preview-none icon-preview-wrapper"><img class="icon icon-preview" src="/core/themes/claro/images/icons/e34f4f/crossout.svg" title="None" width="32" height="32"></div>';
+
+    foreach ($icons as $icon) {
+      $form['list']['icons_preview'][$icon['icon_full_id']] = [
         '#type' => 'html_tag',
         '#tag' => 'div',
         '#attributes' => [
           'class' => [
-            'icon-preview',
+            'icon-preview-wrapper',
           ],
-          'data-icon-id' => $icon_full_id,
+          'data-icon-id' => $icon['icon_full_id'],
         ],
-        'icon' => $icon,
+        'icon' => $icon['preview'],
       ];
-      $options[$icon_full_id] = $icon['#label'] ?? $icon['#context']['label'] ?? $icon_full_id;
+      $options[$icon['icon_full_id']] = $icon['#label'] ?? $icon['#context']['label'] ?? $icon['icon_full_id'];
     }
 
     $form['list']['icon_full_id'] = [
@@ -361,8 +366,13 @@ final class IconSelectForm extends FormBase {
     $icon_full_id = $form_state->getValue('icon_full_id');
     $wrapper_id = $form_state->getValue('wrapper_id');
 
+    // Allow remove the value to delete.
+    if ('_none_' === $icon_full_id) {
+      $icon_full_id = '';
+    }
+
     $response->addCommand(new UpdateIconSelectionCommand($icon_full_id, $wrapper_id));
-    $response->addCommand(new CloseModalDialogCommand());
+    $response->addCommand(new CloseModalDialogCommand(TRUE));
 
     return $response;
   }
@@ -409,13 +419,16 @@ final class IconSelectForm extends FormBase {
     }
 
     $icons = [];
-    foreach ($icons_list as $id => $icon) {
+    foreach ($icons_list as $icon_full_id => $icon) {
       if (!empty($icon_pack) && !in_array($icon->getIconPackId(), $icon_pack)) {
         continue;
       }
-      $icons[$id] = $icon->getPreview([
-        'size' => 32,
-      ]);
+      $icons[$icon->getIconId()] = [
+        'icon_full_id' => $icon_full_id,
+        'preview' => $icon->getPreview([
+          'size' => 32,
+        ]),
+      ];
     }
 
     return $icons;
