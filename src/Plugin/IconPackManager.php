@@ -10,7 +10,6 @@ use Drupal\Core\Extension\ModuleHandlerInterface;
 use Drupal\Core\Extension\ThemeHandlerInterface;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Form\SubformState;
-use Drupal\Core\KeyValueStore\KeyValueFactoryInterface;
 use Drupal\Core\Plugin\DefaultPluginManager;
 use Drupal\Core\Plugin\Discovery\ContainerDerivativeDiscoveryDecorator;
 use Drupal\Core\Plugin\Discovery\YamlDiscovery;
@@ -78,8 +77,6 @@ class IconPackManager extends DefaultPluginManager implements IconPackManagerInt
    *   The cache backend.
    * @param \Drupal\ui_icons\Plugin\IconExtractorPluginManager $iconPackExtractorManager
    *   The ui_icons plugin extractor service.
-   * @param \Drupal\Core\KeyValueStore\KeyValueFactoryInterface $keyValueFactory
-   *   The key value factory.
    * @param string $appRoot
    *   The application root.
    */
@@ -88,7 +85,6 @@ class IconPackManager extends DefaultPluginManager implements IconPackManagerInt
     protected ThemeHandlerInterface $themeHandler,
     CacheBackendInterface $cacheBackend,
     protected IconExtractorPluginManager $iconPackExtractorManager,
-    protected KeyValueFactoryInterface $keyValueFactory,
     protected string $appRoot,
   ) {
     $this->moduleHandler = $module_handler;

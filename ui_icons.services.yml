@@ -7,7 +7,6 @@ services:
         '@theme_handler',
         '@cache.discovery',
         '@plugin.manager.ui_icons_extractor',
-        '@keyvalue',
         '%app.root%',
       ]
   Drupal\ui_icons\Plugin\IconPackManagerInterface: '@plugin.manager.ui_icons_pack'
