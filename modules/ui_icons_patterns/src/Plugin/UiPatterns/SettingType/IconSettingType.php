@@ -9,8 +9,8 @@ use Drupal\ui_patterns_settings\Plugin\PatternSettingTypeBase;
  * Icon setting type.
  *
  * @UiPatternsSettingType(
- *   id = 'icon',
- *   label = @Translation('Icon')
+ *   id = "icon",
+ *   label = @Translation("Icon")
  * )
  */
 class IconSettingType extends PatternSettingTypeBase {
