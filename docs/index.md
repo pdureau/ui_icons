@@ -98,9 +98,39 @@ Icons located in the Drupal web root `libraries` folder.
 Icons located in the Module or Theme where the *.ui_icons.yml file exist:
 `my_module/assets/icons/`.
 
-##### Other extractor
+##### Web font Extractor
+
+Provided by sub module `UI Icons Font`.
+
+Allow to use a Web Font, the discovery of icons can be done with different
+format: json, yml, codepoints or reading TTF or Woff file.
+
+Definition `config > sources` key must reference any supported format to load
+the list of icons.
+
+An optional key `config > offset` allow to load only from a starting point, can
+be useful with TTF discovery that include numbers and letters.
+
+Examples:
+
+- [Bootstrap](https://gitlab.com/ui-icons/ui-icons-example/-/blob/main/ui_icons_bootstrap/ui_icons_bootstrap.ui_icons.yml)
+- [Material](https://gitlab.com/ui-icons/ui-icons-example/-/blob/main/ui_icons_material/ui_icons_material.ui_icons.yml)
+- [Feather](https://gitlab.com/ui-icons/ui-icons-example/-/blob/main/ui_icons_feather/ui_icons_feather.ui_icons.yml)
+- [Font awesome](https://gitlab.com/ui-icons/ui-icons-example/-/tree/main/ui_icons_fontawesome)
+  _Note_: Font awesome JavaScript loader is not compatible with `ui_icons_ckeditor`.
+
+##### Iconify Extractor
 
 - [Iconify](https://iconify.design) with `UI Icons Iconify API`.
+
+Allow to add collections from Iconify through the API.
+
+A key `config > collections` allow to get a list of icons from Iconify API.
+This must be the machine name of the set found in
+[https://icon-sets.iconify.design](https://icon-sets.iconify.design/material-symbols/).
+
+Machine name is the url address, hor example `Lets Icons` package has machine
+name: `lets-icons`.
 
 An example is located in project [UI Icons Iconify](https://gitlab.com/ui-icons/ui-icons-example/-/tree/main/ui_icons_iconify).
 

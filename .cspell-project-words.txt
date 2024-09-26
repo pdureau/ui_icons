@@ -1,7 +1,9 @@
 autocompleteclose
 beyris
+codepoints
 corge
 devicon
+dompdf
 dsfr
 dureau
 emojione
