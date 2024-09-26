@@ -31,11 +31,12 @@ use Drupal\ui_icons\IconDefinitionInterface;
  *     license_url: STRING
  *     links:
  *       - DOCUMENTATION
+ *     license: LICENSE
+ *     license_url: http://LICENSE
  *     version: 1.0.0
  *     enabled: BOOL
  *     extractor: PLUGIN_NAME
- *     config:
- *       sources: ARRAY
+ *     config: OBJECT
  *     settings:
  *       FORM_KEY:
  *         KEY: VALUE
