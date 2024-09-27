@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace Drupal\Tests\ui_icons\Unit;
 
 use Drupal\ui_icons\Exception\IconDefinitionInvalidDataException;
-use Drupal\ui_icons\IconDefinitionInterface;
 
 /**
  * Tests IconDefinition class used by extractor plugin.
@@ -18,7 +17,7 @@ class IconDefinitionTest extends IconUnitTestCase {
    * Test the getRenderable method.
    */
   public function testGetRenderable(): void {
-    $icon = self::createIcon([
+    $icon = self::createTestIcon([
       'icon_id' => 'test_icon_pack:test',
       'source' => '/foo/bar',
       'icon_pack_id' => 'test_icon_pack',
@@ -47,7 +46,7 @@ class IconDefinitionTest extends IconUnitTestCase {
    * Test the getPreview method.
    */
   public function testGetPreview(): void {
-    $icon = self::createIcon([
+    $icon = self::createTestIcon([
       'icon_id' => 'test_icon_pack:test',
       'source' => '/foo/bar',
       'icon_pack_id' => 'test_icon_pack',
@@ -74,6 +73,51 @@ class IconDefinitionTest extends IconUnitTestCase {
   }
 
   /**
+   * Test the getPreview method with custom `preview`.
+   */
+  public function testGetPreviewDefinition(): void {
+    $data = [
+      'icon_id' => 'test_icon_pack:test',
+      'source' => '/foo/bar',
+      'icon_pack_id' => 'test_icon_pack',
+      'icon_pack_label' => 'Baz',
+      'template' => 'test_template',
+      'preview' => '<span></span>',
+    ];
+
+    $expected = [
+      '#type' => 'inline_template',
+      '#template' => $data['preview'],
+      '#attached' => [],
+      '#context' => [
+        'icon_id' => $data['icon_id'],
+        'label' => 'Test icon pack:test - ' . $data['icon_pack_label'],
+        'source' => $data['source'],
+        'extractor' => '',
+        'content' => NULL,
+        'size' => 48,
+      ],
+    ];
+
+    $icon = self::createTestIcon($data);
+    $actual = $icon->getPreview(['foo' => 'bar']);
+    $this->assertEquals($expected, $actual);
+
+    $data['library'] = 'test_library';
+    $data['content'] = 'test_content';
+    $expected['#attached'] = ['library' => [$data['library']]];
+    $expected['#context']['content'] = $data['content'];
+
+    $icon = self::createTestIcon($data);
+    $actual = $icon->getPreview(['foo' => 'bar']);
+    $this->assertEquals($expected, $actual);
+
+    $actual = $icon->getPreview(['foo' => 'bar', 'size' => 24]);
+    $expected['#context']['size'] = 24;
+    $this->assertEquals($expected, $actual);
+  }
+
+  /**
    * Test the create method.
    *
    * @param array $icon_data
@@ -82,9 +126,7 @@ class IconDefinitionTest extends IconUnitTestCase {
    * @dataProvider providerCreateIcon
    */
   public function testCreateIcon(array $icon_data): void {
-    $actual = self::createIcon($icon_data);
-
-    $this->assertInstanceOf(IconDefinitionInterface::class, $actual);
+    $actual = self::createTestIcon($icon_data);
 
     $this->assertEquals($icon_data['icon_pack_id'] . ':' . $icon_data['icon_id'], $actual->getId());
     $this->assertEquals($icon_data['icon_pack_id'], $actual->getIconPackId());
@@ -132,7 +174,7 @@ class IconDefinitionTest extends IconUnitTestCase {
     $this->expectException(IconDefinitionInvalidDataException::class);
     $this->expectExceptionMessage('Empty icon_id provided. Missing Icon Pack Id in data.');
 
-    self::createIcon([
+    self::createTestIcon([
       'icon_id' => '',
       'data' => [],
       'source' => NULL,

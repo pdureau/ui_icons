@@ -77,6 +77,29 @@ class IconExtractorSettingsFormTest extends UnitTestCase {
           ],
         ],
       ],
+      'case for string with placeholder' => [
+        'settings' => [
+          'test_string' => [
+            'title' => 'Test String',
+            'type' => 'string',
+            'description' => 'Form test string',
+            'examples' => ['Example 1', 'Example 2'],
+            'maxLength' => 33,
+            'pattern' => '_pattern_',
+          ],
+        ],
+        'expected' => [
+          'test_string' => [
+            '#title' => 'Test String',
+            '#description' => 'Form test string',
+            '#placeholder' => 'Example 1',
+            '#type' => 'textfield',
+            '#pattern' => '_pattern_',
+            '#maxlength' => 33,
+            '#size' => 33,
+          ],
+        ],
+      ],
       'case for string field with min' => [
         'settings' => [
           'test_string' => [
@@ -136,6 +159,41 @@ class IconExtractorSettingsFormTest extends UnitTestCase {
           ],
         ],
       ],
+      'case for integer field' => [
+        'settings' => [
+          'test_integer' => [
+            'title' => 'Test Integer',
+            'description' => 'Form test integer',
+            'type' => 'integer',
+          ],
+        ],
+        'expected' => [
+          'test_integer' => [
+            '#title' => 'Test Integer',
+            '#description' => 'Form test integer',
+            '#type' => 'number',
+            '#step' => 1,
+          ],
+        ],
+      ],
+      'case for integer field with step' => [
+        'settings' => [
+          'test_integer' => [
+            'title' => 'Test Integer',
+            'description' => 'Form test integer',
+            'type' => 'integer',
+            'multipleOf' => 5,
+          ],
+        ],
+        'expected' => [
+          'test_integer' => [
+            '#title' => 'Test Integer',
+            '#description' => 'Form test integer',
+            '#type' => 'number',
+            '#step' => 5,
+          ],
+        ],
+      ],
       'case for boolean field' => [
         'settings' => [
           'test_boolean' => [
@@ -167,6 +225,29 @@ class IconExtractorSettingsFormTest extends UnitTestCase {
             '#description' => 'Form test enum',
             '#type' => 'select',
             '#options' => array_combine(['option1', 'option2', 'option3'], ['Option1', 'Option2', 'Option3']),
+          ],
+        ],
+      ],
+      'case for field with meta:enum' => [
+        'settings' => [
+          'test_enum' => [
+            'title' => 'Test Enum',
+            'description' => 'Form test enum',
+            'type' => 'string',
+            'enum' => ['option1', 'option2', 'option3'],
+            'meta:enum' => [
+              'option1' => 'Option 1',
+              'option2' => 'Option 2',
+              'option3' => 'Option 3',
+            ],
+          ],
+        ],
+        'expected' => [
+          'test_enum' => [
+            '#title' => 'Test Enum',
+            '#description' => 'Form test enum',
+            '#type' => 'select',
+            '#options' => array_combine(['option1', 'option2', 'option3'], ['Option 1', 'Option 2', 'Option 3']),
           ],
         ],
       ],

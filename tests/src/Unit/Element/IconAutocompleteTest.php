@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\ui_icons\Unit\Element;
 
-use Drupal\Core\Ajax\AjaxResponse;
 use Drupal\Core\DependencyInjection\ContainerBuilder;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Render\RendererInterface;
@@ -82,9 +81,17 @@ class IconAutocompleteTest extends IconUnitTestCase {
     $form_state = $this->createMock(FormStateInterface::class);
     $complete_form = [];
 
+    // phpcs:disable
+    $value = new class implements \Stringable {function __toString() {
+        return 'foo';
+      }
+    };
+    // phpcs:enable
+
     $element = [
       '#parents' => ['foo', 'bar'],
       '#array_parents' => ['baz', 'qux'],
+      '#value' => $value,
     ];
 
     IconAutocomplete::processIcon($element, $form_state, $complete_form);
@@ -93,6 +100,7 @@ class IconAutocompleteTest extends IconUnitTestCase {
       '#parents' => ['foo', 'bar'],
       '#array_parents' => ['baz', 'qux'],
       '#tree' => TRUE,
+      '#value' => [],
       'icon_id' => [
         '#type' => 'textfield',
         '#title' => new TranslatableMarkup('Icon'),
@@ -109,6 +117,8 @@ class IconAutocompleteTest extends IconUnitTestCase {
     ];
 
     $this->assertEquals($expected, $element);
+
+    unset($element['#value'], $expected['#value']);
 
     // Test basic values and #default_value.
     $values = [
@@ -179,14 +189,6 @@ class IconAutocompleteTest extends IconUnitTestCase {
     $this->assertArrayHasKey('#ajax', $element['icon_id']);
     $this->assertArrayNotHasKey('icon_settings', $element);
 
-    // Test value without show settings.
-    $element = $base_element;
-    $element['#default_value'] = 'foo:bar';
-    IconAutocomplete::processIcon($element, $form_state, $complete_form);
-    IconAutocomplete::processIconAjaxForm($element, $form_state, $complete_form);
-    $this->assertArrayHasKey('#ajax', $element['icon_id']);
-    $this->assertArrayNotHasKey('icon_settings', $element);
-
     // Test show settings without icon id.
     $element = $base_element;
     $element['#show_settings'] = TRUE;
@@ -201,9 +203,9 @@ class IconAutocompleteTest extends IconUnitTestCase {
     $ui_icons_pack_plugin_manager->expects($this->once())
       ->method('getExtractorPluginForms')
       ->with($this->anything())
-      ->will($this->returnCallback(function (&$form): void {
+      ->willReturnCallback(function (&$form): void {
         $form['sub_form'] = TRUE;
-      }));
+      });
     $this->container->set('plugin.manager.ui_icons_pack', $ui_icons_pack_plugin_manager);
 
     $element = $base_element;
@@ -219,6 +221,90 @@ class IconAutocompleteTest extends IconUnitTestCase {
     $this->assertSame($base_element['#settings_title'], $element['icon_settings']['#title']);
 
     $this->assertArrayHasKey('sub_form', $element['icon_settings']);
+  }
+
+  /**
+   * Test the processIconAjaxForm method for #show_settings = FALSE.
+   */
+  public function testProcessIconAjaxFormNoSettings(): void {
+    $form_state = $this->createMock(FormStateInterface::class);
+    $complete_form = [];
+
+    $icon_id = 'foo:bar';
+    $icon_pack_id = 'baz';
+
+    $element = [
+      '#parents' => ['foo', 'bar'],
+      '#array_parents' => ['baz', 'qux'],
+      '#show_settings' => FALSE,
+      '#settings_title' => new TranslatableMarkup('Baz'),
+      '#value' => [
+        'icon_id' => $icon_id,
+      ],
+    ];
+
+    $icon = self::createTestIcon([
+      'icon_pack_id' => $icon_pack_id,
+      'icon_id' => $icon_id,
+      'source' => 'foo/path',
+      'icon_pack_label' => 'Baz',
+    ]);
+
+    $ui_icons_pack_plugin_manager = $this->createMock(IconPackManagerInterface::class);
+    $ui_icons_pack_plugin_manager->method('getIcon')
+      ->with('foo:bar')
+      ->willReturn($icon);
+    $this->container->set('plugin.manager.ui_icons_pack', $ui_icons_pack_plugin_manager);
+
+    IconAutocomplete::processIcon($element, $form_state, $complete_form);
+    IconAutocomplete::processIconAjaxForm($element, $form_state, $complete_form);
+    $this->assertArrayHasKey('#ajax', $element['icon_id']);
+  }
+
+  /**
+   * Test the processIconAjaxForm #allowed_icon_pack and no extractor form.
+   */
+  public function testProcessIconAjaxFormAllowedIconPack(): void {
+    $form_state = $this->createMock(FormStateInterface::class);
+    $complete_form = [];
+
+    $icon_id = 'foo:bar';
+    $icon_pack_id = 'baz';
+
+    $element = [
+      '#parents' => ['foo', 'bar'],
+      '#array_parents' => ['baz', 'qux'],
+      '#show_settings' => TRUE,
+      '#settings_title' => new TranslatableMarkup('Baz'),
+      '#value' => [
+        'icon_id' => $icon_id,
+      ],
+    ];
+
+    $icon = self::createTestIcon([
+      'icon_pack_id' => $icon_pack_id,
+      'icon_id' => $icon_id,
+      'source' => 'foo/path',
+      'icon_pack_label' => 'Baz',
+    ]);
+
+    $ui_icons_pack_plugin_manager = $this->createMock(IconPackManagerInterface::class);
+    $ui_icons_pack_plugin_manager->method('getIcon')
+      ->with($icon_id)
+      ->willReturn($icon);
+    $this->container->set('plugin.manager.ui_icons_pack', $ui_icons_pack_plugin_manager);
+
+    // Test with no Extractor form.
+    IconAutocomplete::processIcon($element, $form_state, $complete_form);
+    IconAutocomplete::processIconAjaxForm($element, $form_state, $complete_form);
+    $this->assertArrayHasKey('#ajax', $element['icon_id']);
+
+    // Test with #allowed_icon_pack value not valid.
+    $element['#allowed_icon_pack'] = ['qux'];
+    IconAutocomplete::processIcon($element, $form_state, $complete_form);
+    IconAutocomplete::processIconAjaxForm($element, $form_state, $complete_form);
+    $this->assertArrayHasKey('#ajax', $element['icon_id']);
+    $this->assertArrayNotHasKey('icon_settings', $element);
   }
 
   /**
@@ -239,7 +325,7 @@ class IconAutocompleteTest extends IconUnitTestCase {
     $complete_form = [];
     $settings = $values['icon']['icon_settings'];
 
-    $icon = self::createIcon([
+    $icon = self::createTestIcon([
       'icon_id' => explode(':', $values['icon']['icon_id'])[1],
       'source' => 'foo/bar',
       'icon_pack_id' => $icon_pack_id,
@@ -275,6 +361,10 @@ class IconAutocompleteTest extends IconUnitTestCase {
       ->method('setValueForElement')
       ->with($element, ['target_id' => $values['icon']['icon_id'], 'settings' => $settings]);
 
+    IconAutocomplete::validateIcon($element, $form_state, $complete_form);
+
+    // Test $input_exists is FALSE.
+    $element['#parents'] = ['foo'];
     IconAutocomplete::validateIcon($element, $form_state, $complete_form);
   }
 
@@ -376,7 +466,7 @@ class IconAutocompleteTest extends IconUnitTestCase {
       '#allowed_icon_pack' => ['qux', 'corge'],
     ];
 
-    $icon = self::createIcon([
+    $icon = self::createTestIcon([
       'icon_pack_id' => $icon_pack_id,
       'icon_id' => $icon_id,
       'source' => 'foo/path',
@@ -432,7 +522,7 @@ class IconAutocompleteTest extends IconUnitTestCase {
       'icon_settings' => ['foo' => 'bar'],
     ];
 
-    $icon = self::createIcon([
+    $icon = self::createTestIcon([
       'icon_pack_id' => $icon_pack_id,
       'icon_id' => $icon_id,
       'source' => 'foo/path',
@@ -466,6 +556,54 @@ class IconAutocompleteTest extends IconUnitTestCase {
       'object' => $icon,
     ];
     $this->assertSame($expected, $actual);
+
+    // Test empty icon_id.
+    $input = ['icon_id' => ''];
+    $element['#default_value'] = 'foo';
+
+    $actual = IconAutocomplete::valueCallback($element, $input, $form_state);
+    $this->assertSame([], $actual);
+  }
+
+  /**
+   * Test the valueCallback method with no Icon.
+   */
+  public function testValueCallbackInvalidIcon(): void {
+    $element = [];
+
+    $input = [
+      'icon_id' => 'foo:bar',
+      'icon_settings' => ['foo' => 'bar'],
+    ];
+
+    $form_state = $this->createMock(FormStateInterface::class);
+
+    $ui_icons_pack_plugin_manager = $this->createMock(IconPackManagerInterface::class);
+    $ui_icons_pack_plugin_manager->method('getIcon')
+      ->willReturn(NULL);
+    $this->container->set('plugin.manager.ui_icons_pack', $ui_icons_pack_plugin_manager);
+
+    $actual = IconAutocomplete::valueCallback($element, $input, $form_state);
+    $this->assertSame($input, $actual);
+  }
+
+  /**
+   * Test the valueCallback method with no callback.
+   */
+  public function testValueCallbackNoCallback(): void {
+    $element = [];
+
+    $input = FALSE;
+
+    $form_state = $this->createMock(FormStateInterface::class);
+
+    $ui_icons_pack_plugin_manager = $this->createMock(IconPackManagerInterface::class);
+    $ui_icons_pack_plugin_manager->method('getIcon')
+      ->willReturn(NULL);
+    $this->container->set('plugin.manager.ui_icons_pack', $ui_icons_pack_plugin_manager);
+
+    $actual = IconAutocomplete::valueCallback($element, $input, $form_state);
+    $this->assertSame($input, $actual);
   }
 
   /**
@@ -488,8 +626,6 @@ class IconAutocompleteTest extends IconUnitTestCase {
     $this->container->set('renderer', $renderer);
 
     $actual = IconAutocomplete::buildSettingsAjaxCallback($form, $form_state, $request);
-
-    $this->assertInstanceOf(AjaxResponse::class, $actual);
 
     $expected = [
       'command' => 'insert',

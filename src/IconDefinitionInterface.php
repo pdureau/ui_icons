@@ -67,14 +67,6 @@ interface IconDefinitionInterface {
   public function getGroup(): ?string;
 
   /**
-   * Get the Icon data.
-   *
-   * @return array
-   *   The icon data, include definition and any extractor added data.
-   */
-  public function getData(): array;
-
-  /**
    * Get the Icon content.
    *
    * @return string|null

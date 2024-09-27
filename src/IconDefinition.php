@@ -76,18 +76,8 @@ class IconDefinition implements IconDefinitionInterface {
   /**
    * {@inheritdoc}
    */
-  public function getData(): array {
-    return $this->data;
-  }
-
-  /**
-   * {@inheritdoc}
-   */
   public function getContent(): ?string {
     if (!isset($this->data['content'])) {
-      return NULL;
-    }
-    if (empty($this->data['content'])) {
       return NULL;
     }
     return $this->data['content'];

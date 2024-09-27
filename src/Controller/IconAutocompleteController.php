@@ -67,16 +67,10 @@ class IconAutocompleteController extends ControllerBase {
       return new JsonResponse([]);
     }
 
-    $query = preg_replace('/[^ \w-]/', '', $query);
-    if (NULL === $query) {
+    $query = preg_replace('/[^ \w-]/', '', preg_split('/\s+/', $query));
+    if (empty($query) || empty($query[0] ?? '')) {
       return new JsonResponse([]);
     }
-    $query = preg_split('/\s+/', $query);
-
-    if (FALSE === $query) {
-      return new JsonResponse([]);
-    }
-
     $result = $this->searchIcon($icons, $query, $max_result, $allowed_icon_pack);
 
     return new JsonResponse($result);

@@ -181,6 +181,7 @@ class IconAutocomplete extends FormElementBase {
   public static function processIcon(array &$element, FormStateInterface $form_state, array &$complete_form): array {
     $element['#tree'] = TRUE;
 
+    // @todo find where this error can occur.
     if (isset($element['#value']) && $element['#value'] instanceof \Stringable) {
       $element['#value'] = [];
     }

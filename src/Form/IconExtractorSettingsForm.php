@@ -40,10 +40,10 @@ class IconExtractorSettingsForm {
         'integer' => self::buildNumberForm($setting_id, $setting, $saved_values),
         'string' => self::buildStringForm($setting_id, $setting, $saved_values),
         // @todo not supported scalar could be removed when JSON validation of definition is done.
-        'null' => [],
-        'object' => [],
-        'array' => [],
-        default => [],
+        // 'null' => [],
+        // 'object' => [],
+        // 'array' => [],
+        // default => [],
       };
     }
 

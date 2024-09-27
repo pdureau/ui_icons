@@ -47,7 +47,7 @@ class IconAutocompleteControllerTest extends IconUnitTestCase {
     $renderer = $this->createMock(RendererInterface::class);
     $iconAutocompleteController = new IconAutocompleteController($iconPackManager, $renderer);
 
-    $this->assertInstanceOf('Drupal\ui_icons\Controller\IconAutocompleteController', $iconAutocompleteController);
+    $this->assertInstanceOf(IconAutocompleteController::class, $iconAutocompleteController);
   }
 
   /**
@@ -67,7 +67,7 @@ class IconAutocompleteControllerTest extends IconUnitTestCase {
 
     $icons = [];
     foreach ($iconsData as $iconId => $iconData) {
-      $icons[$iconId] = $this->createIcon($iconData);
+      $icons[$iconId] = $this->createTestIcon($iconData);
     }
     $prophecy->getIcons()->willReturn($icons);
 
@@ -100,6 +100,16 @@ class IconAutocompleteControllerTest extends IconUnitTestCase {
    */
   public static function handleSearchIconsDataProvider(): array {
     return [
+      'no query' => [
+        'iconsData' => self::createIconData(),
+        'queryParams' => [],
+        'expectedData' => [],
+      ],
+      'empty query' => [
+        'iconsData' => self::createIconData(),
+        'queryParams' => ['q' => ''],
+        'expectedData' => [],
+      ],
       'query icon id' => [
         'iconsData' => self::createIconData(),
         'queryParams' => ['q' => 'bar'],
@@ -156,11 +166,9 @@ class IconAutocompleteControllerTest extends IconUnitTestCase {
         ],
       ],
       'query non ascii letter' => [
-        'iconsData' => self::createIconData('%2$*', 'à(5çè', '?:!!/"&', ']}=(-_ù,'),
+        'iconsData' => self::createIconData('%2$*', 'à(5çè', '?:!!/"&'),
         'queryParams' => ['q' => ':!!'],
-        'expectedData' => [
-          self::createIconResultData('%2$*', 'à(5çè', '?:!!/"&', ']}=(-_ù,'),
-        ],
+        'expectedData' => [],
       ],
       'query icon pack no result' => [
         'iconsData' => self::createIconData('my_icon_pack'),
