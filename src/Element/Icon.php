@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Drupal\ui_icons\Element;
 
+use Drupal\Component\Render\FormattableMarkup;
 use Drupal\Core\Render\Attribute\RenderElement;
 use Drupal\Core\Render\Element\RenderElementBase;
 use Drupal\ui_icons\IconDefinition;
@@ -19,7 +20,7 @@ use Drupal\ui_icons\IconDefinition;
  * Usage Example:
  * @code
  * $build['icon'] = [
- *   '#type' => 'ui_icon',
+ *   '#type' => 'icon',
  *   '#icon_pack' => 'material_symbols',
  *   '#icon' => 'home',
  *   '#settings' => [
@@ -28,7 +29,7 @@ use Drupal\ui_icons\IconDefinition;
  * ];
  * @endcode
  */
-#[RenderElement('ui_icon')]
+#[RenderElement('icon')]
 class Icon extends RenderElementBase {
 
   /**
@@ -49,7 +50,7 @@ class Icon extends RenderElementBase {
    * Ui icon element pre render callback.
    *
    * @param array $element
-   *   An associative array containing the properties of the ui_icon element.
+   *   An associative array containing the properties of the icon element.
    *
    * @return array
    *   The modified element.
@@ -73,7 +74,8 @@ class Icon extends RenderElementBase {
     }
 
     if ($content = $icon->getData('content')) {
-      $context['content'] = $content;
+      // Because content is an HTML string, we need to net escape it for render.
+      $context['content'] = new FormattableMarkup($content, []);
     }
 
     // @todo do we need all data?
@@ -87,7 +89,7 @@ class Icon extends RenderElementBase {
     if ($library = $icon->getData('library')) {
       $element['inline-template']['#attached'] = ['library' => [$library]];
     }
-
+    // dpm($element['inline-template']);.
     return $element;
   }
 

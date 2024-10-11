@@ -50,13 +50,13 @@ class IconDefinition implements IconDefinitionInterface {
     ?array $data = NULL,
   ): self {
     $errors = [];
-    if (empty($pack_id)) {
+    if (0 === strlen($pack_id)) {
       $errors[] = 'Empty pack_id provided!';
     }
-    if (empty($icon_id)) {
+    if (0 === strlen($icon_id)) {
       $errors[] = 'Empty icon_id provided!';
     }
-    if (empty($template)) {
+    if (0 === strlen($template)) {
       $errors[] = 'Empty template provided!';
     }
 
@@ -138,7 +138,7 @@ class IconDefinition implements IconDefinitionInterface {
    */
   public function getRenderable(array $settings = []): array {
     return [
-      '#type' => 'ui_icon',
+      '#type' => 'icon',
       '#icon_pack' => $this->pack_id,
       '#icon' => $this->icon_id,
       '#settings' => $settings,
@@ -150,8 +150,8 @@ class IconDefinition implements IconDefinitionInterface {
    */
   public function getPreview(array $settings = []): array {
     $label = $this->getLabel();
-    if (isset($this->data['pack_label'])) {
-      $label = ' - ' . $this->data['pack_label'];
+    if (isset($this->data['label'])) {
+      $label .= ' - ' . $this->data['label'];
     }
 
     if ($preview = $this->data['preview'] ?? NULL) {

@@ -210,7 +210,7 @@ final class LibrarySearchForm extends FormBase {
       $icons[$key] = $icon->getPreview(['size' => 48]);
       $icons[$key]['#group'] = $group;
       $icons[$key]['#label'] = $icon->getLabel();
-      $icons[$key]['#pack_label'] = $icon->getData('pack_label');
+      $icons[$key]['#pack_label'] = $icon->getData('label');
     }
 
     return $icons;

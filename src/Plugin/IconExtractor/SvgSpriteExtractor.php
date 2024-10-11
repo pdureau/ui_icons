@@ -40,7 +40,7 @@ class SvgSpriteExtractor extends IconExtractorWithFinder {
     foreach ($files as $file) {
       $icon_ids = $this->extractIdsFromXml($file['absolute_path'] ?? '');
       foreach ($icon_ids as $icon_id) {
-        $icons[] = $this->createIcon($icon_id, $file['source'], $file['group'] ?? NULL);
+        $icons[] = $this->createIcon((string) $icon_id, $file['source'], $file['group'] ?? NULL);
       }
     }
 
@@ -61,8 +61,7 @@ class SvgSpriteExtractor extends IconExtractorWithFinder {
       return [];
     }
 
-    libxml_use_internal_errors(TRUE);
-
+    // libxml_use_internal_errors(TRUE);
     if (!$svg = simplexml_load_string((string) $content)) {
       // @todo log a warning with the xml error.
       return [];

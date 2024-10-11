@@ -123,7 +123,7 @@ class IconTest extends IconUnitTestCase {
     $this->container->set('plugin.manager.ui_icons_pack', $pluginManagerIconPack);
 
     $element = [
-      '#type' => 'ui_icon',
+      '#type' => 'icon',
       '#icon_pack' => $data['pack_id'],
       '#icon' => $data['icon_id'],
       '#settings' => $data['icon_settings'] ?? [],
@@ -145,7 +145,7 @@ class IconTest extends IconUnitTestCase {
     $this->container->set('plugin.manager.ui_icons_pack', $pluginManagerIconPack);
 
     $element = [
-      '#type' => 'ui_icon',
+      '#type' => 'icon',
       '#icon_pack' => 'foo',
       '#icon' => 'bar',
     ];

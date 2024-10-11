@@ -29,7 +29,7 @@ class IconRenderableSource extends IconSource {
     }
     [$pack_id, $icon_id] = explode(IconDefinition::ICON_SEPARATOR, $value['icon_id']);
     return [
-      '#type' => 'ui_icon',
+      '#type' => 'icon',
       '#icon_pack' => $pack_id ?: '',
       '#icon' => $icon_id ?: '',
       '#settings' => $value['icon_settings'][$pack_id] ?? [],

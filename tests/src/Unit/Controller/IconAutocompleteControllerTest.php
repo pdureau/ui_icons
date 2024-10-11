@@ -235,7 +235,7 @@ class IconAutocompleteControllerTest extends IconUnitTestCase {
         'icon_id' => $icon_id,
         'source' => 'qux/corge',
         'pack_id' => $pack_id,
-        'pack_label' => $pack_label ?? 'Baz',
+        'label' => $pack_label ?? 'Baz',
       ],
     ];
   }

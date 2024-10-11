@@ -83,7 +83,7 @@ class IconDefinitionTest extends IconUnitTestCase {
         'group' => 'quux',
         'data' => [
           'content' => 'corge',
-          'pack_label' => 'Qux',
+          'label' => 'Qux',
         ],
       ],
     ];
@@ -130,12 +130,20 @@ class IconDefinitionTest extends IconUnitTestCase {
     $this->assertEquals($data['pack_id'], $actual->getPackId());
     $this->assertEquals($data['template'], $actual->getTemplate());
 
-    $this->assertEquals($data['source'] ?? NULL, $actual->getSource());
-    $this->assertEquals($data['group'] ?? NULL, $actual->getGroup());
+    if (isset($data['source'])) {
+      $this->assertEquals($data['source'], $actual->getSource());
+    }
+    if (isset($data['group'])) {
+      $this->assertEquals($data['group'], $actual->getGroup());
+    }
 
     if ($icon_data) {
-      $this->assertEquals($icon_data['pack_label'] ?? NULL, $actual->getData('pack_label'));
-      $this->assertEquals($icon_data['content'] ?? NULL, $actual->getData('content'));
+      if (isset($icon_data['label'])) {
+        $this->assertEquals($icon_data['label'], $actual->getData('label'));
+      }
+      if (isset($icon_data['content'])) {
+        $this->assertEquals($icon_data['content'], $actual->getData('content'));
+      }
     }
   }
 
@@ -156,7 +164,7 @@ class IconDefinitionTest extends IconUnitTestCase {
     $icon = IconDefinition::create('foo', 'bar', 'baz');
 
     $expected = [
-      '#type' => 'ui_icon',
+      '#type' => 'icon',
       '#icon_pack' => 'foo',
       '#icon' => 'bar',
       '#settings' => [

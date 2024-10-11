@@ -283,13 +283,13 @@ Assuming a settings `size` is declared:
 
 #### Render API
 
-`UI Icons` module provide a `RenderElement` with type: `ui_icon` to allow usage
+`UI Icons` module provide a `RenderElement` with type: `icon` to allow usage
 of an icon with the Drupal Render API.
 
 ```php
 <?php
 $build['icon'] = [
-  '#type' => 'ui_icon',
+  '#type' => 'icon',
   '#icon_pack' => 'my_pack_id',
   '#icon' => 'my_icon_id',
   '#settings' => [
