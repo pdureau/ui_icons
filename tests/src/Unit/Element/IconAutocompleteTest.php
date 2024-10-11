@@ -63,7 +63,7 @@ class IconAutocompleteTest extends IconUnitTestCase {
       '#pre_render' => [
         [$class, 'preRenderGroup'],
       ],
-      '#theme' => 'input__icon',
+      '#theme' => 'icon_selector',
       '#theme_wrappers' => ['form_element'],
       '#allowed_icon_pack' => [],
       '#show_settings' => FALSE,

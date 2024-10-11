@@ -17,8 +17,7 @@
         context,
       )
         .filter(
-          (iconSelector) =>
-            typeof $(iconSelector).autocomplete() === 'function',
+          (iconSelector) => typeof $(iconSelector).autocomplete() === 'object',
         )
         .forEach((iconSelector) => {
           $(iconSelector).autocomplete('option', {

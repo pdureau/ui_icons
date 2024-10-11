@@ -38,7 +38,7 @@ function ui_icons_help(string $route_name, RouteMatchInterface $route_match): ?s
  */
 function ui_icons_theme(array $existing, string $type, string $theme, string $path): array {
   return [
-    'input__icon' => [
+    'icon_selector' => [
       'render element' => 'element',
     ],
     'icon_preview' => [
@@ -64,7 +64,7 @@ function ui_icons_theme(array $existing, string $type, string $theme, string $pa
  *
  * @see src/Element/IconAutocomplete.php
  */
-function template_preprocess_input__icon(array &$variables): void {
+function template_preprocess_icon_selector(array &$variables): void {
   $variables['has_settings'] = $variables['element']['#show_settings'] ?? FALSE;
   $variables['icon_form'] = $variables['element']['icon_id'] ?? '';
 
