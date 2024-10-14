@@ -89,7 +89,7 @@ class Icon extends RenderElementBase {
     if ($library = $icon->getData('library')) {
       $element['inline-template']['#attached'] = ['library' => [$library]];
     }
-    // dpm($element['inline-template']);.
+
     return $element;
   }
 
