@@ -20,7 +20,7 @@ use Drupal\ui_icons\IconDefinitionInterface;
 /**
  * Defines an Icon Pack plugin manager to deal with icons.
  *
- * Extension can define icon pack in an EXTENSION_NAME.ui_icons.yml file
+ * Extension can define icon pack in an EXTENSION_NAME.icons.yml file
  * contained in the extension's base directory. Each icon pack has the
  * following structure:
  * @code
@@ -92,8 +92,8 @@ class IconPackManager extends DefaultPluginManager implements IconPackManagerInt
   ) {
     $this->moduleHandler = $module_handler;
     $this->factory = new ContainerFactory($this);
-    $this->alterInfo('ui_icons');
-    $this->setCacheBackend($cacheBackend, 'ui_icons_pack', ['ui_icons_pack_plugin']);
+    $this->alterInfo('icons');
+    $this->setCacheBackend($cacheBackend, 'icons_pack', ['icons_pack_plugin']);
   }
 
   /**
@@ -131,7 +131,6 @@ class IconPackManager extends DefaultPluginManager implements IconPackManagerInt
       throw new IconPackConfigErrorException(sprintf('Invalid Icon Pack id in: %s, name: %s must contain only lowercase letters, numbers, and underscores.', $definition['provider'], $plugin_id));
     }
 
-    // @todo replace with json validation.
     if (!isset($definition['template'])) {
       throw new IconPackConfigErrorException('Missing `template:` key in your definition!');
     }
@@ -277,7 +276,7 @@ class IconPackManager extends DefaultPluginManager implements IconPackManagerInt
    */
   protected function getDiscovery(): DiscoveryInterface {
     if (!$this->discovery) {
-      $this->discovery = new YamlDiscovery('ui_icons', $this->moduleHandler->getModuleDirectories() + $this->themeHandler->getThemeDirectories());
+      $this->discovery = new YamlDiscovery('icons', $this->moduleHandler->getModuleDirectories() + $this->themeHandler->getThemeDirectories());
       $this->discovery = new ContainerDerivativeDiscoveryDecorator($this->discovery);
     }
     return $this->discovery;

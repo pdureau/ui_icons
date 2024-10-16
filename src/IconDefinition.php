@@ -64,7 +64,7 @@ class IconDefinition implements IconDefinitionInterface {
       throw new IconDefinitionInvalidDataException(implode(' ', $errors));
     }
 
-    // @todo cleanup of data, check we don't need to pass these anywhere.
+    // Cleanup of data that do not need to be passed.
     unset($data['config']['sources'], $data['relative_path'], $data['absolute_path']);
 
     return new self($pack_id, $icon_id, $template, $source, $group, $data);

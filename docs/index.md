@@ -17,10 +17,10 @@ for further information.
 ## Usage
 
 To add an **Icon Pack**, you need to declare in your **module** or **theme** a
-specific file with suffix `*.ui_icons.yml`:
+specific file with suffix `*.icons.yml`:
 
-- `MY_MODULE_NAME.ui_icons.yml`
-- `MY_THEME_NAME.ui_icons.yml`
+- `MY_MODULE_NAME.icons.yml`
+- `MY_THEME_NAME.icons.yml`
 
 The definition file can declare multiple definitions.
 
@@ -325,7 +325,7 @@ This is optional as core extractors already include a preview template, this
 value is intended for custom extractor that display the icon in a different way.
 
 For example font based icons need this value as example for
-[Material icons](https://gitlab.com/ui-icons/ui-icons-example/-/blob/main/ui_icons_material/ui_icons_material.ui_icons.yml?ref_type=heads).
+[Material icons](https://gitlab.com/ui-icons/ui-icons-example/-/blob/main/ui_icons_material/ui_icons_material.icons.yml?ref_type=heads).
 
 ### Extractors (discover icons)
 
@@ -367,7 +367,7 @@ with suffix `-24`.
 - assets/icons/{icon_id}.svg
 ```
 
-Icons located in the Module or Theme where the `*.ui_icons.yml` file is:
+Icons located in the Module or Theme where the `*.icons.yml` file is:
 `my_module/assets/icons/`.
 
 ##### Web font Extractor
@@ -385,9 +385,9 @@ be useful with TTF discovery that include numbers and letters.
 
 Examples:
 
-- [Bootstrap](https://gitlab.com/ui-icons/ui-icons-example/-/blob/main/ui_icons_bootstrap/ui_icons_bootstrap.ui_icons.yml)
-- [Material](https://gitlab.com/ui-icons/ui-icons-example/-/blob/main/ui_icons_material/ui_icons_material.ui_icons.yml)
-- [Feather](https://gitlab.com/ui-icons/ui-icons-example/-/blob/main/ui_icons_feather/ui_icons_feather.ui_icons.yml)
+- [Bootstrap](https://gitlab.com/ui-icons/ui-icons-example/-/blob/main/ui_icons_bootstrap/ui_icons_bootstrap.icons.yml)
+- [Material](https://gitlab.com/ui-icons/ui-icons-example/-/blob/main/ui_icons_material/ui_icons_material.icons.yml)
+- [Feather](https://gitlab.com/ui-icons/ui-icons-example/-/blob/main/ui_icons_feather/ui_icons_feather.icons.yml)
 - [Font awesome](https://gitlab.com/ui-icons/ui-icons-example/-/tree/main/ui_icons_fontawesome)
   _Note_: Font awesome JavaScript loader is not compatible with `ui_icons_ckeditor`.
 

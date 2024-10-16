@@ -74,15 +74,13 @@ class Icon extends RenderElementBase {
     }
 
     if ($content = $icon->getData('content')) {
-      // Because content is an HTML string, we need to net escape it for render.
+      // Because content is an HTML string, we need to not escape it for render.
       $context['content'] = new FormattableMarkup($content, []);
     }
 
-    // @todo do we need all data?
     $element['inline-template'] = [
       '#type' => 'inline_template',
       '#template' => $icon->getTemplate(),
-      // @todo array_merge to define priority?
       '#context' => $context + $element['#settings'],
     ];
 

@@ -15,7 +15,7 @@ use Drupal\ui_icons\Plugin\IconPackManagerInterface;
  *
  * Tests values are from test module.
  *
- * @see ui_icons/tests/modules/ui_icons_test/ui_icons_test.ui_icons.yml
+ * @see ui_icons/tests/modules/ui_icons_test/ui_icons_test.icons.yml
  *
  * @group ui_icons
  */
@@ -144,7 +144,7 @@ class IconPackManagerKernelTest extends KernelTestBase {
    */
   public function testGetExtractorFormDefaults(): void {
     $actual = $this->pluginManagerIconPack->getExtractorFormDefaults('test_settings');
-    // @see ui_icons/tests/modules/ui_icons_test/ui_icons_test.ui_icons.yml
+    // @see ui_icons/tests/modules/ui_icons_test/ui_icons_test.icons.yml
     $expected = [
       'width' => 32,
       'height' => 33,
@@ -172,7 +172,7 @@ class IconPackManagerKernelTest extends KernelTestBase {
 
     $this->pluginManagerIconPack->getExtractorPluginForms($form, $form_state);
 
-    // @see ui_icons/tests/modules/ui_icons_test/ui_icons_test.ui_icons.yml
+    // @see ui_icons/tests/modules/ui_icons_test/ui_icons_test.icons.yml
     $this->assertCount(4, array_keys($form));
     $expected = ['test_path', 'test_svg', 'test_svg_sprite', 'test_settings'];
     $this->assertSame($expected, array_keys($form));

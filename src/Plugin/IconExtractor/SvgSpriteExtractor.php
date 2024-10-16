@@ -61,7 +61,8 @@ class SvgSpriteExtractor extends IconExtractorWithFinder {
       return [];
     }
 
-    // libxml_use_internal_errors(TRUE);
+    libxml_use_internal_errors(TRUE);
+
     if (!$svg = simplexml_load_string((string) $content)) {
       // @todo log a warning with the xml error.
       return [];

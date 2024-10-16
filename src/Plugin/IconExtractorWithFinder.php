@@ -79,7 +79,6 @@ abstract class IconExtractorWithFinder extends IconExtractorBase implements Icon
    *   If the config:sources value in definition is not set or not valid.
    */
   private function checkRequireConfigSources(): void {
-    // @todo json schema validation can avoid type check.
     if (
       !isset($this->configuration['config']['sources']) ||
       empty($this->configuration['config']['sources']) ||

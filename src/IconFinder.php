@@ -241,7 +241,6 @@ class IconFinder implements ContainerInjectionInterface, IconFinderInterface {
     $path = str_replace(self::GROUP_PATTERN, '*', $path);
     $finder = new Finder();
     try {
-      // @todo check sort performance impact as it's mostly used for tests.
       $finder
         ->depth(0)
         ->in($path)
