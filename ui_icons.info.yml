@@ -1,5 +1,7 @@
-name: 'UI Icons'
+name: 'UI Icons Form element'
 type: module
-description: 'Core Icons management for Drupal.'
+description: 'Core Icons main form element for Icon autocomplete.'
 package: User interface
 core_version_requirement: ^10.3 || ^11
+dependencies:
+  - ui_icons:ui_icons_backport

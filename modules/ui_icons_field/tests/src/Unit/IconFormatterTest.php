@@ -6,8 +6,8 @@ namespace Drupal\Tests\ui_icons_field\Unit\Plugin;
 
 use Drupal\Core\DependencyInjection\ContainerBuilder;
 use Drupal\Core\StringTranslation\TranslationInterface;
+use Drupal\Core\Theme\Icon\Plugin\IconPackManagerInterface;
 use Drupal\Tests\UnitTestCase;
-use Drupal\ui_icons\Plugin\IconPackManagerInterface;
 use Drupal\ui_icons_field\Plugin\Field\FieldFormatter\IconFormatter;
 
 /**
@@ -27,7 +27,7 @@ class IconFormatterTest extends UnitTestCase {
   /**
    * The IconPackManager instance.
    *
-   * @var \Drupal\ui_icons\Plugin\IconPackManagerInterface
+   * @var \Drupal\Core\Theme\Icon\Plugin\IconPackManagerInterface
    */
   private IconPackManagerInterface $pluginManagerIconPack;
 

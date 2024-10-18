@@ -10,7 +10,7 @@ use Drupal\Core\Field\WidgetBase;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
 use Drupal\Core\StringTranslation\TranslatableMarkup;
-use Drupal\ui_icons\IconDefinitionInterface;
+use Drupal\Core\Theme\Icon\IconDefinitionInterface;
 
 /**
  * Plugin implementation of the 'icon_widget' widget.

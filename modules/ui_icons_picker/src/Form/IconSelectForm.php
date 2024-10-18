@@ -12,7 +12,9 @@ use Drupal\Core\Ajax\HtmlCommand;
 use Drupal\Core\Ajax\ReplaceCommand;
 use Drupal\Core\Form\FormBase;
 use Drupal\Core\Form\FormStateInterface;
-use Drupal\ui_icons\Plugin\IconPackManagerInterface;
+use Drupal\Core\Theme\Icon\IconDefinitionInterface;
+use Drupal\Core\Theme\Icon\Plugin\IconPackManagerInterface;
+use Drupal\ui_icons\IconPreview;
 use Drupal\ui_icons_picker\Ajax\UpdateIconSelectionCommand;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
@@ -84,7 +86,7 @@ final class IconSelectForm extends FormBase {
     $icons = $modal_state['icon_list'];
 
     if (!empty($search) && strlen($search) >= self::SEARCH_MIN_LENGTH) {
-      $icons = array_filter($icons, fn($icon) => str_contains($icon->getId(), mb_strtolower($search)));
+      $icons = array_filter($icons, fn($icon) => $icon instanceof IconDefinitionInterface && str_contains($icon->getId(), mb_strtolower($search)));
     }
 
     $pager = $this->createPager($modal_state['page'], count($icons));
@@ -169,11 +171,13 @@ final class IconSelectForm extends FormBase {
     // Empty icon to delete selection.
     $options['_none_'] = '<div class="icon-preview-none icon-preview-wrapper"><img class="icon icon-preview" src="/core/themes/claro/images/icons/e34f4f/crossout.svg" title="None" width="32" height="32"></div>';
 
-    foreach ($icons as $icon) {
+    foreach (array_keys($icons) as $icon_id) {
+      $icon = $this->pluginManagerIconPack->getIcon($icon_id);
+      if (!$icon instanceof IconDefinitionInterface) {
+        continue;
+      }
       $id = $icon->getId();
-      $preview = $icon->getPreview([
-        'size' => 32,
-      ]);
+      $preview = IconPreview::getPreview($icon, ['size' => 32]);
       $form['list']['icons_preview'][$id] = [
         '#type' => 'html_tag',
         '#tag' => 'div',

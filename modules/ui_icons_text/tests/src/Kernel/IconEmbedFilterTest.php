@@ -4,8 +4,11 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\ui_icons_text\Kernel;
 
+@class_alias('Drupal\ui_icons_backport\IconDefinition', 'Drupal\Core\Theme\Icon\IconDefinition');
+@class_alias('Drupal\ui_icons_backport\Plugin\IconPackManagerInterface', 'Drupal\Core\Theme\Icon\Plugin\IconPackManagerInterface');
+
+use Drupal\Core\Theme\Icon\IconDefinition;
 use Drupal\KernelTests\KernelTestBase;
-use Drupal\ui_icons\IconDefinition;
 use Drupal\ui_icons_text\Plugin\Filter\IconEmbed;
 
 /**
@@ -42,6 +45,7 @@ class IconEmbedFilterTest extends KernelTestBase {
     'system',
     'filter',
     'ui_icons',
+    'ui_icons_backport',
     'ui_icons_text',
     'ui_icons_test',
   ];
@@ -56,7 +60,7 @@ class IconEmbedFilterTest extends KernelTestBase {
   /**
    * The icon pack manager service.
    *
-   * @var \Drupal\ui_icons\Plugin\IconPackManagerInterface
+   * @var \Drupal\Core\Theme\Icon\Plugin\IconPackManagerInterface
    */
   protected $pluginManagerIconPack;
 
@@ -66,7 +70,7 @@ class IconEmbedFilterTest extends KernelTestBase {
   protected function setUp(): void {
     parent::setUp();
 
-    $this->installConfig(['system', 'filter', 'ui_icons']);
+    $this->installConfig(['system', 'filter', 'ui_icons_backport', 'ui_icons']);
 
     $this->pluginManagerIconPack = $this->container->get('plugin.manager.icon_pack');
 
@@ -177,7 +181,6 @@ class IconEmbedFilterTest extends KernelTestBase {
       $this->assertEquals($html, $result->getProcessedText());
       return;
     }
-
     foreach ($expected_contains as $contain) {
       $this->assertStringContainsString($contain, $result->getProcessedText());
     }

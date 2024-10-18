@@ -9,9 +9,9 @@ use Drupal\Core\Ajax\CloseModalDialogCommand;
 use Drupal\Core\Ajax\HtmlCommand;
 use Drupal\Core\Form\FormBase;
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\Theme\Icon\IconDefinitionInterface;
 use Drupal\editor\Ajax\EditorDialogSave;
 use Drupal\filter\FilterFormatInterface;
-use Drupal\ui_icons\IconDefinitionInterface;
 
 /**
  * Provides a UI Icons Ckeditor5 form.

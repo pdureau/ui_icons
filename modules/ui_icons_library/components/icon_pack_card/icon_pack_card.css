@@ -1,0 +1,39 @@
+.card_grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 32px;
+}
+.card_grid .card {
+  padding: 0 1rem 0 1rem;
+}
+.card.disabled {
+  background-color: rgba(255, 72, 0, 0.507);
+}
+.card .link {
+  text-decoration: none;
+  color: inherit;
+}
+.card .link:hover {
+  text-decoration: none;
+  color: inherit;
+}
+.card svg,
+.card img,
+.card i,
+.card span {
+  margin-right: 0.7rem;
+  margin-bottom: 0.7rem;
+}
+
+.card .title {
+  margin-bottom: 0;
+}
+
+.card .description,
+.card .license {
+  margin: 0;
+}
+
+.card .content {
+  padding-top: 1rem;
+}

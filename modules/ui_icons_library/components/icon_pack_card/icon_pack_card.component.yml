@@ -1,0 +1,36 @@
+name: Icons pack card teaser
+status: stable
+props:
+  type: object
+  properties:
+    attributes:
+      type: Drupal\Core\Template\Attribute
+      title: Attributes
+      description: Wrapper attributes.
+    link:
+      type: string
+      format: iri-reference
+      title: Card link
+    enabled:
+      type: boolean
+      title: Card status
+    label:
+      type: string
+      title: Card label
+    description:
+      type: string
+      title: Card header description
+    version:
+      type: string
+      title: Card header version
+    license_name:
+      type: string
+      title: Card header license
+    license_url:
+      type: string
+      format: iri-reference
+      title: Card header license
+
+slots:
+  icons:
+    title: Card icons list

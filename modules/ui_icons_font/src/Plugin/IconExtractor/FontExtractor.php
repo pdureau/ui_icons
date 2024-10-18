@@ -8,10 +8,10 @@ namespace Drupal\ui_icons_font\Plugin\IconExtractor;
 use Drupal\Component\Serialization\Exception\InvalidDataTypeException;
 use Drupal\Component\Serialization\Yaml;
 use Drupal\Core\StringTranslation\TranslatableMarkup;
-use Drupal\ui_icons\Attribute\IconExtractor;
-use Drupal\ui_icons\Exception\IconPackConfigErrorException;
-use Drupal\ui_icons\Plugin\IconExtractorBase;
-use Drupal\ui_icons\PluginForm\IconPackExtractorForm;
+use Drupal\Core\Theme\Icon\Attribute\IconExtractor;
+use Drupal\Core\Theme\Icon\Exception\IconPackConfigErrorException;
+use Drupal\Core\Theme\Icon\IconExtractorBase;
+use Drupal\Core\Theme\Icon\IconPackExtractorForm;
 use FontLib\Font;
 
 /**

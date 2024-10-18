@@ -1,9 +1,9 @@
 <span{{ attributes }} style="border: solid 1px red; border-radius: 20px; padding: 5px; display: inline-block">
   {% if icon1 %}
-  <span class="button__icon">{{ icon(icon1.icon_pack, icon1.icon, icon1.settings) }}</span>
+  <span class="button__icon">{{ icon(icon1.pack_id, icon1.icon_id, icon1.settings) }}</span>
   {% endif %}
   <span class="button__label">{{ label }}</span>
   {% if icon2 %}
-  <span class="button__icon">{{ icon(icon2.icon_pack, icon2.icon, icon2.settings) }}</span>
+  <span class="button__icon">{{ icon(icon2.pack_id, icon2.icon_id, icon2.settings) }}</span>
   {% endif %}
 </span>

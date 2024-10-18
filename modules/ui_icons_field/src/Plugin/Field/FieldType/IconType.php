@@ -10,8 +10,8 @@ use Drupal\Core\Field\FieldItemBase;
 use Drupal\Core\Field\FieldStorageDefinitionInterface;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\StringTranslation\TranslatableMarkup;
+use Drupal\Core\Theme\Icon\Plugin\IconPackManagerInterface;
 use Drupal\Core\TypedData\DataDefinition;
-use Drupal\ui_icons\Plugin\IconPackManagerInterface;
 
 /**
  * Plugin implementation of the 'ui_icon' field type.
@@ -29,14 +29,14 @@ class IconType extends FieldItemBase {
   /**
    * Plugin manager for icons pack discovery and definitions.
    *
-   * @var \Drupal\ui_icons\Plugin\IconPackManagerInterface
+   * @var \Drupal\Core\Theme\Icon\Plugin\IconPackManagerInterface
    */
   private ?IconPackManagerInterface $pluginManagerIconPack = NULL;
 
   /**
    * Get the Icon pack plugin manager.
    *
-   * @return \Drupal\ui_icons\Plugin\IconPackManagerInterface
+   * @return \Drupal\Core\Theme\Icon\Plugin\IconPackManagerInterface
    *   Plugin manager for icon pack discovery and definitions.
    */
   private function getIconPackManager(): IconPackManagerInterface {
@@ -152,7 +152,7 @@ class IconType extends FieldItemBase {
     }
 
     return [
-      'target_id' => $icons[array_rand($icons)]->getId(),
+      'target_id' => array_rand($icons),
     ];
   }
 

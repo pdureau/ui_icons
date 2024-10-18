@@ -15,5 +15,6 @@ function ui_icons_library_theme(): array {
     'ui_icons_library' => [
       'variables' => ['icons' => [], 'search' => '', 'total' => 0, 'available' => 0],
     ],
+    'form_icon_pack' => ['render element' => 'form'],
   ];
 }

@@ -10,9 +10,9 @@ use Drupal\Core\Field\FieldItemListInterface;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
 use Drupal\Core\StringTranslation\TranslatableMarkup;
+use Drupal\Core\Theme\Icon\Plugin\IconPackManagerInterface;
 use Drupal\link_attributes\LinkAttributesManager;
 use Drupal\link_attributes\LinkWithAttributesWidgetTrait;
-use Drupal\ui_icons\Plugin\IconPackManagerInterface;
 use Drupal\ui_icons_field\Plugin\Field\FieldWidget\IconLinkWidget;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
@@ -46,7 +46,7 @@ class IconLinkWithAttributesWidget extends IconLinkWidget implements ContainerFa
    *   The Plugin settings.
    * @param array $third_party_settings
    *   The Plugin third party settings.
-   * @param \Drupal\ui_icons\Plugin\IconPackManagerInterface $pluginManagerIconPack
+   * @param \Drupal\Core\Theme\Icon\Plugin\IconPackManagerInterface $pluginManagerIconPack
    *   The ui icons pack manager.
    * @param \Drupal\link_attributes\LinkAttributesManager $linkAttributesManager
    *   The link attributes manager.

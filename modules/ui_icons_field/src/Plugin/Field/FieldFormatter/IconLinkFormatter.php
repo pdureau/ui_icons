@@ -11,9 +11,9 @@ use Drupal\Core\Field\FieldItemListInterface;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Path\PathValidatorInterface;
 use Drupal\Core\StringTranslation\TranslatableMarkup;
+use Drupal\Core\Theme\Icon\IconDefinitionInterface;
+use Drupal\Core\Theme\Icon\Plugin\IconPackManagerInterface;
 use Drupal\link\Plugin\Field\FieldFormatter\LinkFormatter;
-use Drupal\ui_icons\IconDefinitionInterface;
-use Drupal\ui_icons\Plugin\IconPackManagerInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
@@ -47,7 +47,7 @@ class IconLinkFormatter extends LinkFormatter {
    *   Third party settings.
    * @param \Drupal\Core\Path\PathValidatorInterface $path_validator
    *   The path validator service.
-   * @param \Drupal\ui_icons\Plugin\IconPackManagerInterface $pluginManagerIconPack
+   * @param \Drupal\Core\Theme\Icon\Plugin\IconPackManagerInterface $pluginManagerIconPack
    *   The ui icons pack manager.
    * @param \Drupal\Core\Entity\EntityDisplayRepositoryInterface $entityDisplayRepository
    *   Manage entity view mode configurations and displays.

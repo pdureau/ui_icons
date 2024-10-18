@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\ui_icons_font\Unit;
 
+use Drupal\Core\Theme\Icon\Exception\IconPackConfigErrorException;
 use Drupal\Tests\UnitTestCase;
-use Drupal\ui_icons\Exception\IconPackConfigErrorException;
 use Drupal\ui_icons_font\Plugin\IconExtractor\FontExtractor;
 
 /**

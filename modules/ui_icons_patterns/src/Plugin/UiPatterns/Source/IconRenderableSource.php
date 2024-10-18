@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace Drupal\ui_icons_patterns\Plugin\UiPatterns\Source;
 
 use Drupal\Core\StringTranslation\TranslatableMarkup;
-use Drupal\ui_icons\IconDefinition;
+use Drupal\Core\Theme\Icon\IconDefinition;
 use Drupal\ui_patterns\Attribute\Source;
 
 /**
@@ -30,8 +30,8 @@ class IconRenderableSource extends IconSource {
     [$pack_id, $icon_id] = explode(IconDefinition::ICON_SEPARATOR, $value['icon_id']);
     return [
       '#type' => 'icon',
-      '#icon_pack' => $pack_id ?: '',
-      '#icon' => $icon_id ?: '',
+      '#pack_id' => $pack_id ?: '',
+      '#icon_id' => $icon_id ?: '',
       '#settings' => $value['icon_settings'][$pack_id] ?? [],
     ];
   }

@@ -1,6 +1,4 @@
-name: 'UI Icons Tests'
+name: 'UI Icon Tests'
 type: module
-description: 'Provides test icons and settings.'
+description: 'Provides test for icons and settings.'
 package: 'Testing'
-dependencies:
-  - ui_icons:ui_icons

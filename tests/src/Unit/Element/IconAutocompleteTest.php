@@ -4,15 +4,21 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\ui_icons\Unit\Element;
 
+@class_alias('Drupal\ui_icons_backport\IconDefinition', 'Drupal\Core\Theme\Icon\IconDefinition');
+@class_alias('Drupal\ui_icons_backport\IconDefinitionInterface', 'Drupal\Core\Theme\Icon\IconDefinitionInterface');
+@class_alias('Drupal\ui_icons_backport\Plugin\IconPackManagerInterface', 'Drupal\Core\Theme\Icon\Plugin\IconPackManagerInterface');
+@class_alias('Drupal\Tests\ui_icons_backport\IconTestTrait', 'Drupal\Tests\Core\Theme\Icon\IconTestTrait');
+
 // cspell:ignore corge quux
 use Drupal\Core\DependencyInjection\ContainerBuilder;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Render\RendererInterface;
 use Drupal\Core\StringTranslation\TranslatableMarkup;
-use Drupal\Tests\ui_icons\Unit\IconUnitTestCase;
+use Drupal\Core\Theme\Icon\IconDefinition;
+use Drupal\Core\Theme\Icon\Plugin\IconPackManagerInterface;
+use Drupal\Tests\Core\Theme\Icon\IconTestTrait;
+use Drupal\Tests\UnitTestCase;
 use Drupal\ui_icons\Element\IconAutocomplete;
-use Drupal\ui_icons\IconDefinition;
-use Drupal\ui_icons\Plugin\IconPackManagerInterface;
 use Prophecy\Argument;
 use Symfony\Component\HttpFoundation\Request;
 
@@ -21,7 +27,9 @@ use Symfony\Component\HttpFoundation\Request;
  *
  * @group ui_icons
  */
-class IconAutocompleteTest extends IconUnitTestCase {
+class IconAutocompleteTest extends UnitTestCase {
+
+  use IconTestTrait;
 
   /**
    * The container.

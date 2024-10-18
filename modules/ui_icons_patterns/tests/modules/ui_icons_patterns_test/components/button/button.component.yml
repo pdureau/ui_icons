@@ -12,21 +12,21 @@ props:
       title: 'Icon 2, with implicit typing'
       type: object
       properties:
-        icon_pack: {type: 'string'}
-        icon: {type: 'string'}
+        pack_id: {type: 'string'}
+        icon_id: {type: 'string'}
 stories:
   preview:
     title: Preview
     slots:
       label:
         type: ui_icon
-        icon_pack: icon_pack_example_drupal_core
-        icon: circle
+        pack_id: icon_pack_example_drupal_core
+        icon_id: circle
     props:
       icon1:
-        icon_pack: 'icon_pack_example_drupal_core'
-        icon: 'arrow-left'
+        pack_id: 'icon_pack_example_drupal_core'
+        icon_id: 'arrow-left'
       icon2:
-        icon_pack: 'icon_pack_example_drupal_core'
-        icon: 'arrow-right'
+        pack_id: 'icon_pack_example_drupal_core'
+        icon_id: 'arrow-right'
         settings: {}

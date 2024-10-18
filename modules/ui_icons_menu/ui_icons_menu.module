@@ -5,9 +5,10 @@
  * Drupal hooks and global functions for ui_icons_menu module.
  */
 
+use Drupal\Component\Render\FormattableMarkup;
 use Drupal\Core\Entity\EntityTypeInterface;
 use Drupal\Core\Routing\RouteMatchInterface;
-use Drupal\ui_icons\IconDefinition;
+use Drupal\Core\Theme\Icon\IconDefinition;
 
 /**
  * Implements hook_help().
@@ -31,7 +32,7 @@ function ui_icons_menu_entity_base_field_info_alter(array &$fields, EntityTypeIn
   if ($entity_type->id() === 'menu_link_content') {
     $moduleDiscovery = \Drupal::service('module_handler');
     $type = 'icon_link_widget';
-    if ($moduleDiscovery->moduleExists('link_attributes')) {
+    if ($moduleDiscovery->moduleExists('ui_icons_field_link_attributes')) {
       $type = 'icon_link_attributes_widget';
     }
     $fields['link']->setDisplayOptions('form', [
@@ -97,7 +98,7 @@ function ui_icons_menu__preprocess_menu_item(array &$item): void {
     return;
   }
 
-  /** @var \Drupal\ui_icons\Plugin\IconPackManagerInterface $pluginManagerIconPack */
+  /** @var \Drupal\Core\Theme\Icon\Plugin\IconPackManagerInterface $pluginManagerIconPack */
   $pluginManagerIconPack = \Drupal::service('plugin.manager.icon_pack');
   $icon = $pluginManagerIconPack->getIcon($icon_full_id);
 
@@ -109,27 +110,34 @@ function ui_icons_menu__preprocess_menu_item(array &$item): void {
   if (isset($options['icon']['settings'][$icon->getPackId()])) {
     $icon_settings = $options['icon']['settings'][$icon->getPackId()];
   }
-  $icon = $icon->getRenderable($icon_settings);
+  $icon_renderable = $icon->getRenderable($icon_settings);
+  $icon = \Drupal::service('renderer')->renderInIsolation($icon_renderable);
 
   $icon_display = $options['icon_display'] ?? 'before';
   switch ($icon_display) {
     case 'before':
-      $item['title'] = [
-        'icon' => $icon,
-        'title' => ['#markup' => '<span class="ui-icons-menu-text">' . $item['title'] . '</span>'],
-      ];
+      $item['title'] = new FormattableMarkup('@icon<span class="i-icons-menu-text">@title</span>', [
+        '@title' => $item['title'],
+        '@icon' => $icon,
+      ]);
       break;
 
     case 'after':
-      $item['title'] = [
-        'title' => ['#markup' => '<span class="ui-icons-menu-text">' . $item['title'] . '</span>'],
-        'icon' => $icon,
-      ];
+      $item['title'] = new FormattableMarkup('<span class="i-icons-menu-text">@title</span>@icon', [
+        '@title' => $item['title'],
+        '@icon' => $icon,
+      ]);
       break;
 
     default:
-      $item['title'] = $icon;
+      $item['title'] = new FormattableMarkup('@icon', [
+        '@icon' => $icon,
+      ]);
       break;
   }
-
+  // print("\n");
+  // print_r($icon);
+  // print("\n");
+  // print_r($item['title']);
+  // print("\n");
 }

@@ -15,9 +15,9 @@ use Drupal\Core\Render\Attribute\FormElement;
 use Drupal\Core\Render\Element;
 use Drupal\Core\Render\Element\FormElementBase;
 use Drupal\Core\StringTranslation\TranslatableMarkup;
-use Drupal\ui_icons\IconDefinition;
-use Drupal\ui_icons\IconDefinitionInterface;
-use Drupal\ui_icons\Plugin\IconPackManagerInterface;
+use Drupal\Core\Theme\Icon\IconDefinition;
+use Drupal\Core\Theme\Icon\IconDefinitionInterface;
+use Drupal\Core\Theme\Icon\Plugin\IconPackManagerInterface;
 use Symfony\Component\HttpFoundation\Request;
 
 /**
@@ -103,7 +103,7 @@ class IconAutocomplete extends FormElementBase {
       }
       $return = $input;
 
-      /** @var \Drupal\ui_icons\IconDefinitionInterface $icon */
+      /** @var \Drupal\Core\Theme\Icon\IconDefinitionInterface $icon */
       $icon = self::iconPack()->getIcon($input['icon_id']);
       if (NULL === $icon) {
         return $return;
@@ -118,7 +118,7 @@ class IconAutocomplete extends FormElementBase {
     }
     else {
       if (!empty($element['#default_value']) && is_string($element['#default_value'])) {
-        /** @var \Drupal\ui_icons\IconDefinitionInterface $icon */
+        /** @var \Drupal\Core\Theme\Icon\IconDefinitionInterface $icon */
         $icon = self::iconPack()->getIcon($element['#default_value']);
       }
     }
@@ -199,7 +199,7 @@ class IconAutocomplete extends FormElementBase {
       '#maxlength' => 128,
       '#value' => $element['#value']['icon_id'] ?? $element['#default_value'] ?? '',
       '#error_no_message' => TRUE,
-      // Ensure the validateIcon is run.
+      // Ensure the ::validateIcon run.
       '#limit_validation_errors' => [$element['#parents']],
     ];
 
@@ -336,7 +336,7 @@ class IconAutocomplete extends FormElementBase {
       return;
     }
 
-    /** @var \Drupal\ui_icons\IconDefinitionInterface $icon */
+    /** @var \Drupal\Core\Theme\Icon\IconDefinitionInterface $icon */
     $icon = self::iconPack()->getIcon($input['icon_id']);
     if (NULL === $icon || !$icon instanceof IconDefinitionInterface) {
       $form_state->setError($element['icon_id'], new TranslatableMarkup('Icon for %title is invalid: %icon.<br>Please search again and select a result in the list.', [
@@ -359,7 +359,7 @@ class IconAutocomplete extends FormElementBase {
     $settings = [];
     if (isset($input['icon_settings'][$pack_id])) {
       $settings[$pack_id] = $input['icon_settings'][$pack_id];
-      // @todo validateConfigurationForm from extractor plugin.
+      // @todo validateConfigurationForm from extractor plugin?
     }
 
     if (isset($element['#return_id']) && TRUE === $element['#return_id']) {
@@ -373,7 +373,7 @@ class IconAutocomplete extends FormElementBase {
   /**
    * Wraps the icon pack service.
    *
-   * @return \Drupal\ui_icons\Plugin\IconPackManagerInterface
+   * @return \Drupal\Core\Theme\Icon\Plugin\IconPackManagerInterface
    *   The icon pack manager service.
    */
   protected static function iconPack(): IconPackManagerInterface {

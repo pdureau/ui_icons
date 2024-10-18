@@ -5,17 +5,17 @@ declare(strict_types=1);
 namespace Drupal\ui_icons_test\Plugin\IconExtractor;
 
 use Drupal\Core\StringTranslation\TranslatableMarkup;
-use Drupal\ui_icons\Attribute\IconExtractor;
-use Drupal\ui_icons\Plugin\IconExtractorWithFinder;
-use Drupal\ui_icons\PluginForm\IconPackExtractorForm;
+use Drupal\Core\Theme\Icon\Attribute\IconExtractor;
+use Drupal\Core\Theme\Icon\IconExtractorWithFinder;
+use Drupal\Core\Theme\Icon\IconPackExtractorForm;
 
 /**
- * Plugin implementation of the icon_extractor.
+ * Test plugin implementation of the icon_extractor.
  */
 #[IconExtractor(
   id: 'test_finder',
   label: new TranslatableMarkup('Test finder'),
-  description: new TranslatableMarkup('Test finder extractor.'),
+  description: new TranslatableMarkup('Test extractor with files finder.'),
   forms: [
     'settings' => IconPackExtractorForm::class,
   ]

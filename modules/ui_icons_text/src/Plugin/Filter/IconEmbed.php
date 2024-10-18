@@ -13,12 +13,12 @@ use Drupal\Core\Render\RenderContext;
 use Drupal\Core\Render\RendererInterface;
 use Drupal\Core\StringTranslation\TranslatableMarkup;
 use Drupal\Core\Template\Attribute;
+use Drupal\Core\Theme\Icon\IconDefinitionInterface;
+use Drupal\Core\Theme\Icon\Plugin\IconPackManagerInterface;
 use Drupal\filter\Attribute\Filter;
 use Drupal\filter\FilterProcessResult;
 use Drupal\filter\Plugin\FilterBase;
 use Drupal\filter\Plugin\FilterInterface;
-use Drupal\ui_icons\IconDefinitionInterface;
-use Drupal\ui_icons\Plugin\IconPackManagerInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
@@ -41,7 +41,7 @@ class IconEmbed extends FilterBase implements ContainerFactoryPluginInterface {
   /**
    * The ui icons service.
    *
-   * @var \Drupal\ui_icons\Plugin\IconPackManagerInterface
+   * @var \Drupal\Core\Theme\Icon\Plugin\IconPackManagerInterface
    */
   protected $pluginManagerIconPack;
 
@@ -68,7 +68,7 @@ class IconEmbed extends FilterBase implements ContainerFactoryPluginInterface {
    *   The plugin ID for the plugin instance.
    * @param mixed $plugin_definition
    *   The plugin implementation definition.
-   * @param \Drupal\ui_icons\Plugin\IconPackManagerInterface $plugin_manager_icon_pack
+   * @param \Drupal\Core\Theme\Icon\Plugin\IconPackManagerInterface $plugin_manager_icon_pack
    *   The icon manager service.
    * @param \Drupal\Core\Render\RendererInterface $renderer
    *   The renderer.
@@ -165,6 +165,7 @@ class IconEmbed extends FilterBase implements ContainerFactoryPluginInterface {
         $settings = json_decode($data_settings, TRUE);
       }
 
+      // @todo do not call getIcon() here as it double with preRenderIcon().
       $icon = $this->pluginManagerIconPack->getIcon($icon_id);
       assert($icon === NULL || $icon instanceof IconDefinitionInterface);
 
@@ -224,7 +225,7 @@ class IconEmbed extends FilterBase implements ContainerFactoryPluginInterface {
   /**
    * Wrap icon renderable in a specific class.
    *
-   * @param \Drupal\ui_icons\IconDefinitionInterface $icon
+   * @param \Drupal\Core\Theme\Icon\IconDefinitionInterface $icon
    *   The icon to render.
    * @param array $settings
    *   Settings to pass as context to the rendered icon.

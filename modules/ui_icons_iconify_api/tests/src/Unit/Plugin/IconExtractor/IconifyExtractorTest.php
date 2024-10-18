@@ -4,9 +4,12 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\ui_icons_iconify_api\Unit\Plugin\IconExtractor;
 
-use Drupal\Tests\ui_icons\Unit\IconUnitTestCase;
-use Drupal\ui_icons\Exception\IconPackConfigErrorException;
-use Drupal\ui_icons\IconDefinition;
+@class_alias('Drupal\ui_icons_backport\IconExtractorBase', 'Drupal\Core\Theme\Icon\IconExtractorBase');
+@class_alias('Drupal\ui_icons_backport\Exception\IconPackConfigErrorException', 'Drupal\Core\Theme\Icon\Exception\IconPackConfigErrorException');
+
+use Drupal\Core\Theme\Icon\Exception\IconPackConfigErrorException;
+use Drupal\Core\Theme\Icon\IconDefinition;
+use Drupal\Tests\UnitTestCase;
 use Drupal\ui_icons_iconify_api\Plugin\IconExtractor\IconifyExtractor;
 
 /**
@@ -14,7 +17,7 @@ use Drupal\ui_icons_iconify_api\Plugin\IconExtractor\IconifyExtractor;
  *
  * @group ui_icons
  */
-class IconifyExtractorTest extends IconUnitTestCase {
+class IconifyExtractorTest extends UnitTestCase {
 
   /**
    * The Iconify API service.
@@ -84,7 +87,6 @@ class IconifyExtractorTest extends IconUnitTestCase {
         NULL,
         [
           'id' => 'foo',
-          'template' => '_bar_',
         ],
       ),
       IconDefinition::create(
@@ -95,7 +97,6 @@ class IconifyExtractorTest extends IconUnitTestCase {
         NULL,
         [
           'id' => 'foo',
-          'template' => '_bar_',
         ],
       ),
       IconDefinition::create(
@@ -106,7 +107,6 @@ class IconifyExtractorTest extends IconUnitTestCase {
         NULL,
         [
           'id' => 'foo',
-          'template' => '_bar_',
         ],
       ),
       IconDefinition::create(
@@ -117,7 +117,6 @@ class IconifyExtractorTest extends IconUnitTestCase {
         NULL,
         [
           'id' => 'foo',
-          'template' => '_bar_',
         ],
       ),
     ];

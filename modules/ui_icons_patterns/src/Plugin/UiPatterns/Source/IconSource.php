@@ -6,7 +6,7 @@ namespace Drupal\ui_icons_patterns\Plugin\UiPatterns\Source;
 
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\StringTranslation\TranslatableMarkup;
-use Drupal\ui_icons\IconDefinition;
+use Drupal\Core\Theme\Icon\IconDefinition;
 use Drupal\ui_patterns\Attribute\Source;
 use Drupal\ui_patterns\SourcePluginBase;
 
@@ -28,8 +28,8 @@ class IconSource extends SourcePluginBase {
     $value = $this->getSetting('value');
     [$pack_id, $icon_id] = explode(IconDefinition::ICON_SEPARATOR, $value['icon_id']);
     return [
-      'icon_pack' => $pack_id ?: '',
-      'icon' => $icon_id ?: '',
+      'pack_id' => $pack_id ?: '',
+      'icon_id' => $icon_id ?: '',
       'settings' => $value['icon_settings'][$pack_id] ?? [],
     ];
   }

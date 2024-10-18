@@ -5,12 +5,12 @@ declare(strict_types=1);
 namespace Drupal\ui_icons_test\Plugin\IconExtractor;
 
 use Drupal\Core\StringTranslation\TranslatableMarkup;
-use Drupal\ui_icons\Attribute\IconExtractor;
-use Drupal\ui_icons\Plugin\IconExtractorBase;
-use Drupal\ui_icons\PluginForm\IconPackExtractorForm;
+use Drupal\Core\Theme\Icon\Attribute\IconExtractor;
+use Drupal\Core\Theme\Icon\IconExtractorBase;
+use Drupal\Core\Theme\Icon\IconPackExtractorForm;
 
 /**
- * Plugin implementation of the icon_extractor.
+ * Test plugin implementation of the icon_extractor.
  */
 #[IconExtractor(
   id: 'test',

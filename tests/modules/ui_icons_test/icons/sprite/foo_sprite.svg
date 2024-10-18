@@ -1,4 +1,4 @@
-<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" data-test="sprite">
   <symbol id="icon-test-1" viewBox="0 0 50 50">
     <circle cx="25" cy="25" r="20" stroke="red" stroke-width="4" fill="blue" />
   </symbol>
@@ -6,6 +6,6 @@
     <circle cx="25" cy="25" r="20" stroke="blue" stroke-width="4" fill="red" />
   </symbol>
   <symbol id="icon-test-3" viewBox="0 0 50 50">
-    <circle cx="25" cy="25" r="20" stroke="yellow" stroke-width="4" fill="orange" />
+    <circle cx="25" cy="25" r="20" stroke="orange" stroke-width="4" fill="cyan" />
   </symbol>
 </svg>

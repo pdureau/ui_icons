@@ -10,9 +10,9 @@ use Drupal\Core\Field\FieldItemListInterface;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
 use Drupal\Core\StringTranslation\TranslatableMarkup;
+use Drupal\Core\Theme\Icon\IconDefinitionInterface;
+use Drupal\Core\Theme\Icon\Plugin\IconPackManagerInterface;
 use Drupal\link\Plugin\Field\FieldWidget\LinkWidget;
-use Drupal\ui_icons\IconDefinitionInterface;
-use Drupal\ui_icons\Plugin\IconPackManagerInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
@@ -38,7 +38,7 @@ class IconLinkWidget extends LinkWidget implements ContainerFactoryPluginInterfa
    *   The Plugin settings.
    * @param array $third_party_settings
    *   The Plugin third party settings.
-   * @param \Drupal\ui_icons\Plugin\IconPackManagerInterface $pluginManagerIconPack
+   * @param \Drupal\Core\Theme\Icon\Plugin\IconPackManagerInterface $pluginManagerIconPack
    *   The ui icons pack manager.
    */
   public function __construct(

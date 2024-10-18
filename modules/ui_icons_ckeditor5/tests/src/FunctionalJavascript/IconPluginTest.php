@@ -4,13 +4,15 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\ui_icons_ckeditor5\Functional;
 
+@class_alias('Drupal\ui_icons_backport\IconDefinition', 'Drupal\Core\Theme\Icon\IconDefinition');
+
 use Behat\Mink\Element\NodeElement;
+use Drupal\Core\Theme\Icon\IconDefinition;
 use Drupal\FunctionalJavascriptTests\WebDriverTestBase;
 use Drupal\Tests\ckeditor5\Traits\CKEditor5TestTrait;
 use Drupal\ckeditor5\Plugin\Editor\CKEditor5;
 use Drupal\editor\Entity\Editor;
 use Drupal\filter\Entity\FilterFormat;
-use Drupal\ui_icons\IconDefinition;
 use Symfony\Component\Validator\ConstraintViolation;
 
 /**

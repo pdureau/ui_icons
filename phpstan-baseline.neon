@@ -1,6 +1,51 @@
 parameters:
 	ignoreErrors:
 		-
+			message: "#^Cannot access offset 'description' on array\\|Drupal\\\\Component\\\\Plugin\\\\Definition\\\\PluginDefinitionInterface\\.$#"
+			count: 1
+			path: modules/ui_icons_backport/src/IconExtractorBase.php
+
+		-
+			message: "#^Cannot access offset 'label' on array\\|Drupal\\\\Component\\\\Plugin\\\\Definition\\\\PluginDefinitionInterface\\.$#"
+			count: 1
+			path: modules/ui_icons_backport/src/IconExtractorBase.php
+
+		-
+			message: "#^Call to an undefined method Drupal\\\\Core\\\\Form\\\\FormStateInterface\\:\\:getCompleteFormState\\(\\)\\.$#"
+			count: 1
+			path: modules/ui_icons_backport/src/IconExtractorSettingsForm.php
+
+		-
+			message: "#^Match expression does not handle remaining value\\: mixed$#"
+			count: 1
+			path: modules/ui_icons_backport/src/IconExtractorSettingsForm.php
+
+		-
+			message: "#^Call to an undefined method Drupal\\\\Component\\\\Plugin\\\\PluginInspectionInterface\\:\\:buildConfigurationForm\\(\\)\\.$#"
+			count: 1
+			path: modules/ui_icons_backport/src/IconPackExtractorForm.php
+
+		-
+			message: "#^Call to an undefined method Drupal\\\\Component\\\\Plugin\\\\PluginInspectionInterface\\:\\:submitConfigurationForm\\(\\)\\.$#"
+			count: 1
+			path: modules/ui_icons_backport/src/IconPackExtractorForm.php
+
+		-
+			message: "#^Call to an undefined method Drupal\\\\Component\\\\Plugin\\\\PluginInspectionInterface\\:\\:validateConfigurationForm\\(\\)\\.$#"
+			count: 1
+			path: modules/ui_icons_backport/src/IconPackExtractorForm.php
+
+		-
+			message: "#^Method Drupal\\\\ui_icons_backport\\\\Plugin\\\\IconPackManager\\:\\:processDefinition\\(\\) has parameter \\$definition with no type specified\\.$#"
+			count: 1
+			path: modules/ui_icons_backport/src/Plugin/IconPackManager.php
+
+		-
+			message: "#^Method Drupal\\\\ui_icons_backport\\\\Plugin\\\\IconPackManager\\:\\:processDefinition\\(\\) has parameter \\$plugin_id with no type specified\\.$#"
+			count: 1
+			path: modules/ui_icons_backport/src/Plugin/IconPackManager.php
+
+		-
 			message: "#^Call to an undefined method Drupal\\\\filter\\\\FilterPluginCollection\\|Drupal\\\\filter\\\\Plugin\\\\FilterInterface\\:\\:has\\(\\)\\.$#"
 			count: 1
 			path: modules/ui_icons_ckeditor5/src/Plugin/CKEditor5Plugin/IconPlugin.php
@@ -64,43 +109,3 @@ parameters:
 			message: "#^Parameter \\#2 \\$content of class Drupal\\\\Core\\\\Ajax\\\\ReplaceCommand constructor expects array\\|string, Drupal\\\\Component\\\\Render\\\\MarkupInterface given\\.$#"
 			count: 1
 			path: src/Element/IconAutocomplete.php
-
-		-
-			message: "#^Call to an undefined method Drupal\\\\Core\\\\Form\\\\FormStateInterface\\:\\:getCompleteFormState\\(\\)\\.$#"
-			count: 1
-			path: src/Form/IconExtractorSettingsForm.php
-
-		-
-			message: "#^Match expression does not handle remaining value\\: mixed$#"
-			count: 1
-			path: src/Form/IconExtractorSettingsForm.php
-
-		-
-			message: "#^Cannot access offset 'description' on array\\|Drupal\\\\Component\\\\Plugin\\\\Definition\\\\PluginDefinitionInterface\\.$#"
-			count: 1
-			path: src/Plugin/IconExtractorBase.php
-
-		-
-			message: "#^Cannot access offset 'label' on array\\|Drupal\\\\Component\\\\Plugin\\\\Definition\\\\PluginDefinitionInterface\\.$#"
-			count: 1
-			path: src/Plugin/IconExtractorBase.php
-
-		-
-			message: "#^Method Drupal\\\\ui_icons\\\\Plugin\\\\IconPackManager\\:\\:processDefinition\\(\\) has parameter \\$definition with no type specified\\.$#"
-			count: 1
-			path: src/Plugin/IconPackManager.php
-
-		-
-			message: "#^Method Drupal\\\\ui_icons\\\\Plugin\\\\IconPackManager\\:\\:processDefinition\\(\\) has parameter \\$plugin_id with no type specified\\.$#"
-			count: 1
-			path: src/Plugin/IconPackManager.php
-
-		-
-			message: "#^Access to an undefined property Drupal\\\\Core\\\\Plugin\\\\PluginFormInterface\\:\\:\\$plugin\\.$#"
-			count: 3
-			path: src/PluginForm/IconPackExtractorForm.php
-
-		-
-			message: "#^PHPDoc tag @var with type Drupal\\\\Core\\\\Plugin\\\\PluginFormInterface is not subtype of native type \\$this\\(Drupal\\\\ui_icons\\\\PluginForm\\\\IconPackExtractorForm\\)\\.$#"
-			count: 3
-			path: src/PluginForm/IconPackExtractorForm.php

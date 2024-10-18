@@ -4,10 +4,10 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\ui_icons_field\Functional;
 
+use Drupal\Core\Theme\Icon\IconDefinition;
 use Drupal\Tests\BrowserTestBase;
 use Drupal\field\Entity\FieldConfig;
 use Drupal\field\Entity\FieldStorageConfig;
-use Drupal\ui_icons\IconDefinition;
 
 /**
  * Test the UI icons field features.

@@ -11,7 +11,7 @@ use Drupal\Core\Field\FormatterBase;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
 use Drupal\Core\StringTranslation\TranslatableMarkup;
-use Drupal\ui_icons\Plugin\IconPackManagerInterface;
+use Drupal\Core\Theme\Icon\Plugin\IconPackManagerInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
@@ -43,7 +43,7 @@ class IconFormatter extends FormatterBase implements ContainerFactoryPluginInter
    *   The view mode.
    * @param array $third_party_settings
    *   The Plugin third party settings.
-   * @param \Drupal\ui_icons\Plugin\IconPackManagerInterface $pluginManagerIconPack
+   * @param \Drupal\Core\Theme\Icon\Plugin\IconPackManagerInterface $pluginManagerIconPack
    *   The ui icons pack manager.
    */
   public function __construct(

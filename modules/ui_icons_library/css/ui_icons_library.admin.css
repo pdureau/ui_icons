@@ -1,9 +1,27 @@
-.ui-icons-library-search > div {
-  display: inline-block;
+.card-page {
+  display: flex;
 }
 
-.ui-icons-library-search div.ui-icons-wrapper {
-  display: block;
+.sidebar {
+  width: 20%;
+  margin: 0 1rem 0 1rem;
+}
+
+.content {
+  width: 80%;
+}
+
+@media (max-width: 768px) {
+  .sidebar {
+    width: 100%;
+  }
+  .content {
+    width: 100%;
+  }
+}
+
+.ui-icons-library-search .filters > div {
+  display: inline-block;
 }
 
 .ui-icons-library-search .form-submit {
@@ -12,49 +30,7 @@
 
 .ui-icons-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(64px, 1fr));
+  grid-template-columns: repeat(auto-fill, minmax(32px, 120px));
   grid-gap: 6px;
   margin-block: 6px;
-}
-
-.ui-icons-item {
-  position: relative;
-  overflow: hidden;
-  padding: 0.2rem;
-  border: 1px solid #f7f7f7;
-  border-radius: 5px;
-  background-color: #f7f7f7;
-  box-shadow: 2px 2px 2px 1px rgb(0, 0, 0, 0.2);
-}
-
-.ui-icons-item-inner {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  padding: 1px;
-}
-
-.icon-preview-wrapper {
-  height: 3rem;
-}
-
-.icon-preview-wrapper > svg,
-.icon-preview-wrapper > img {
-  display: block;
-  max-width: 2.8rem;
-  max-height: 2.8rem;
-  margin: auto;
-  text-align: center;
-  line-height: 2.8rem;
-}
-
-.ui-icons-item-name {
-  overflow: hidden;
-  max-width: 100%;
-  padding: 0.2rem 0 0;
-  white-space: nowrap;
-  text-transform: capitalize;
-  text-overflow: ellipsis;
-  font-size: 11px;
-  line-height: 12px;
 }

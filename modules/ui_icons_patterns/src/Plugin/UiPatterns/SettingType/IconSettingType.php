@@ -2,7 +2,7 @@
 
 namespace Drupal\ui_icons_patterns\Plugin\UIPatterns\SettingType;
 
-use Drupal\ui_icons\IconDefinition;
+use Drupal\Core\Theme\Icon\IconDefinition;
 use Drupal\ui_patterns_settings\Definition\PatternDefinitionSetting;
 use Drupal\ui_patterns_settings\Plugin\PatternSettingTypeBase;
 
@@ -38,21 +38,21 @@ class IconSettingType extends PatternSettingTypeBase {
   public function preprocess($value, array $context) {
     if (!is_array($value)) {
       return [
-        'icon_pack' => '',
-        'icon' => '',
+        'pack_id' => '',
+        'icon_id' => '',
         'settings' => [],
       ];
     }
     // Value not coming from ::settingsForm(), like component definition's
     // preview, has an already resolved flat structure with primitive only.
-    if (isset($value['icon']) && is_string($value['icon']) && isset($value['icon_pack'])) {
+    if (isset($value['icon_id']) && is_string($value['icon_id']) && isset($value['pack_id'])) {
       return $value;
     }
     // Data coming from ::settingsForm() have an IconDefinition objects.
     [$pack_id, $icon_id] = explode(IconDefinition::ICON_SEPARATOR, $value['target_id']);
     return [
-      'icon_pack' => $pack_id ?: '',
-      'icon' => $icon_id ?: '',
+      'pack_id' => $pack_id ?: '',
+      'icon_id' => $icon_id ?: '',
       'settings' => $value['settings'][$pack_id] ?? [],
     ];
   }

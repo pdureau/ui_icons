@@ -4,11 +4,15 @@ declare(strict_types=1);
 
 namespace Drupal\ui_icons\Controller;
 
+@class_alias('Drupal\ui_icons_backport\Plugin\IconPackManagerInterface', 'Drupal\Core\Theme\Icon\Plugin\IconPackManagerInterface');
+
 use Drupal\Component\Render\FormattableMarkup;
 use Drupal\Core\Controller\ControllerBase;
 use Drupal\Core\Render\RendererInterface;
-use Drupal\ui_icons\IconDefinitionInterface;
-use Drupal\ui_icons\Plugin\IconPackManagerInterface;
+use Drupal\Core\Theme\Icon\IconDefinition;
+use Drupal\Core\Theme\Icon\IconDefinitionInterface;
+use Drupal\Core\Theme\Icon\Plugin\IconPackManagerInterface;
+use Drupal\ui_icons\IconPreview;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -21,6 +25,7 @@ use Symfony\Component\HttpFoundation\Request;
 class IconAutocompleteController extends ControllerBase {
 
   private const SEARCH_MIN_LENGTH = 2;
+  private const SEARCH_MAX_RESULT = 20;
 
   public function __construct(
     private readonly IconPackManagerInterface $pluginManagerIconPack,
@@ -45,6 +50,8 @@ class IconAutocompleteController extends ControllerBase {
    *
    * @return \Symfony\Component\HttpFoundation\JsonResponse
    *   A JSON response containing the autocomplete suggestions for Icons.
+   *
+   * @todo cache search for faster lookup.
    */
   public function handleSearchIcons(Request $request): JsonResponse {
     $query = trim((string) $request->query->get('q', ''));
@@ -60,19 +67,24 @@ class IconAutocompleteController extends ControllerBase {
       $allowed_icon_pack = explode('+', (string) $request->query->get('allowed_icon_pack', ''));
     }
 
-    $max_result = (int) $request->query->get('max_result', 20);
-
     $icons = $this->pluginManagerIconPack->getIcons($allowed_icon_pack);
     if (empty($icons)) {
       return new JsonResponse([]);
     }
 
-    $query = preg_replace('/[^ \w-]/', '', preg_split('/\s+/', $query));
-    if (empty($query) || empty($query[0] ?? '')) {
+    // If the search is an exact icon full id let return faster.
+    if (isset($icons[$query])) {
+      return new JsonResponse([$this->createResultEntry($query)]);
+    }
+
+    // Prepare multi words search by removing unwanted characters.
+    $words_search = preg_split('/\s+/', trim(preg_replace('/[^ \w-]/', ' ', $query)));
+    if (empty($words_search)) {
       return new JsonResponse([]);
     }
 
-    $result = $this->searchIcon($icons, $query, $max_result, $allowed_icon_pack);
+    $max_result = (int) $request->query->get('max_result', self::SEARCH_MAX_RESULT);
+    $result = $this->searchIcon($icons, $words_search, $max_result, $allowed_icon_pack);
 
     return new JsonResponse($result);
   }
@@ -86,8 +98,8 @@ class IconAutocompleteController extends ControllerBase {
    *  - Any parts of words
    * For example if I search.
    *
-   * @param \Drupal\ui_icons\IconDefinitionInterface[] $icons
-   *   The list of icons definitions.
+   * @param array $icons
+   *   The list of icon ids.
    * @param array $words
    *   The keywords to search.
    * @param int $max_result
@@ -99,32 +111,25 @@ class IconAutocompleteController extends ControllerBase {
    *   The icons matching the search.
    */
   private function searchIcon(array $icons, array $words, int $max_result, ?array $allowed_icon_pack = NULL): array {
-    // First is exact words order.
-    $exactOrderPattern = '/' . implode('\s+', array_map(function ($word) {
-      return '\b' . preg_quote($word, '/') . '\b';
-    }, $words)) . '/i';
-    // Then any order.
-    $anyOrderPattern = '/' . implode('.*', array_map(function ($word) {
-      return '\b' . preg_quote($word, '/') . '\b';
-    }, $words)) . '/i';
-    // Any words part.
-    $anyPartPattern = '/' . implode('.*', array_map('preg_quote', $words)) . '/i';
-
-    $matches = [];
-    foreach ($icons as $icon) {
-      // Search is based on icon clean icon label and pack label.
-      $item = trim($icon->getLabel() . ' ' . $icon->getPackLabel());
-
-      if (preg_match($exactOrderPattern, $item)) {
-        $matches[] = $this->createResultEntry($icon);
-      }
-      elseif (preg_match($anyOrderPattern, $item)) {
-        $matches[] = $this->createResultEntry($icon);
-      }
-      elseif (preg_match($anyPartPattern, $item)) {
-        $matches[] = $this->createResultEntry($icon);
+    $matches = $track_id = [];
+    $icon_list = array_keys($icons);
+    foreach ($icon_list as $icon_full_id) {
+      [$pack_id, $icon_id] = explode(IconDefinition::ICON_SEPARATOR, $icon_full_id);
+      if ($allowed_icon_pack && !in_array($pack_id, $allowed_icon_pack)) {
+        continue;
       }
 
+      if (str_replace($words, '', $icon_id) !== $icon_id) {
+        $matches[] = $this->createResultEntry($icon_full_id);
+        $track_id[$icon_full_id] = '';
+      }
+      if (count($matches) >= $max_result) {
+        break;
+      }
+
+      if (str_replace($words, '', $pack_id) !== $pack_id && !isset($track_id[$icon_full_id])) {
+        $matches[] = $this->createResultEntry($icon_full_id);
+      }
       if (count($matches) >= $max_result) {
         break;
       }
@@ -136,14 +141,19 @@ class IconAutocompleteController extends ControllerBase {
   /**
    * Create icon result.
    *
-   * @param \Drupal\ui_icons\IconDefinitionInterface $icon
-   *   The icon definition.
+   * @param string $icon_full_id
+   *   The icon full id.
    *
-   * @return array
+   * @return array|null
    *   The icon result with keys 'value' and 'label'.
    */
-  private function createResultEntry(IconDefinitionInterface $icon): array {
-    $icon_renderable = $icon->getPreview(['size' => 24]);
+  private function createResultEntry(string $icon_full_id): ?array {
+    $icon = $this->pluginManagerIconPack->getIcon($icon_full_id);
+    if (!$icon instanceof IconDefinitionInterface) {
+      return NULL;
+    }
+
+    $icon_renderable = IconPreview::getPreview($icon, ['size' => 24]);
     $renderable = $this->renderer->renderInIsolation($icon_renderable);
 
     $label = sprintf('%s (%s)', $icon->getLabel(), $icon->getPackLabel() ?? $icon->getPackId());

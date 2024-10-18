@@ -9,9 +9,10 @@ test_minimal:
 test_path:
   enabled: true
   label: Test path
-  description: Local png files available for test.
+  description: Local png files available for test with all metas.
   links:
-    - https://www.drupal.org/project/ui_icons
+    - https://www.drupal.org
+    - https://www.drupal.org
   version: 1.0.0
   license:
     name: GPL-3.0-or-later
@@ -64,7 +65,7 @@ test_svg:
   template: >
     {{ icon_id }}: <svg
       xmlns="https://www.w3.org/2000/svg"
-      viewBox="0 0 14 14"
+      viewBox="0 0 50 50"
       width="{{ size|default(32) }}"
       height="{{ size|default(32) }}"
       aria-hidden="true"
@@ -104,7 +105,7 @@ test_settings:
   extractor: path
   config:
     sources:
-      - icons/settings/*.svg
+      - icons/settings/*
   settings:
     width:
       title: "Width"
@@ -132,6 +133,11 @@ test_settings:
       type: "integer"
       enum: [100, 200, 300, 400, 500, 600, 700, 800, 900]
       default: 400
+    select_string:
+      title: "Test select"
+      description: "Test for a select with enum property."
+      type: "string"
+      enum: ['foo', 'bar']
     boolean:
       title: "Test boolean"
       description: "Test for a boolean property."
@@ -164,6 +170,17 @@ test_settings:
       data-decimal="{{ decimal }}"
       data-number="{{ number }}"
     >
+    <ul>
+      <li>width: {{ width }}</li>
+      <li>height: {{ height }}</li>
+      <li>title: {{ title }}</li>
+      <li>alt: {{ alt }}</li>
+      <li>select: {{ select }}</li>
+      <li>select_string: {{ select_string }}</li>
+      <li>boolean: {{ boolean }}</li>
+      <li>decimal: {{ decimal }}</li>
+      <li>number: {{ number }}</li>
+    </ul>
 
 test_no_settings:
   enabled: true
@@ -186,18 +203,17 @@ test_url_path:
     sources:
       - https://www.drupal.org/files/D10-logo.png
       - https://www.drupal.org/files/drupal-wordmark.png
-      - ftp://test.com/ignored_1.png
-      - ssh://test.com/ignored_2.png
       - htp://test.com/invalid.jpg
   template: >
     {{ icon_id }}: <img src="{{ source }}" width="32" height="32">
 
 test_url_svg:
   enabled: true
-  label: Test url svg
+  label: Test url svg empty
   extractor: svg
   config:
     sources:
+      # This will be ignored.
       - https://www.drupal.org/files/drupal-wordmark.svg
   template: >
     {{ icon_id }}: <svg xmlns="https://www.w3.org/2000/svg">
@@ -206,7 +222,7 @@ test_url_svg:
 
 test_url_svg_sprite:
   enabled: false
-  label: Test svg sprite
+  label: Test url svg sprite disabled and empty
   extractor: svg_sprite
   config:
     sources:

@@ -9,8 +9,8 @@ declare(strict_types=1);
 
 use Drupal\Core\Routing\RouteMatchInterface;
 use Drupal\Core\StringTranslation\TranslatableMarkup;
-use Drupal\ui_icons\IconDefinition;
-use Drupal\ui_icons\IconDefinitionInterface;
+use Drupal\Core\Theme\Icon\IconDefinition;
+use Drupal\Core\Theme\Icon\IconDefinitionInterface;
 
 /**
  * Implements hook_help().

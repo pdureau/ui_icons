@@ -42,6 +42,10 @@ These examples include widely used third party Icon pack like:
 - [Octicons](https://primer.style/foundations/icons)
 - [Phosphor Icons](https://phosphoricons.com)
 - [Remix icon](https://remixicon.com)
+- [Delta icons](https://delta-icons.github.io)
+- [Evil icons](https://evil-icons.io)
+- [Maki icons](https://labs.mapbox.com/maki-icons)
+- [Lucide icons](https://lucide.dev)
 
 Icon packs builder:
 
@@ -466,8 +470,8 @@ of an icon with the Drupal Render API.
 <?php
 $build['icon'] = [
   '#type' => 'icon',
-  '#icon_pack' => 'my_pack_id',
-  '#icon' => 'my_icon_id',
+  '#pack_id' => 'my_pack_id',
+  '#icon_id' => 'my_icon_id',
   '#settings' => [
     'size' => 64,
   ],
@@ -476,8 +480,8 @@ $build['icon'] = [
 
 Specific properties:
 
-- `#icon_pack`: (string) Icon Pack provider plugin id.
-- `#icon`: (string) Id of the icon.
+- `#pack_id`: (string) Icon Pack provider plugin id.
+- `#icon_id`: (string) Id of the icon.
 - `#settings`: (array) Settings sent to the inline Twig template.
 
 #### Form API

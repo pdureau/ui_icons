@@ -4,8 +4,10 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\ui_icons_ckeditor5\Kernel;
 
+@class_alias('Drupal\ui_icons_backport\IconDefinition', 'Drupal\Core\Theme\Icon\IconDefinition');
+
+use Drupal\Core\Theme\Icon\IconDefinition;
 use Drupal\KernelTests\KernelTestBase;
-use Drupal\ui_icons\IconDefinition;
 use Drupal\ui_icons_ckeditor5\Controller\IconFilterController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
@@ -43,6 +45,7 @@ class IconFilterControllerTest extends KernelTestBase {
   protected static $modules = [
     'system',
     'ui_icons',
+    'ui_icons_backport',
     'ui_icons_ckeditor5',
     'ui_icons_test',
   ];
@@ -73,16 +76,13 @@ class IconFilterControllerTest extends KernelTestBase {
    */
   public function testPreview(): void {
     $icon_id = IconDefinition::createIconId(self::TEST_ICON_PACK_ID, self::TEST_ICON_ID);
-
     // Test case 1: Valid icon request.
     $request = new Request(['icon_id' => $icon_id]);
     $response = $this->controller->preview($request);
-
     $this->assertEquals(200, $response->getStatusCode());
     $this->assertStringContainsString('<img', $response->getContent());
     $this->assertStringContainsString(self::TEST_ICON_CLASS, $response->getContent());
     $this->assertStringContainsString(self::TEST_ICON_FILENAME, $response->getContent());
-
     // Test case 2: Valid icon request with settings.
     $settings = json_encode(['width' => 100, 'height' => 100]);
     $request = new Request([
@@ -90,18 +90,14 @@ class IconFilterControllerTest extends KernelTestBase {
       'settings' => $settings,
     ]);
     $response = $this->controller->preview($request);
-
     $this->assertEquals(200, $response->getStatusCode());
     $this->assertStringContainsString('<img', $response->getContent());
     $this->assertStringContainsString('width="100"', $response->getContent());
     $this->assertStringContainsString('height="100"', $response->getContent());
-
     // Test case 3: Invalid icon ID.
     $request = new Request(['icon_id' => 'invalid:icon']);
     $response = $this->controller->preview($request);
-
     $this->assertEquals(404, $response->getStatusCode());
-
     // Test case 4: Missing icon ID.
     $request = new Request();
     $this->expectException(NotFoundHttpException::class);

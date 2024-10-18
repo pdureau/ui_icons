@@ -7,8 +7,11 @@ namespace Drupal\ui_icons_library\Form;
 use Drupal\Core\Form\FormBase;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Pager\PagerManagerInterface;
-use Drupal\ui_icons\Plugin\IconPackManagerInterface;
+use Drupal\Core\Theme\Icon\IconDefinition;
+use Drupal\Core\Theme\Icon\IconDefinitionInterface;
+use Drupal\Core\Theme\Icon\Plugin\IconPackManagerInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
+use function Symfony\Component\String\u;
 
 /**
  * Provides a UI Icons form.
@@ -17,7 +20,8 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  */
 final class LibrarySearchForm extends FormBase {
 
-  private const NUM_PER_PAGE = 196;
+  private const NUM_PER_PAGE = 100;
+  private const ICON_DEFAULT_SIZE = 64;
 
   public function __construct(
     private readonly IconPackManagerInterface $pluginManagerIconPack,
@@ -44,31 +48,39 @@ final class LibrarySearchForm extends FormBase {
   /**
    * {@inheritdoc}
    */
-  public function buildForm(array $form, FormStateInterface $form_state): array {
+  public function buildForm(array $form, FormStateInterface $form_state, string $pack_id = ''): array {
     $session = $this->getRequest()->getSession();
     $values = $session->get('ui_icons_library_search');
-    $search = $values['search'] ?? '';
-    $icon_pack = $values['icon_pack'] ?? '';
-    $group = $values['group'] ?? '';
-    $num_per_page = $values['num_per_page'] ?? self::NUM_PER_PAGE;
 
-    $form['icon_pack'] = [
-      '#type' => 'select',
-      '#title_display' => 'invisible',
-      '#title' => $this->t('Icon Pack'),
-      '#default_value' => $icon_pack,
-      '#options' => ['' => $this->t('- Select pack -')] + $this->pluginManagerIconPack->listIconPackOptions(),
-      '#weight' => -11,
+    // Build default settings and try to override size for display.
+    $default = [
+      $pack_id => array_merge(
+        $this->pluginManagerIconPack->getExtractorFormDefaults($pack_id),
+        [
+          'size' => self::ICON_DEFAULT_SIZE,
+          'width' => self::ICON_DEFAULT_SIZE,
+          'height' => self::ICON_DEFAULT_SIZE,
+        ],
+      ),
+    ];
+
+    $settings = $values[$pack_id]['settings'] ?? $default;
+    $search = $values[$pack_id]['search'] ?? '';
+    $group = $values[$pack_id]['group'] ?? '';
+
+    $form['#theme'] = 'form_icon_pack';
+    $form['pack_id'] = [
+      '#type' => 'hidden',
+      '#value' => $pack_id,
     ];
 
     $form['search'] = [
       '#type' => 'textfield',
-      '#size' => 12,
+      '#size' => 20,
       '#default_value' => $search,
       '#title' => $this->t('Keywords'),
       '#title_display' => 'invisible',
       '#placeholder' => $this->t('Keywords'),
-      '#weight' => -10,
     ];
 
     $form['actions']['submit'] = [
@@ -85,61 +97,37 @@ final class LibrarySearchForm extends FormBase {
 
     $form['actions']['#weight'] = -9;
 
-    $icons_list = $this->pluginManagerIconPack->getIcons();
+    $icons_list = $this->pluginManagerIconPack->getIcons([$pack_id]);
 
-    if (!empty($icon_pack)) {
-      $group_options = [];
-      foreach ($icons_list as $icon) {
-        if ($icon_pack !== $icon->getPackId()) {
-          continue;
-        }
-        $group_id = $icon->getGroup();
-        if (empty($group_id)) {
-          continue;
-        }
-        $group_options[$group_id] = ucfirst($group_id);
+    $group_options = [];
+    foreach ($icons_list as $icon) {
+      $group_id = $icon['group'] ?? NULL;
+      if (empty($group_id)) {
+        continue;
       }
-
-      if (!empty($group_options)) {
-        ksort($group_options);
-        $form['group'] = [
-          '#type' => 'select',
-          '#title_display' => 'invisible',
-          '#title' => $this->t('Group'),
-          '#default_value' => $group,
-          '#options' => ['' => $this->t('- Select group -')] + $group_options,
-          '#weight' => -11,
-        ];
-      }
+      $group_name = u($group_id)->snake()->replace('_', ' ')->title(allWords: TRUE);
+      $group_options[$group_id] = $group_name;
     }
 
-    if (!empty($search)) {
-      $icons_list = array_filter($icons_list, fn($icon) => str_contains($icon->getId(), mb_strtolower($search)));
-    }
-
-    $icons = $this->filterIcons($icons_list, $icon_pack, $group);
-    // Based on the key we mix pack and use icon id for order.
-    $icons_keys = array_keys($icons);
-    array_multisort($icons_keys, SORT_NATURAL, $icons);
-
-    $total = count($icons);
-    if ($total > self::NUM_PER_PAGE) {
-      $options = [self::NUM_PER_PAGE, self::NUM_PER_PAGE * 2, self::NUM_PER_PAGE * 4];
-      $form['num_per_page'] = [
+    if (!empty($group_options)) {
+      ksort($group_options);
+      $form['group'] = [
         '#type' => 'select',
-        '#title' => $this->t('Icons per page'),
         '#title_display' => 'invisible',
-        '#options' => array_combine($options, $options),
-        '#default_value' => $num_per_page,
-        '#weight' => -10,
+        '#title' => $this->t('Group'),
+        '#default_value' => $group,
+        '#options' => ['' => $this->t('- Select group -')] + $group_options,
       ];
     }
 
-    $pager = $this->pagerManager->createPager($total, (int) $num_per_page);
-    $page = $pager->getCurrentPage();
-    $offset = (int) $num_per_page * $page;
+    $icons = $this->filterIcons($icons_list, $search, $pack_id, $group, $settings);
 
-    $icons = array_slice($icons, $offset, (int) $num_per_page);
+    $total = count($icons);
+    $pager = $this->pagerManager->createPager($total, self::NUM_PER_PAGE);
+    $page = $pager->getCurrentPage();
+    $offset = self::NUM_PER_PAGE * $page;
+
+    $icons = array_slice($icons, $offset, self::NUM_PER_PAGE);
 
     $form['list'] = [
       '#theme' => 'ui_icons_library',
@@ -147,17 +135,22 @@ final class LibrarySearchForm extends FormBase {
       '#icons' => $icons,
       '#total' => $total,
       '#available' => count($icons_list),
-      '#weight' => 1,
     ];
 
-    $form['pager-top'] = [
+    $form['settings'] = ['#tree' => TRUE];
+    $this->pluginManagerIconPack->getExtractorPluginForms(
+      $form['settings'],
+      $form_state,
+      $settings,
+      [$pack_id => $pack_id],
+    );
+
+    $form['pager_top'] = [
       '#type' => 'pager',
-      '#weight' => 0,
     ];
 
     $form['pager'] = [
       '#type' => 'pager',
-      '#weight' => 2,
     ];
 
     return $form;
@@ -175,13 +168,14 @@ final class LibrarySearchForm extends FormBase {
       return;
     }
     $values = $form_state->getValues();
+    $pack_id = $values['pack_id'];
     foreach (array_keys($values) as $key) {
-      if (FALSE !== strpos($key, 'form_') || 'op' === $key || 'submit' === $key) {
+      if (FALSE !== strpos($key, 'form_') || 'op' === $key || 'submit' === $key || 'pack_id' === $key) {
         unset($values[$key]);
       }
     }
 
-    $session->set('ui_icons_library_search', $values);
+    $session->set('ui_icons_library_search', [$pack_id => $values]);
   }
 
   /**
@@ -189,29 +183,43 @@ final class LibrarySearchForm extends FormBase {
    *
    * @param array $icons_list
    *   The list of icons to filter.
-   * @param string $icon_pack
+   * @param string $search
+   *   The search string.
+   * @param string $pack_id
    *   The icon set to filter by.
    * @param string $group
    *   The group to filter by.
+   * @param array $settings
+   *   Settings of the icon.
    *
    * @return array
    *   The filtered list of icons.
    */
-  private function filterIcons(array $icons_list, string $icon_pack, string $group): array {
+  private function filterIcons(array $icons_list, string $search, string $pack_id, string $group, array $settings = []): array {
+    $search = mb_strtolower($search);
     $icons = [];
-    foreach ($icons_list as $icon) {
-      if (!empty($icon_pack) && $icon_pack !== $icon->getPackId()) {
+    foreach ($icons_list as $icon_full_id => $icon) {
+      $icon_data = explode(IconDefinition::ICON_SEPARATOR, $icon_full_id);
+      if (!isset($icon_data[0]) || !isset($icon_data[1])) {
         continue;
       }
-      if (!empty($group) && $group !== $icon->getGroup()) {
+      [$icon_pack_id, $icon_id] = $icon_data;
+
+      if (!empty($pack_id) && $pack_id !== $icon_pack_id) {
         continue;
       }
-      // Generate a key for sorting.
-      $key = $icon->getIconId() . '_' . $icon->getPackId();
-      $icons[$key] = $icon->getPreview(['size' => 48]);
-      $icons[$key]['#group'] = $group;
-      $icons[$key]['#label'] = $icon->getLabel();
-      $icons[$key]['#pack_label'] = $icon->getPackLabel();
+      if (!empty($group) && $group !== $icon['group']) {
+        continue;
+      }
+      if (!empty($search) && !str_contains($icon_id, $search)) {
+        continue;
+      }
+      // Load only icon if needed for performance.
+      $icon = $this->pluginManagerIconPack->getIcon($icon_full_id);
+      if (!$icon instanceof IconDefinitionInterface) {
+        continue;
+      }
+      $icons[] = $icon->getRenderable($settings[$pack_id]);
     }
 
     return $icons;
