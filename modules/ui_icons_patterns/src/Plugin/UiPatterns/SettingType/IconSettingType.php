@@ -45,7 +45,7 @@ class IconSettingType extends PatternSettingTypeBase {
     }
     // Value not coming from ::settingsForm(), like component definition's
     // preview, has an already resolved flat structure with primitive only.
-    if (is_string($value['icon']) && isset($value['icon_pack'])) {
+    if (isset($value['icon']) && is_string($value['icon']) && isset($value['icon_pack'])) {
       return $value;
     }
     // Data coming from ::settingsForm() have an IconDefinition objects.

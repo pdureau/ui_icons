@@ -77,7 +77,7 @@ function template_preprocess_icon_selector(array &$variables): void {
     $variables['pack_id'] = $variables['element']['#value']['object']->getPackId();
     $variables['icon_id'] = $variables['element']['#value']['object']->getId();
   }
-  elseif (isset($variables['element']['#default_value'])) {
+  elseif (!empty($variables['element']['#default_value'])) {
     [$pack_id, $icon_id] = explode(IconDefinition::ICON_SEPARATOR, $variables['element']['#default_value']);
     $variables['pack_id'] = $pack_id;
     $variables['icon_id'] = $icon_id;
