@@ -4,42 +4,6 @@
   grid-gap: 8px;
 }
 
-@media (min-width: 480px) {
-  .icon-picker-modal__content .form-radios {
-    grid-template-columns: repeat(8, 1fr);
-  }
-}
-
-@media (min-width: 600px) {
-  .icon-picker-modal__content .form-radios {
-    grid-template-columns: repeat(10, 1fr);
-  }
-}
-
-@media (min-width: 768px) {
-  .icon-picker-modal__content .form-radios {
-    grid-template-columns: repeat(12, 1fr);
-  }
-}
-
-@media (min-width: 1024px) {
-  .icon-picker-modal__content .form-radios {
-    grid-template-columns: repeat(16, 1fr);
-  }
-}
-
-@media (min-width: 1440px) {
-  .icon-picker-modal__content .form-radios {
-    grid-template-columns: repeat(24, 1fr);
-  }
-}
-
-@media (min-width: 1620px) {
-  .icon-picker-modal__content .form-radios {
-    grid-template-columns: repeat(28, 1fr);
-  }
-}
-
 .icon-picker-modal__content .icon-preview-wrapper {
   display: flex;
   align-items: center;
