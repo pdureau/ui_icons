@@ -19,7 +19,7 @@ use Drupal\ui_patterns\PropTypePluginBase;
     'type' => 'object',
     'properties' => [
       'icon' => ['type' => 'string'],
-      'icon_pack' => ['$ref' => 'ui-patterns://machine_name'],
+      'icon_pack' => ['$ref' => 'ui-patterns://identifier'],
       'settings' => ['type' => 'object'],
     ],
     'required' => [
