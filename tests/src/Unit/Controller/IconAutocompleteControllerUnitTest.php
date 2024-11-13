@@ -105,6 +105,14 @@ class IconAutocompleteControllerUnitTest extends TestCase {
       'query' => ' ',
     ];
 
+    yield 'one char' => [
+      'query' => 'a',
+    ];
+
+    yield 'one char spaces' => [
+      'query' => ' a ',
+    ];
+
     yield 'no words' => [
       'query' => '?!%$*+',
     ];
@@ -264,7 +272,7 @@ class IconAutocompleteControllerUnitTest extends TestCase {
     ];
 
     yield 'words with one match' => [
-      'query' => 'foo bar',
+      'query' => 'other bar',
       'allowed_icon_pack' => NULL,
       'icons' => [
         'foo:_partial_barista_',

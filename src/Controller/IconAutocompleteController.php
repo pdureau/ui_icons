@@ -92,11 +92,10 @@ class IconAutocompleteController extends ControllerBase {
   /**
    * Find an icon based on search string.
    *
-   * The search is fuzzy on words with a priority:
+   * The search try to be fuzzy on words with a priority:
    *  - Words in order
    *  - Words in any order
-   *  - Any parts of words
-   * For example if I search.
+   *  - Any parts of words.
    *
    * @param array $icons
    *   The list of icon ids.
@@ -104,14 +103,19 @@ class IconAutocompleteController extends ControllerBase {
    *   The keywords to search.
    * @param int $max_result
    *   Maximum result to show.
-   * @param array $allowed_icon_pack
+   * @param array|null $allowed_icon_pack
    *   Restrict to an icon pack list.
    *
    * @return array
    *   The icons matching the search.
    */
   private function searchIcon(array $icons, array $words, int $max_result, ?array $allowed_icon_pack = NULL): array {
-    $matches = $track_id = [];
+    // Prepare pattern for exact and any order matches.
+    $pattern = '/\b(' . implode('|', array_map(function ($word) {
+      return preg_quote($word, '/');
+    }, $words)) . ')\b/i';
+
+    $matches = $matched_ids = [];
     $icon_list = array_keys($icons);
     foreach ($icon_list as $icon_full_id) {
       [$pack_id, $icon_id] = explode(IconDefinition::ICON_SEPARATOR, $icon_full_id);
@@ -119,17 +123,31 @@ class IconAutocompleteController extends ControllerBase {
         continue;
       }
 
-      if (str_replace($words, '', $icon_id) !== $icon_id) {
-        $matches[] = $this->createResultEntry($icon_full_id);
-        $track_id[$icon_full_id] = '';
+      // Priority search is on id and then pack for order.
+      $icon_search = $icon_id . ' ' . $pack_id;
+
+      // Check for exact order or any order matches.
+      if (preg_match($pattern, $icon_search)) {
+        $entry = $this->createResultEntry($icon_full_id);
+        if ($entry && !isset($matched_ids[$icon_full_id])) {
+          $matches[] = $entry;
+          $matched_ids[$icon_full_id] = TRUE;
+        }
       }
-      if (count($matches) >= $max_result) {
-        break;
+      else {
+        // Fallback to search partial string.
+        foreach ($words as $word) {
+          if (str_contains($icon_search, $word)) {
+            $entry = $this->createResultEntry($icon_full_id);
+            if ($entry && !isset($matched_ids[$icon_full_id])) {
+              $matches[] = $entry;
+              $matched_ids[$icon_full_id] = TRUE;
+            }
+            break;
+          }
+        }
       }
 
-      if (str_replace($words, '', $pack_id) !== $pack_id && !isset($track_id[$icon_full_id])) {
-        $matches[] = $this->createResultEntry($icon_full_id);
-      }
       if (count($matches) >= $max_result) {
         break;
       }
