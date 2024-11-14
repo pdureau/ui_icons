@@ -32,9 +32,10 @@
   </div>
 
   <div class="ui-icons-grid">
-    {% for icon in icons %}
-      <div class="ui-icons-item" title="{{ icon['#pack_id'] }}:{{ icon['#icon_id'] }}">
-        {{ icon }}
+    {% for icon_full_id in icons %}
+      {% set icon_id = icon_full_id|split(':') %}
+      <div class="ui-icons-item" title="{{ icon_full_id }}">
+        {{ icon(icon_id.0, icon_id.1, settings) }}
       </div>
     {% endfor %}
   </div>

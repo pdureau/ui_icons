@@ -47,12 +47,10 @@ class IconAutocompleteControllerKernelTest extends KernelTestBase {
   protected function setUp(): void {
     parent::setUp();
 
-    $pluginManagerIconPack = $this->container->get('plugin.manager.icon_pack');
-    $renderer = $this->container->get('renderer');
+    $iconSearch = $this->container->get('ui_icons.search');
 
     $this->iconAutocompleteController = new IconAutocompleteController(
-      $pluginManagerIconPack,
-      $renderer,
+      $iconSearch,
     );
   }
 

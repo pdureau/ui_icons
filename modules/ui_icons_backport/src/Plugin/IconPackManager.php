@@ -332,7 +332,7 @@ class IconPackManager extends DefaultPluginManager implements IconPackManagerInt
       // extractor form.
       $form[$pack_id] = [
         '#type' => $wrap_details ? 'details' : 'container',
-        '#title' => $wrap_details ? $definition['label'] : $pack_id,
+        '#title' => $wrap_details ? $definition['label'] ?? $pack_id : $pack_id,
       ];
 
       // Create the extractor form and set settings so we can build with values.
@@ -420,10 +420,10 @@ class IconPackManager extends DefaultPluginManager implements IconPackManagerInt
    * @param array $definition
    *   The definition.
    *
-   * @return \Drupal\Core\Theme\Icon\IconDefinitionInterface
+   * @return \Drupal\Core\Theme\Icon\IconDefinitionInterface|null
    *   Loaded icon by the extractor.
    */
-  private function loadIconFromExtractor(array $icon_data, string $extractor, array $definition): IconDefinitionInterface {
+  private function loadIconFromExtractor(array $icon_data, string $extractor, array $definition): ?IconDefinitionInterface {
     /** @var \Drupal\Core\Theme\Icon\IconExtractorInterface $extractor */
     $extractor = $this->iconPackExtractorManager->createInstance($extractor, $definition);
     return $extractor->loadIcon($icon_data);

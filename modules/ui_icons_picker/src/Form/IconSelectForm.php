@@ -15,6 +15,7 @@ use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Theme\Icon\IconDefinitionInterface;
 use Drupal\Core\Theme\Icon\Plugin\IconPackManagerInterface;
 use Drupal\ui_icons\IconPreview;
+use Drupal\ui_icons\IconSearch;
 use Drupal\ui_icons_picker\Ajax\UpdateIconSelectionCommand;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
@@ -26,11 +27,28 @@ final class IconSelectForm extends FormBase {
   private const AJAX_WRAPPER_ID = 'icon-results-wrapper';
   private const MESSAGE_WRAPPER_ID = 'icon-message-wrapper';
   private const NUM_PER_PAGE = 308;
-  private const SEARCH_MIN_LENGTH = 2;
+
+  /**
+   * The icon search service.
+   *
+   * @var \Drupal\ui_icons\IconSearch
+   */
+  private IconSearch $iconSearch;
+
+  /**
+   * Plugin manager for icons pack discovery and definitions.
+   *
+   * @var \Drupal\Core\Theme\Icon\Plugin\IconPackManagerInterface
+   */
+  private ?IconPackManagerInterface $pluginManagerIconPack = NULL;
 
   public function __construct(
-    private readonly IconPackManagerInterface $pluginManagerIconPack,
-  ) {}
+    IconPackManagerInterface $pluginManagerIconPack,
+    IconSearch $iconSearch,
+  ) {
+    $this->pluginManagerIconPack = $pluginManagerIconPack;
+    $this->iconSearch = $iconSearch;
+  }
 
   /**
    * {@inheritdoc}
@@ -38,6 +56,7 @@ final class IconSelectForm extends FormBase {
   public static function create(ContainerInterface $container): self {
     return new static(
       $container->get('plugin.manager.icon_pack'),
+      $container->get('ui_icons.search'),
     );
   }
 
@@ -52,8 +71,8 @@ final class IconSelectForm extends FormBase {
    * {@inheritdoc}
    */
   public function buildForm(array $form, FormStateInterface $form_state, ?array $options = NULL): array {
-
     $request = $this->getRequest();
+
     if (!$request->query->has('dialogOptions')) {
       return [];
     }
@@ -65,32 +84,37 @@ final class IconSelectForm extends FormBase {
       return [];
     }
 
-    $allowed_icon_pack = $options['query']['allowed_icon_pack'] ?? NULL;
+    $allowed_icon_pack = $options['query']['allowed_icon_pack'] ?? [];
     if (!empty($allowed_icon_pack)) {
       $allowed_icon_pack = explode('+', $allowed_icon_pack);
     }
     else {
-      $allowed_icon_pack = NULL;
+      $allowed_icon_pack = [];
     }
 
     if (!$modal_state = static::getModalState($form_state)) {
+      $icons_list = $this->getIconPackManager()->getIcons($allowed_icon_pack);
       $modal_state = [
         'page' => 0,
-        'icon_list' => $this->pluginManagerIconPack->getIcons($allowed_icon_pack),
+        'icon_list' => $icons_list,
+        'total_available' => count($icons_list),
       ];
       static::setModalState($form_state, $modal_state);
     }
 
     $input = $form_state->getUserInput();
-    $search = $input['filter'] ?? '';
-    $icons = $modal_state['icon_list'];
+    $query = $input['filter'] ?? '';
+    $icons_list = $modal_state['icon_list'] ?? [];
+    $total_available = $modal_state['total_available'] ?? 0;
 
-    if (!empty($search) && strlen($search) >= self::SEARCH_MIN_LENGTH) {
-      $icons = array_filter($icons, fn($icon) => $icon instanceof IconDefinitionInterface && str_contains($icon->getId(), mb_strtolower($search)));
+    if (empty($query)) {
+      $icons = array_keys($icons_list);
+    }
+    else {
+      $icons = $this->getIconSearch()->search($query, $allowed_icon_pack, $total_available);
     }
 
     $pager = $this->createPager($modal_state['page'], count($icons));
-    ksort($icons);
     $icons = array_slice($icons, $pager['offset'], self::NUM_PER_PAGE);
 
     $form['#prefix'] = '<div id="' . self::AJAX_WRAPPER_ID . '"><div id="' . self::MESSAGE_WRAPPER_ID . '"></div>';
@@ -171,8 +195,9 @@ final class IconSelectForm extends FormBase {
     // Empty icon to delete selection.
     $options['_none_'] = '<div class="icon-preview-none icon-preview-wrapper"><img class="icon icon-preview" src="/core/themes/claro/images/icons/e34f4f/crossout.svg" title="None" width="32" height="32"></div>';
 
-    foreach (array_keys($icons) as $icon_id) {
-      $icon = $this->pluginManagerIconPack->getIcon($icon_id);
+    // @todo use search callable an theme.
+    foreach ($icons as $icon_id) {
+      $icon = $this->getIconPackManager()->getIcon($icon_id);
       if (!$icon instanceof IconDefinitionInterface) {
         continue;
       }
@@ -459,6 +484,34 @@ final class IconSelectForm extends FormBase {
         '#markup' => $this->t('Page @current_page/@total_page', $arg),
       ],
     ];
+  }
+
+  /**
+   * Get the icon pack plugin manager.
+   *
+   * @return \Drupal\Core\Theme\Icon\Plugin\IconPackManagerInterface
+   *   Plugin manager for icon pack discovery and definitions.
+   */
+  private function getIconPackManager(): IconPackManagerInterface {
+    if (!isset($this->pluginManagerIconPack)) {
+      $this->pluginManagerIconPack = \Drupal::service('plugin.manager.icon_pack');
+    }
+
+    return $this->pluginManagerIconPack;
+  }
+
+  /**
+   * Get the icon search service.
+   *
+   * @return \Drupal\ui_icons\IconSearch
+   *   Icon search service.
+   */
+  private function getIconSearch(): IconSearch {
+    if (!isset($this->iconSearch)) {
+      $this->iconSearch = \Drupal::service('ui_icons.search');
+    }
+
+    return $this->iconSearch;
   }
 
 }

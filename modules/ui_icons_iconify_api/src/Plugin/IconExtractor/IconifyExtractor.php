@@ -8,6 +8,7 @@ use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
 use Drupal\Core\StringTranslation\TranslatableMarkup;
 use Drupal\Core\Theme\Icon\Attribute\IconExtractor;
 use Drupal\Core\Theme\Icon\Exception\IconPackConfigErrorException;
+use Drupal\Core\Theme\Icon\IconDefinition;
 use Drupal\Core\Theme\Icon\IconExtractorBase;
 use Drupal\Core\Theme\Icon\IconPackExtractorForm;
 use Drupal\ui_icons_iconify_api\IconifyApi;
@@ -90,7 +91,8 @@ class IconifyExtractor extends IconExtractorBase implements ContainerFactoryPlug
         }
 
         $source = sprintf('%s/%s/%s.svg', IconifyApi::API_ENDPOINT, $collection, $icon_id);
-        $icons[] = $this->createIcon($icon_id, $source);
+        $id = IconDefinition::createIconId($this->configuration['id'], $icon_id);
+        $icons[$id] = ['source' => $source];
       }
     }
 

@@ -11,20 +11,21 @@ namespace Drupal\Tests\ui_icons\Unit\Controller;
 @class_alias('Drupal\Tests\ui_icons_backport\IconTestTrait', 'Drupal\Tests\Core\Theme\Icon\IconTestTrait');
 
 use Drupal\Core\DependencyInjection\ContainerBuilder;
+use Drupal\Core\Render\Markup;
 use Drupal\Core\Render\RendererInterface;
 use Drupal\Core\Theme\Icon\IconDefinition;
+use Drupal\Core\Theme\Icon\IconDefinitionInterface;
 use Drupal\Core\Theme\Icon\Plugin\IconPackManagerInterface;
 use Drupal\Tests\Core\Theme\Icon\IconTestTrait;
-use Drupal\ui_icons\Controller\IconAutocompleteController;
+use Drupal\ui_icons\IconSearch;
 use PHPUnit\Framework\TestCase;
-use Symfony\Component\HttpFoundation\Request;
 
 /**
- * @coversDefaultClass \Drupal\ui_icons\Controller\IconAutocompleteController
+ * @coversDefaultClass \Drupal\ui_icons\IconSearch
  *
  * @group ui_icons
  */
-class IconAutocompleteControllerUnitTest extends TestCase {
+class IconSearchTest extends TestCase {
 
   use IconTestTrait;
 
@@ -50,11 +51,11 @@ class IconAutocompleteControllerUnitTest extends TestCase {
   private RendererInterface $renderer;
 
   /**
-   * The IconAutocompleteController.
+   * The Icon search.
    *
-   * @var \Drupal\ui_icons\Controller\IconAutocompleteController
+   * @var \Drupal\ui_icons\IconSearch
    */
-  private IconAutocompleteController $iconAutocompleteController;
+  private IconSearch $iconSearch;
 
   /**
    * {@inheritdoc}
@@ -69,9 +70,9 @@ class IconAutocompleteControllerUnitTest extends TestCase {
     $this->renderer = $this->createMock(RendererInterface::class);
     $this->renderer
       ->method('renderInIsolation')
-      ->willReturn('_rendered_');
+      ->willReturn(new Markup('_rendered_'));
 
-    $this->iconAutocompleteController = new IconAutocompleteController(
+    $this->iconSearch = new IconSearch(
       $this->iconPackManager,
       $this->renderer
     );
@@ -81,21 +82,21 @@ class IconAutocompleteControllerUnitTest extends TestCase {
    * Test the _construct method.
    */
   public function testConstructor(): void {
-    $iconAutocompleteController = new IconAutocompleteController(
+    $iconSearch = new IconSearch(
       $this->createMock(IconPackManagerInterface::class),
       $this->createMock(RendererInterface::class)
     );
 
-    $this->assertInstanceOf(IconAutocompleteController::class, $iconAutocompleteController);
+    $this->assertInstanceOf(IconSearch::class, $iconSearch);
   }
 
   /**
-   * Provide data for testHandleSearchIcons.
+   * Provide data for testSearch.
    *
    * @return \Generator
    *   The test cases.
    */
-  public static function handleSearchIconsDataProviderId(): iterable {
+  public static function searchDataProviderId(): iterable {
 
     yield 'empty' => [
       'query' => '',
@@ -119,15 +120,15 @@ class IconAutocompleteControllerUnitTest extends TestCase {
 
     // Test the id based search.
     yield 'id exact full' => [
-      'query' => '_match_:_match_',
-      'allowed_icon_pack' => NULL,
+      'query' => '_pack_match_:_match_',
+      'allowed_icon_pack' => [],
       'icons' => [
         'foo:bar',
-        '_match_:_match_',
+        '_pack_match_:_match_',
         'baz:corge',
       ],
       'expected' => [
-        '_match_:_match_',
+        '_pack_match_:_match_',
       ],
     ];
 
@@ -157,7 +158,7 @@ class IconAutocompleteControllerUnitTest extends TestCase {
 
     yield 'id exact' => [
       'query' => '_match_',
-      'allowed_icon_pack' => NULL,
+      'allowed_icon_pack' => [],
       'icons' => [
         'bar:_match_',
         'baz:corge',
@@ -195,7 +196,7 @@ class IconAutocompleteControllerUnitTest extends TestCase {
 
     yield 'id exact multiple results' => [
       'query' => '_match_',
-      'allowed_icon_pack' => NULL,
+      'allowed_icon_pack' => [],
       'icons' => [
         'foo:_match_',
         'bar:_match_',
@@ -245,16 +246,16 @@ class IconAutocompleteControllerUnitTest extends TestCase {
   }
 
   /**
-   * Provide data for testHandleSearchIcons.
+   * Provide data for testSearch.
    *
    * @return \Generator
    *   The test cases.
    */
-  public static function handleSearchIconsDataProviderWord(): iterable {
+  public static function searchDataProviderWord(): iterable {
     // Test words search.
     yield 'word result' => [
       'query' => 'fo',
-      'allowed_icon_pack' => NULL,
+      'allowed_icon_pack' => [],
       'icons' => [
         'bar:foo',
         'bar:bar',
@@ -273,7 +274,7 @@ class IconAutocompleteControllerUnitTest extends TestCase {
 
     yield 'words with one match' => [
       'query' => 'other bar',
-      'allowed_icon_pack' => NULL,
+      'allowed_icon_pack' => [],
       'icons' => [
         'foo:_partial_barista_',
         'qux:quux',
@@ -313,7 +314,7 @@ class IconAutocompleteControllerUnitTest extends TestCase {
 
     yield 'words with multiple match' => [
       'query' => 'foo bar',
-      'allowed_icon_pack' => NULL,
+      'allowed_icon_pack' => [],
       'icons' => [
         'foo:_partial_barista_',
         'qux:quux',
@@ -357,7 +358,7 @@ class IconAutocompleteControllerUnitTest extends TestCase {
 
     yield 'words specials chars ignored with multiple match' => [
       'query' => '!foo? !ùµ$::!bar.çà',
-      'allowed_icon_pack' => NULL,
+      'allowed_icon_pack' => [],
       'icons' => [
         'foo:_partial_barista_',
         'qux:quux',
@@ -372,27 +373,29 @@ class IconAutocompleteControllerUnitTest extends TestCase {
   }
 
   /**
-   * Tests the handleSearchIcons method of the IconAutocompleteController.
+   * Tests the search method of the IconSearch.
    *
    * @param string $query
    *   The search query to test.
-   * @param array|null $allowed_icon_pack
+   * @param array $allowed_icon_pack
    *   The limited allowed icon pack to test.
    * @param array $icons
    *   The icons returned by IconPackManager::getIcons().
    * @param array|null $expected
    *   The expected result values.
    *
-   * @dataProvider handleSearchIconsDataProviderId
-   * @dataProvider handleSearchIconsDataProviderWord
+   * @dataProvider searchDataProviderId
+   * @dataProvider searchDataProviderWord
    */
-  public function testHandleSearchIcons(string $query, ?array $allowed_icon_pack = NULL, array $icons = [], ?array $expected = NULL): void {
+  public function testSearch(string $query, array $allowed_icon_pack = [], array $icons = [], ?array $expected = NULL): void {
 
     $this->preparePackManagerMock($icons, $allowed_icon_pack);
-    $request = $this->prepareRequest($query, $allowed_icon_pack);
-
-    $search = $this->iconAutocompleteController->handleSearchIcons($request);
-    $result = json_decode($search->getContent(), TRUE);
+    $result = $this->iconSearch->search(
+      $query,
+      $allowed_icon_pack,
+      5,
+      [ResultCallback::class, 'testCreateResultEntry'],
+    );
 
     if (NULL === $expected) {
       $this->assertEmpty($result);
@@ -402,8 +405,8 @@ class IconAutocompleteControllerUnitTest extends TestCase {
     $this->assertCount(count($expected), $result);
 
     foreach ($expected as $index => $expected_icon_id) {
-      $this->assertEquals($expected_icon_id, $result[$index]['value']);
-      $this->assertArrayHasKey('label', $result[$index]);
+      $this->assertArrayHasKey('_test_callback_', $result[$index]);
+      $this->assertEquals($expected_icon_id, $result[$index]['_test_callback_']);
     }
   }
 
@@ -412,11 +415,11 @@ class IconAutocompleteControllerUnitTest extends TestCase {
    *
    * @param array $icons
    *   The icons returned by IconPackManager::getIcons().
-   * @param array|null $allowed_icon_pack
+   * @param array $allowed_icon_pack
    *   The limited allowed icon pack to test.
    */
-  private function preparePackManagerMock(array $icons = [], ?array $allowed_icon_pack = NULL): void {
-    if (NULL !== $allowed_icon_pack) {
+  private function preparePackManagerMock(array $icons = [], array $allowed_icon_pack = []): void {
+    if (!empty($allowed_icon_pack)) {
       foreach ($icons as $key => $icon_full_id) {
         [$pack_id] = explode(IconDefinition::ICON_SEPARATOR, $icon_full_id);
         if (!in_array($pack_id, $allowed_icon_pack)) {
@@ -447,24 +450,26 @@ class IconAutocompleteControllerUnitTest extends TestCase {
       ->willReturnMap($icons_returned_map);
   }
 
-  /**
-   * Helper to prepare the request object.
-   *
-   * @param string $query
-   *   The search query to test.
-   * @param array|null $allowed_icon_pack
-   *   The limited allowed icon pack to test.
-   *
-   * @return \Symfony\Component\HttpFoundation\Request
-   *   The request object.
-   */
-  public function prepareRequest(string $query, ?array $allowed_icon_pack = NULL): Request {
-    $request['q'] = $query;
-    if (NULL !== $allowed_icon_pack) {
-      $request['allowed_icon_pack'] = implode('+', $allowed_icon_pack);
-    }
+}
 
-    return new Request($request);
+/**
+ * Test callback class.
+ */
+class ResultCallback {
+
+  /**
+   * Test callback icon result.
+   *
+   * @param \Drupal\Core\Theme\Icon\IconDefinitionInterface $icon
+   *   The icon to process.
+   * @param \Drupal\Core\Render\Markup $renderable
+   *   The icon preview renderable.
+   *
+   * @return array
+   *   The icon result with key '_test_callback_'.
+   */
+  public static function testCreateResultEntry(IconDefinitionInterface $icon, Markup $renderable): ?array {
+    return ['_test_callback_' => $icon->getId()];
   }
 
 }

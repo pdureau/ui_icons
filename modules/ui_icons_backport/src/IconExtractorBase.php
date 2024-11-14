@@ -29,20 +29,19 @@ abstract class IconExtractorBase extends PluginBase implements IconExtractorInte
     'description',
     'links',
     'config',
-    'library',
   ];
 
   /**
    * {@inheritdoc}
    */
   public function loadIcon(array $icon_data): ?IconDefinitionInterface {
-    if (!isset($icon_data['icon_id']) || !isset($icon_data['source'])) {
+    if (!isset($icon_data['icon_id']) || empty($icon_data['icon_id'])) {
       return NULL;
     }
 
     return $this->createIcon(
       $icon_data['icon_id'],
-      $icon_data['source'],
+      $icon_data['source'] ?? '',
       $icon_data['group'] ?? NULL,
     );
   }

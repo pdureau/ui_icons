@@ -40,6 +40,7 @@ class PathExtractor extends IconExtractorWithFinder {
     foreach ($files as $file) {
       $id = IconDefinition::createIconId($this->configuration['id'], $file['icon_id']);
       $icons[$id] = [
+        'absolute_path' => $file['absolute_path'],
         'source' => $file['source'],
         'group' => $file['group'] ?? NULL,
       ];

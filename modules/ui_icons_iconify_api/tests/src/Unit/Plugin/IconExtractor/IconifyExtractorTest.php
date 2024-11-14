@@ -4,8 +4,9 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\ui_icons_iconify_api\Unit\Plugin\IconExtractor;
 
-@class_alias('Drupal\ui_icons_backport\IconExtractorBase', 'Drupal\Core\Theme\Icon\IconExtractorBase');
 @class_alias('Drupal\ui_icons_backport\Exception\IconPackConfigErrorException', 'Drupal\Core\Theme\Icon\Exception\IconPackConfigErrorException');
+@class_alias('Drupal\ui_icons_backport\IconDefinition', 'Drupal\Core\Theme\Icon\IconDefinition');
+@class_alias('Drupal\ui_icons_backport\IconExtractorBase', 'Drupal\Core\Theme\Icon\IconExtractorBase');
 
 use Drupal\Core\Theme\Icon\Exception\IconPackConfigErrorException;
 use Drupal\Core\Theme\Icon\IconDefinition;
@@ -18,6 +19,11 @@ use Drupal\ui_icons_iconify_api\Plugin\IconExtractor\IconifyExtractor;
  * @group ui_icons
  */
 class IconifyExtractorTest extends UnitTestCase {
+
+  /**
+   * This test plugin id (icon pack id).
+   */
+  private string $pluginId = 'test_iconify';
 
   /**
    * The Iconify API service.
@@ -44,19 +50,17 @@ class IconifyExtractorTest extends UnitTestCase {
       ->getMock();
 
     $configuration = [
-      'id' => 'foo',
+      'id' => $this->pluginId,
       'template' => '_bar_',
       'config' => [
         'collections' => ['test-collection-1', 'test-collection-2'],
       ],
     ];
-    $plugin_id = 'iconify';
-    $plugin_definition = [];
 
     $this->iconifyExtractor = new IconifyExtractor(
       $configuration,
-      $plugin_id,
-      $plugin_definition,
+      $this->pluginId,
+      [],
       $this->iconifyApi
     );
   }
@@ -78,47 +82,20 @@ class IconifyExtractorTest extends UnitTestCase {
 
     $icons = $this->iconifyExtractor->discoverIcons();
 
+    $prefix = $this->pluginId . IconDefinition::ICON_SEPARATOR;
     $expected_icons = [
-      IconDefinition::create(
-        'foo',
-        'icon-1',
-        '_bar_',
-        'https://api.iconify.design/test-collection-1/icon-1.svg',
-        NULL,
-        [
-          'id' => 'foo',
-        ],
-      ),
-      IconDefinition::create(
-        'foo',
-        'icon-2',
-        '_bar_',
-        'https://api.iconify.design/test-collection-1/icon-2.svg',
-        NULL,
-        [
-          'id' => 'foo',
-        ],
-      ),
-      IconDefinition::create(
-        'foo',
-        'icon-3',
-        '_bar_',
-        'https://api.iconify.design/test-collection-2/icon-3.svg',
-        NULL,
-        [
-          'id' => 'foo',
-        ],
-      ),
-      IconDefinition::create(
-        'foo',
-        'icon-4',
-        '_bar_',
-        'https://api.iconify.design/test-collection-2/icon-4.svg',
-        NULL,
-        [
-          'id' => 'foo',
-        ],
-      ),
+      $prefix . 'icon-1' => [
+        'source' => 'https://api.iconify.design/test-collection-1/icon-1.svg',
+      ],
+      $prefix . 'icon-2' => [
+        'source' => 'https://api.iconify.design/test-collection-1/icon-2.svg',
+      ],
+      $prefix . 'icon-3' => [
+        'source' => 'https://api.iconify.design/test-collection-2/icon-3.svg',
+      ],
+      $prefix . 'icon-4' => [
+        'source' => 'https://api.iconify.design/test-collection-2/icon-4.svg',
+      ],
     ];
 
     $this->assertEquals($expected_icons, $icons);

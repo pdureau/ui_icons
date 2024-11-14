@@ -4,22 +4,23 @@
 ] %}
 <div{{ attributes.addClass(classes) }}>
   <a class="link" href="{{ link }}">
+    {% apply spaceless %}
     <h3 class="title">
     {% if not enabled %}
       <em>({{ 'Disabled'|t }})</em>
     {% endif %}
     {{ label }} {% if version %}<span class="version">{{ version }}</span>{% endif %}
-    {% set count = icons|length %}
-    {% if count > 0 %}
+    {% if total > 0 %}
       <small>
         {% trans %}
           (1 icon)
-        {% plural count %}
-          ({{ count }} icons)
+        {% plural total %}
+          ({{ total }} icons)
         {% endtrans %}
       </small>
     {% endif %}
     </h3>
+    {% endapply %}
   </a>
   {% if description %}<p class="description">{{ description }}</p>{% endif %}
   {% if license_name %}<p class="license">License: <a href="{{ license_url }}">{{ license_name }}</a></p>{% endif %}

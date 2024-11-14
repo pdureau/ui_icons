@@ -2,9 +2,16 @@
 
 declare(strict_types=1);
 
+// cspell:ignore corge
 namespace Drupal\Tests\ui_icons_font\Unit;
 
+@class_alias('Drupal\Tests\ui_icons_backport\IconTestTrait', 'Drupal\Tests\Core\Theme\Icon\IconTestTrait');
+@class_alias('Drupal\ui_icons_backport\Exception\IconPackConfigErrorException', 'Drupal\Core\Theme\Icon\Exception\IconPackConfigErrorException');
+@class_alias('Drupal\ui_icons_backport\IconDefinition', 'Drupal\Core\Theme\Icon\IconDefinition');
+
 use Drupal\Core\Theme\Icon\Exception\IconPackConfigErrorException;
+use Drupal\Core\Theme\Icon\IconDefinition;
+use Drupal\Tests\Core\Theme\Icon\IconTestTrait;
 use Drupal\Tests\UnitTestCase;
 use Drupal\ui_icons_font\Plugin\IconExtractor\FontExtractor;
 
@@ -14,6 +21,8 @@ use Drupal\ui_icons_font\Plugin\IconExtractor\FontExtractor;
  * @group ui_icons
  */
 class FontExtractorTest extends UnitTestCase {
+
+  use IconTestTrait;
 
   /**
    * This test plugin id (icon pack id).
@@ -47,18 +56,24 @@ class FontExtractorTest extends UnitTestCase {
 
     $result = $fontExtractorPlugin->discoverIcons();
 
+    $prefix = $this->pluginId . IconDefinition::ICON_SEPARATOR;
     $expected = [
-      'codepoints_foo',
-      'codepoints_baz',
-      'json_foo',
-      'json_baz',
-      'yml_foo',
-      'yml_baz',
-      'yaml_foo',
-      'yaml_baz',
+      $prefix . 'codepoints_foo' => [
+        'content' => 'bar',
+      ],
+      $prefix . 'codepoints_baz' => [
+        'content' => 'corge',
+      ],
+      $prefix . 'json_foo' => [],
+      $prefix . 'json_baz' => [],
+      $prefix . 'yml_foo' => [],
+      $prefix . 'yml_baz' => [],
+      $prefix . 'yaml_foo' => [],
+      $prefix . 'yaml_baz' => [],
     ];
-    foreach ($result as $index => $icon) {
-      $this->assertSame($this->pluginId . ':' . $expected[$index], $icon->getId());
+
+    foreach ($result as $icon_full_id => $icon_data) {
+      $this->assertSame($expected[$icon_full_id], $icon_data);
     }
   }
 
@@ -183,13 +198,14 @@ class FontExtractorTest extends UnitTestCase {
       return;
     }
 
+    $prefix = $this->pluginId . IconDefinition::ICON_SEPARATOR;
     $expected = [
-      'at',
-      'A',
+      $prefix . 'at' => [],
+      $prefix . 'A' => [],
     ];
-    foreach ($result as $index => $icon) {
-      $this->assertSame($this->pluginId . ':' . $expected[$index], $icon->getId());
 
+    foreach ($result as $icon_full_id => $icon_data) {
+      $this->assertSame($expected[$icon_full_id], $icon_data);
     }
   }
 
@@ -208,6 +224,41 @@ class FontExtractorTest extends UnitTestCase {
     $this->expectException(IconPackConfigErrorException::class);
     $this->expectExceptionMessage('Missing `config: sources` in your definition, extractor test_font require this value.');
     $fontExtractorPlugin->discoverIcons();
+  }
+
+  /**
+   * Test the FontExtractor::loadIcon() method.
+   */
+  public function testLoadIcon(): void {
+    $fontExtractorPlugin = new FontExtractor(
+      [
+        'id' => $this->pluginId,
+        'config' => [
+          'sources' => [
+            'foo/bar.ttf',
+          ],
+        ],
+        'template' => '_foo_',
+      ],
+      $this->pluginId,
+      [],
+    );
+
+    $data = [
+      'icon_id' => 'foo:bar',
+      'content' => '_baz_',
+    ];
+    $result = $fontExtractorPlugin->loadIcon($data);
+
+    $expected = $this->createTestIcon([
+      'id' => $this->pluginId,
+      'pack_id' => $this->pluginId,
+      'icon_id' => $data['icon_id'],
+      'template' => '_foo_',
+      'source' => '',
+      'content' => '_baz_',
+    ]);
+    $this->assertEquals($expected, $result);
   }
 
 }

@@ -14,6 +14,14 @@ ui_icons_library.index:
   requirements:
     _permission: 'access ui icons library'
 
+ui_icons_library.mode:
+  path: '/admin/icons/{mode}'
+  defaults:
+    _controller: 'Drupal\ui_icons_library\Controller\LibraryIndex::modeLibrary'
+    mode: 'off'
+  requirements:
+    _permission: 'access ui icons library'
+
 ui_icons_library.pack:
   path: '/admin/appearance/ui/icons/{pack_id}'
   defaults:

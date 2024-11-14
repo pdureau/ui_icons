@@ -4,12 +4,18 @@ declare(strict_types=1);
 
 namespace Drupal\ui_icons_font\Plugin\IconExtractor;
 
+@class_alias('Drupal\ui_icons_backport\IconExtractorBase', 'Drupal\Core\Theme\Icon\IconExtractorBase');
+@class_alias('Drupal\ui_icons_backport\IconDefinition', 'Drupal\Core\Theme\Icon\IconDefinition');
+@class_alias('Drupal\ui_icons_backport\IconDefinitionInterface', 'Drupal\Core\Theme\Icon\IconDefinitionInterface');
+
 // cspell:ignore codepoints
 use Drupal\Component\Serialization\Exception\InvalidDataTypeException;
 use Drupal\Component\Serialization\Yaml;
 use Drupal\Core\StringTranslation\TranslatableMarkup;
 use Drupal\Core\Theme\Icon\Attribute\IconExtractor;
 use Drupal\Core\Theme\Icon\Exception\IconPackConfigErrorException;
+use Drupal\Core\Theme\Icon\IconDefinition;
+use Drupal\Core\Theme\Icon\IconDefinitionInterface;
 use Drupal\Core\Theme\Icon\IconExtractorBase;
 use Drupal\Core\Theme\Icon\IconPackExtractorForm;
 use FontLib\Font;
@@ -46,21 +52,21 @@ class FontExtractor extends IconExtractorBase {
 
       switch ($fileinfo['extension']) {
         case 'codepoints':
-          $icons = array_merge($icons, $this->getCodePoints($filepath, $this->configuration['id']));
+          $icons = array_merge($icons, $this->getCodePoints($filepath));
           break;
 
         case 'ttf':
         case 'woff':
-          $icons = array_merge($icons, $this->getFontIcons($filepath, $this->configuration['id']));
+          $icons = array_merge($icons, $this->getFontIcons($filepath));
           break;
 
         case 'json':
-          $icons = array_merge($icons, $this->getJsonIcons($filepath, $this->configuration['id']));
+          $icons = array_merge($icons, $this->getJsonIcons($filepath));
           break;
 
         case 'yml':
         case 'yaml':
-          $icons = array_merge($icons, $this->getYamlIcons($filepath, $this->configuration['id']));
+          $icons = array_merge($icons, $this->getYamlIcons($filepath));
           break;
 
         default:
@@ -73,6 +79,27 @@ class FontExtractor extends IconExtractorBase {
     }
 
     return $icons;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function loadIcon(array $icon_data): ?IconDefinitionInterface {
+    if (!isset($icon_data['icon_id']) || empty($icon_data['icon_id'])) {
+      return NULL;
+    }
+
+    $data = [];
+    if (isset($icon_data['content'])) {
+      $data['content'] = $icon_data['content'];
+    }
+
+    return $this->createIcon(
+      $icon_data['icon_id'],
+      '',
+      NULL,
+      $data,
+    );
   }
 
   /**
@@ -93,13 +120,11 @@ class FontExtractor extends IconExtractorBase {
    *
    * @param string $filepath
    *   The Code points file absolute path.
-   * @param string $pack_id
-   *   The Icon pack ID.
    *
    * @return array
    *   List of icons indexed by ID.
    */
-  private function getFontIcons(string $filepath, string $pack_id): array {
+  private function getFontIcons(string $filepath): array {
     $icons = [];
 
     if (!class_exists('\FontLib\Font')) {
@@ -108,18 +133,16 @@ class FontExtractor extends IconExtractorBase {
     }
 
     $font = Font::load($filepath);
-
     if (NULL === $font) {
       return [];
     }
 
     $font->parse();
-
     $icons_names = $font->getData('post')['names'] ?? [];
-
     $icons = [];
     foreach ($icons_names as $icon_id) {
-      $icons[] = $this->createIcon($icon_id);
+      $id = IconDefinition::createIconId($this->configuration['id'], (string) $icon_id);
+      $icons[$id] = [];
     }
 
     return $icons;
@@ -130,13 +153,11 @@ class FontExtractor extends IconExtractorBase {
    *
    * @param string $filepath
    *   The Code points file absolute path.
-   * @param string $pack_id
-   *   The Icon pack ID.
    *
    * @return array
    *   List of icons indexed by ID.
    */
-  private function getJsonIcons(string $filepath, string $pack_id): array {
+  private function getJsonIcons(string $filepath): array {
     if (!$data = $this->getFileContents($filepath)) {
       return [];
     }
@@ -147,8 +168,10 @@ class FontExtractor extends IconExtractorBase {
     }
 
     $icons = [];
-    foreach (array_keys(json_decode((string) $data, TRUE)) as $icon_id) {
-      $icons[] = $this->createIcon((string) $icon_id);
+    $icon_json_ids = array_keys(json_decode((string) $data, TRUE));
+    foreach ($icon_json_ids as $icon_id) {
+      $id = IconDefinition::createIconId($this->configuration['id'], (string) $icon_id);
+      $icons[$id] = [];
     }
 
     return $icons;
@@ -159,13 +182,11 @@ class FontExtractor extends IconExtractorBase {
    *
    * @param string $filepath
    *   The Code points file absolute path.
-   * @param string $pack_id
-   *   The Icon pack ID.
    *
    * @return array
    *   List of icons indexed by ID.
    */
-  private function getYamlIcons(string $filepath, string $pack_id): array {
+  private function getYamlIcons(string $filepath): array {
     if (!$data = $this->getFileContents($filepath)) {
       return [];
     }
@@ -185,7 +206,8 @@ class FontExtractor extends IconExtractorBase {
 
     $icons = [];
     foreach (array_keys($data) as $icon_id) {
-      $icons[] = $this->createIcon((string) $icon_id);
+      $id = IconDefinition::createIconId($this->configuration['id'], (string) $icon_id);
+      $icons[$id] = [];
     }
 
     return $icons;
@@ -196,13 +218,11 @@ class FontExtractor extends IconExtractorBase {
    *
    * @param string $filepath
    *   The Code points file absolute path.
-   * @param string $pack_id
-   *   The Icon pack ID.
    *
    * @return array
    *   List of icons indexed by ID.
    */
-  private function getCodePoints(string $filepath, string $pack_id): array {
+  private function getCodePoints(string $filepath): array {
     if (!$data = $this->getFileContents($filepath)) {
       return [];
     }
@@ -218,7 +238,10 @@ class FontExtractor extends IconExtractorBase {
       if (0 === strlen($icon_id)) {
         continue;
       }
-      $icons[] = $this->createIcon((string) $icon_id, NULL, NULL, ['content' => $values[1]]);
+      $id = IconDefinition::createIconId($this->configuration['id'], (string) $icon_id);
+      $icons[$id] = [
+        'content' => $values[1],
+      ];
     }
 
     return $icons;

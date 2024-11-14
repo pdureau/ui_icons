@@ -17,10 +17,11 @@
   text-decoration: none;
   color: inherit;
 }
-.card svg,
-.card img,
-.card i,
-.card span {
+.card .content svg,
+.card .content img,
+.card .content i,
+.card .content span {
+  display: inline-block;
   margin-right: 0.7rem;
   margin-bottom: 0.7rem;
 }

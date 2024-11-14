@@ -30,6 +30,9 @@ props:
       type: string
       format: iri-reference
       title: Card header license
+    total:
+      type: number
+      title: Total of icons
 
 slots:
   icons:
