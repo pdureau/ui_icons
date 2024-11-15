@@ -310,9 +310,6 @@ class IconFinder implements ContainerInjectionInterface, IconFinderInterface {
     return $result;
   }
 
-  // Private function processFile(string $source): array {.
-  // }.
-
   /**
    * Check if {icon_id} is a part of the name and need to be extracted.
    *
