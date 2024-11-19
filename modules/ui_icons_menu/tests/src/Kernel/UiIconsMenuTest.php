@@ -125,11 +125,11 @@ class UiIconsMenuTest extends KernelTestBase {
         break;
 
       case 'before':
-        $expected = $markup . '<span class="i-icons-menu-text">' . $title . '</span>';
+        $expected = $markup . '&nbsp;<span class="ui-icons-menu-text">' . $title . '</span>';
         break;
 
       case 'after':
-        $expected = '<span class="i-icons-menu-text">' . $title . '</span>' . $markup;
+        $expected = '<span class="ui-icons-menu-text">' . $title . '</span>&nbsp;' . $markup;
         break;
     }
 

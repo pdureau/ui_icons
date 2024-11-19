@@ -8,7 +8,6 @@
 use Drupal\Component\Render\FormattableMarkup;
 use Drupal\Core\Entity\EntityTypeInterface;
 use Drupal\Core\Routing\RouteMatchInterface;
-use Drupal\Core\Theme\Icon\IconDefinition;
 
 /**
  * Implements hook_help().
@@ -29,23 +28,27 @@ function ui_icons_menu_help(string $route_name, RouteMatchInterface $route_match
  * for all menus.
  */
 function ui_icons_menu_entity_base_field_info_alter(array &$fields, EntityTypeInterface $entity_type): void {
-  if ($entity_type->id() === 'menu_link_content') {
-    $moduleDiscovery = \Drupal::service('module_handler');
-    $type = 'icon_link_widget';
-    if ($moduleDiscovery->moduleExists('ui_icons_field_link_attributes')) {
-      $type = 'icon_link_attributes_widget';
-    }
-    $fields['link']->setDisplayOptions('form', [
-      'type' => $type,
-      // Allow icon position and settings.
-      'settings' => [
-        'icon_position' => TRUE,
-        'show_settings' => TRUE,
-      ],
-    ]);
-    // Icon is always optional for now.
-    $fields['link']->setRequired(FALSE);
+  if ($entity_type->id() !== 'menu_link_content') {
+    return;
   }
+
+  $moduleDiscovery = \Drupal::service('module_handler');
+  $type = 'icon_link_widget';
+  if ($moduleDiscovery->moduleExists('ui_icons_field_link_attributes')) {
+    $type = 'icon_link_attributes_widget';
+  }
+
+  $fields['link']->setDisplayOptions('form', [
+    'type' => $type,
+    // Allow icon position and settings.
+    'settings' => [
+      'icon_position' => TRUE,
+      'show_settings' => TRUE,
+    ],
+  ]);
+
+  // Icon is always optional.
+  $fields['link']->setRequired(FALSE);
 }
 
 /**
@@ -86,18 +89,29 @@ function ui_icons_menu__preprocess_menu(array &$items): void {
  */
 function ui_icons_menu__preprocess_menu_item(array &$item): void {
   /** @var \Drupal\Core\Url $url */
-  $url = $item['url'];
+  $url = &$item['url'];
 
-  $options = $url->getOptions();
-  if (!isset($options['icon']['target_id']) || !empty($options['already_processed'])) {
+  if (!$icon = $url->getOption('icon')) {
     return;
   }
 
-  $icon_full_id = $options['icon']['target_id'];
-  if (FALSE === strpos($icon_full_id, IconDefinition::ICON_SEPARATOR)) {
-    return;
-  }
+  $url->setOption('ui_icons_menu_processed', TRUE);
+  ui_icons_menu_generate_markup($item['title'], $icon['target_id'], $icon['settings'] ?? [], $url->getOption('icon_display') ?? 'before');
+}
 
+/**
+ * Helper to generate the expected markup for the link with icon.
+ *
+ * @param mixed &$text
+ *   The text reference to generate markup for.
+ * @param string $icon_full_id
+ *   The icon full id.
+ * @param array $icon_settings
+ *   The icon settings.
+ * @param string $icon_display
+ *   The icon position, `icon_only`, `after` or default `before`.
+ */
+function ui_icons_menu_generate_markup(mixed &$text, string $icon_full_id, array $icon_settings, string $icon_display = 'before'): void {
   /** @var \Drupal\Core\Theme\Icon\Plugin\IconPackManagerInterface $pluginManagerIconPack */
   $pluginManagerIconPack = \Drupal::service('plugin.manager.icon_pack');
   $icon = $pluginManagerIconPack->getIcon($icon_full_id);
@@ -106,38 +120,55 @@ function ui_icons_menu__preprocess_menu_item(array &$item): void {
     return;
   }
 
-  $icon_settings = [];
-  if (isset($options['icon']['settings'][$icon->getPackId()])) {
-    $icon_settings = $options['icon']['settings'][$icon->getPackId()];
+  if (isset($icon_settings[$icon->getPackId()])) {
+    $icon_settings = $icon_settings[$icon->getPackId()];
   }
   $icon_renderable = $icon->getRenderable($icon_settings);
   $icon = \Drupal::service('renderer')->renderInIsolation($icon_renderable);
 
-  $icon_display = $options['icon_display'] ?? 'before';
   switch ($icon_display) {
     case 'before':
-      $item['title'] = new FormattableMarkup('@icon<span class="i-icons-menu-text">@title</span>', [
-        '@title' => $item['title'],
+      $text = new FormattableMarkup('@icon&nbsp;<span class="ui-icons-menu-text">@title</span>', [
+        '@title' => $text,
         '@icon' => $icon,
       ]);
       break;
 
     case 'after':
-      $item['title'] = new FormattableMarkup('<span class="i-icons-menu-text">@title</span>@icon', [
-        '@title' => $item['title'],
+      $text = new FormattableMarkup('<span class="ui-icons-menu-text">@title</span>&nbsp;@icon', [
+        '@title' => $text,
         '@icon' => $icon,
       ]);
       break;
 
     default:
-      $item['title'] = new FormattableMarkup('@icon', [
+      $text = new FormattableMarkup('@icon', [
         '@icon' => $icon,
       ]);
       break;
   }
-  // print("\n");
-  // print_r($icon);
-  // print("\n");
-  // print_r($item['title']);
-  // print("\n");
+}
+
+/**
+ * Implements hook_link_alter().
+ *
+ * Allow the icon to be displayed on the menu administration context.
+ */
+function ui_icons_menu_link_alter(array &$variables): void {
+  if (!isset($variables['url']) || !isset($variables['text'])) {
+    return;
+  }
+
+  // Do not handle link passed through ui_icons_menu__preprocess_menu_item,
+  // alter of menu link will not allow markup and the text html will be escaped.
+  if ($variables['url']->getOption('ui_icons_menu_processed')) {
+    return;
+  }
+
+  if (!$icon = $variables['url']->getOption('icon')) {
+    return;
+  }
+
+  $variables['url']->setOption('ui_icons_menu_processed', TRUE);
+  ui_icons_menu_generate_markup($variables['text'], $icon['target_id'], $icon['settings'] ?? [], $variables['url']->getOption('icon_display') ?? 'before');
 }
