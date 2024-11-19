@@ -28,3 +28,5 @@
 @class_alias('Drupal\ui_icons_backport\Plugin\IconPackManagerInterface', 'Drupal\Core\Theme\Icon\Plugin\IconPackManagerInterface');
 
 @class_alias('Drupal\ui_icons_backport\Template\IconsTwigExtension', 'Drupal\Core\Theme\Icon\Template\IconsTwigExtension');
+
+@class_alias('Drupal\ui_icons_backport\IconCollector', 'Drupal\Core\Theme\Icon\IconCollector');

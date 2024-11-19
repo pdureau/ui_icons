@@ -9,7 +9,7 @@ test_minimal:
 test_path:
   enabled: true
   label: Test path
-  description: Local png files available for test with all metas.
+  description: Local png files available for test with all metadata.
   links:
     - https://www.drupal.org
     - https://www.drupal.org

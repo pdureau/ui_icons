@@ -85,6 +85,21 @@ class IconDefinition implements IconDefinitionInterface {
   /**
    * {@inheritdoc}
    */
+  public static function getIconDataFromId(string $icon_full_id): ?array {
+    $icon_data = explode(self::ICON_SEPARATOR, $icon_full_id);
+    if (count($icon_data) < 2) {
+      return NULL;
+    }
+
+    return [
+      'pack_id' => $icon_data[0],
+      'icon_id' => $icon_data[1],
+    ];
+  }
+
+  /**
+   * {@inheritdoc}
+   */
   public function getLabel(): string {
     return self::humanize($this->icon_id);
   }
@@ -148,7 +163,7 @@ class IconDefinition implements IconDefinitionInterface {
   /**
    * {@inheritdoc}
    */
-  public function getData(?string $key = NULL): mixed {
+  public function getData(?string $key = NULL): string|array|NULL {
     if (!$key) {
       return $this->data;
     }

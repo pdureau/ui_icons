@@ -19,13 +19,13 @@ interface IconPackManagerInterface extends PluginManagerInterface {
   /**
    * Get a list of all the icons within definitions.
    *
-   * @param array|null $allowed_icon_pack
+   * @param array $allowed_icon_pack
    *   Limit the icons to some definition id.
    *
    * @return array
    *   Gets a list of icons index by id with `source` and `group`.
    */
-  public function getIcons(?array $allowed_icon_pack = NULL): array;
+  public function getIcons(array $allowed_icon_pack = []): array;
 
   /**
    * Get definition of a specific icon.

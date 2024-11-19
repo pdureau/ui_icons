@@ -15,6 +15,7 @@ use Drupal\Core\Plugin\Discovery\ContainerDerivativeDiscoveryDecorator;
 use Drupal\Core\Plugin\Discovery\YamlDiscovery;
 use Drupal\Core\Plugin\Factory\ContainerFactory;
 use Drupal\Core\Theme\Icon\Exception\IconPackConfigErrorException;
+use Drupal\Core\Theme\Icon\IconCollector;
 use Drupal\Core\Theme\Icon\IconDefinition;
 use Drupal\Core\Theme\Icon\IconDefinitionInterface;
 use Drupal\Core\Theme\Icon\IconExtractorPluginManager;
@@ -167,20 +168,23 @@ class IconPackManager extends DefaultPluginManager implements IconPackManagerInt
    *   The cache backend.
    * @param \Drupal\Core\Theme\Icon\IconExtractorPluginManager $iconPackExtractorManager
    *   The icon plugin extractor service.
+   * @param \Drupal\Core\Theme\Icon\IconCollector $iconCollector
+   *   The icon cache collector service.
    * @param string $appRoot
    *   The application root.
    */
   public function __construct(
     ModuleHandlerInterface $module_handler,
-    protected ThemeHandlerInterface $themeHandler,
+    protected readonly ThemeHandlerInterface $themeHandler,
     CacheBackendInterface $cacheBackend,
-    protected IconExtractorPluginManager $iconPackExtractorManager,
+    protected readonly IconExtractorPluginManager $iconPackExtractorManager,
+    protected readonly IconCollector $iconCollector,
     protected string $appRoot,
   ) {
     $this->moduleHandler = $module_handler;
     $this->factory = new ContainerFactory($this);
     $this->alterInfo('icon_pack');
-    $this->setCacheBackend($cacheBackend, 'icon_pack', ['icon_pack', 'icon_pack_plugin']);
+    $this->setCacheBackend($cacheBackend, 'icon_pack', ['icon_pack_plugin', 'icon_pack_collector']);
   }
 
   /**
@@ -234,7 +238,7 @@ class IconPackManager extends DefaultPluginManager implements IconPackManagerInt
   /**
    * {@inheritdoc}
    */
-  public function getIcons(?array $allowed_icon_pack = NULL): array {
+  public function getIcons(array $allowed_icon_pack = []): array {
     $definitions = $this->getDefinitions();
 
     if (NULL === $definitions) {
@@ -256,31 +260,7 @@ class IconPackManager extends DefaultPluginManager implements IconPackManagerInt
    * {@inheritdoc}
    */
   public function getIcon(string $icon_full_id): ?IconDefinitionInterface {
-    $icon_data = explode(IconDefinition::ICON_SEPARATOR, $icon_full_id);
-    if (!isset($icon_data[0]) || !isset($icon_data[1])) {
-      return NULL;
-    }
-    [$pack_id, $icon_id] = $icon_data;
-
-    $definitions = $this->getDefinitions();
-
-    if (!isset($definitions[$pack_id])) {
-      return NULL;
-    }
-
-    $definition = $definitions[$pack_id];
-
-    if (!isset($definition['icons'][$icon_full_id])) {
-      return NULL;
-    }
-
-    $icon_data = $definition['icons'][$icon_full_id];
-    $icon_data['icon_id'] = $icon_id;
-    // Extracted list of icons is not needed by extractor.
-    unset($definition['icons']);
-    $icon = $this->loadIconFromExtractor($icon_data, $definition['extractor'], $definition);
-
-    return $icon;
+    return $this->iconCollector->get($icon_full_id, $this->getDefinitions());
   }
 
   /**
@@ -408,25 +388,6 @@ class IconPackManager extends DefaultPluginManager implements IconPackManagerInt
     /** @var \Drupal\Core\Theme\Icon\IconExtractorInterface $extractor */
     $extractor = $this->iconPackExtractorManager->createInstance($definition['extractor'], $definition);
     return $extractor->discoverIcons();
-  }
-
-  /**
-   * Load a icon from extractor.
-   *
-   * @param array $icon_data
-   *   The icon data from extractor discovery.
-   * @param string $extractor
-   *   The extractor plugin id.
-   * @param array $definition
-   *   The definition.
-   *
-   * @return \Drupal\Core\Theme\Icon\IconDefinitionInterface|null
-   *   Loaded icon by the extractor.
-   */
-  private function loadIconFromExtractor(array $icon_data, string $extractor, array $definition): ?IconDefinitionInterface {
-    /** @var \Drupal\Core\Theme\Icon\IconExtractorInterface $extractor */
-    $extractor = $this->iconPackExtractorManager->createInstance($extractor, $definition);
-    return $extractor->loadIcon($icon_data);
   }
 
   /**

@@ -61,12 +61,13 @@ class Icon extends RenderElementBase {
   public static function preRenderIcon(array $element): array {
     $icon_full_id = IconDefinition::createIconId($element['#pack_id'], $element['#icon_id']);
 
-    /** @var \Drupal\Core\Theme\Icon\Plugin\IconPackManagerInterface $pluginManagerIconPack */
-    $pluginManagerIconPack = \Drupal::service('plugin.manager.icon_pack');
-    $icon = $pluginManagerIconPack->getIcon($icon_full_id);
-    if (!$icon instanceof IconDefinitionInterface) {
+    $iconCollector = \Drupal::service('Drupal\Core\Theme\Icon\IconCollector');
+    $icon = $iconCollector->get($icon_full_id);
+
+    if (!$icon) {
       return $element;
     }
+
     $context = [
       'icon_id' => $icon->getIconId(),
     ];

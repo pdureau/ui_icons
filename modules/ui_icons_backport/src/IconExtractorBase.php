@@ -24,8 +24,6 @@ abstract class IconExtractorBase extends PluginBase implements IconExtractorInte
   private const DEFINITION_REMOVE = [
     'enabled',
     'template',
-    // Definition label, remove to avoid confusion with icon label.
-    'label',
     'description',
     'links',
     'config',

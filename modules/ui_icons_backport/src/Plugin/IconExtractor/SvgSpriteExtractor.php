@@ -45,6 +45,7 @@ class SvgSpriteExtractor extends IconExtractorWithFinder {
       foreach ($icon_ids as $icon_id) {
         $id = IconDefinition::createIconId($this->configuration['id'], (string) $icon_id);
         $icons[$id] = [
+          'absolute_path' => $file['absolute_path'],
           'source' => $file['source'],
           'group' => $file['group'] ?? NULL,
         ];

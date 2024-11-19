@@ -56,6 +56,17 @@ interface IconDefinitionInterface {
   public static function createIconId(string $pack_id, string $icon_id): string;
 
   /**
+   * Get icon id and pack id from an icon full id.
+   *
+   * @param string $icon_full_id
+   *   The id of the icon including the pack.
+   *
+   * @return array|null
+   *   The icon data as keyed with `pack_id` and `icon_id`.
+   */
+  public static function getIconDataFromId(string $icon_full_id): ?array;
+
+  /**
    * Get the Icon label as human friendly.
    *
    * @return string
@@ -133,10 +144,10 @@ interface IconDefinitionInterface {
    * @param string|null $key
    *   The optional data key to find, if null return all data.
    *
-   * @return mixed
+   * @return string|array|null
    *   The icon data if exist or null.
    */
-  public function getData(?string $key = NULL): mixed;
+  public function getData(?string $key = NULL): string|array|NULL;
 
   /**
    * Get the Icon renderable array.
