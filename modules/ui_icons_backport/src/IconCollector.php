@@ -2,11 +2,12 @@
 
 declare(strict_types=1);
 
-namespace Drupal\ui_icons_backport\Icon;
+namespace Drupal\ui_icons_backport;
 
 use Drupal\Core\Cache\CacheBackendInterface;
 use Drupal\Core\Cache\CacheCollector;
 use Drupal\Core\Lock\LockBackendInterface;
+use Drupal\Core\Theme\Icon\IconExtractorPluginManager;
 
 /**
  * A CacheCollector implementation for building icons info.
@@ -75,6 +76,10 @@ class IconCollector extends CacheCollector {
    */
   private function getIconFromExtractor(string $icon_full_id, array $definitions): ?IconDefinitionInterface {
     $icon_data = IconDefinition::getIconDataFromId($icon_full_id);
+    if (!isset($icon_data['pack_id'])) {
+      return NULL;
+    }
+
     $definition = $definitions[$icon_data['pack_id']] ?? NULL;
     if (NULL === $definition) {
       return NULL;

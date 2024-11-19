@@ -8,7 +8,6 @@ use Drupal\Core\Render\Attribute\RenderElement;
 use Drupal\Core\Render\Element\RenderElementBase;
 use Drupal\Core\Template\Attribute;
 use Drupal\Core\Theme\Icon\IconDefinition;
-use Drupal\Core\Theme\Icon\IconDefinitionInterface;
 
 /**
  * Provides a render element to display an icon.
@@ -77,11 +76,13 @@ class Icon extends RenderElementBase {
 
     // Pass all data to the template, extractors can add specific values.
     if ($data = $icon->getData()) {
-      foreach ($data as $data_name => $data_value) {
-        if (!$data_value) {
-          continue;
+      if (is_array($data)) {
+        foreach ($data as $data_name => $data_value) {
+          if (!$data_value) {
+            continue;
+          }
+          $context[$data_name] = $data_value;
         }
-        $context[$data_name] = $data_value;
       }
     }
 

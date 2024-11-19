@@ -17,7 +17,7 @@ use Drupal\Core\Form\FormStateInterface;
  * - boolean => #type = checkbox
  * - number => #type = number
  * - integer => #type = number
- * - string => #type = textfield
+ * - string => #type = textfield.
  *
  * For all types, basic values from YAML to Drupal Form API:
  * - title => #title
