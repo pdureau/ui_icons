@@ -1,6 +1,6 @@
 name: 'UI Icons Web fonts'
 type: module
-description: 'Font extractor to allow definition of Icons from Web Font.'
+description: 'Font extractor to allow definition of icons from Web Font.'
 package: User interface
 core_version_requirement: ^10.3 || ^11
 dependencies:

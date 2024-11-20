@@ -1,6 +1,6 @@
 name: 'UI Icons Iconify API'
 type: module
-description: 'Iconify API extractor to allow definition of Icons from Iconify.'
+description: 'Iconify API extractor to allow definition of icons from Iconify.'
 package: User interface
 core_version_requirement: ^10.3 || ^11
 dependencies:

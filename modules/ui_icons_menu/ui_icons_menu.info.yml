@@ -1,6 +1,6 @@
 name: 'UI Icons for Menu'
 type: module
-description: 'Menu UI integration of Icons.'
+description: 'Menu UI integration of icons.'
 package: User interface
 core_version_requirement: ^10.3 || ^11
 dependencies:
