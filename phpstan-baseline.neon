@@ -21,31 +21,6 @@ parameters:
 			path: modules/ui_icons_backport/src/IconExtractorSettingsForm.php
 
 		-
-			message: "#^Call to an undefined method Drupal\\\\Component\\\\Plugin\\\\PluginInspectionInterface\\:\\:buildConfigurationForm\\(\\)\\.$#"
-			count: 1
-			path: modules/ui_icons_backport/src/IconPackExtractorForm.php
-
-		-
-			message: "#^Call to an undefined method Drupal\\\\Component\\\\Plugin\\\\PluginInspectionInterface\\:\\:submitConfigurationForm\\(\\)\\.$#"
-			count: 1
-			path: modules/ui_icons_backport/src/IconPackExtractorForm.php
-
-		-
-			message: "#^Call to an undefined method Drupal\\\\Component\\\\Plugin\\\\PluginInspectionInterface\\:\\:validateConfigurationForm\\(\\)\\.$#"
-			count: 1
-			path: modules/ui_icons_backport/src/IconPackExtractorForm.php
-
-		-
-			message: "#^Method Drupal\\\\ui_icons_backport\\\\Plugin\\\\IconPackManager\\:\\:processDefinition\\(\\) has parameter \\$definition with no type specified\\.$#"
-			count: 1
-			path: modules/ui_icons_backport/src/Plugin/IconPackManager.php
-
-		-
-			message: "#^Method Drupal\\\\ui_icons_backport\\\\Plugin\\\\IconPackManager\\:\\:processDefinition\\(\\) has parameter \\$plugin_id with no type specified\\.$#"
-			count: 1
-			path: modules/ui_icons_backport/src/Plugin/IconPackManager.php
-
-		-
 			message: "#^Call to an undefined method Drupal\\\\filter\\\\FilterPluginCollection\\|Drupal\\\\filter\\\\Plugin\\\\FilterInterface\\:\\:has\\(\\)\\.$#"
 			count: 1
 			path: modules/ui_icons_ckeditor5/src/Plugin/CKEditor5Plugin/IconPlugin.php
