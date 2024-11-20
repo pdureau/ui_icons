@@ -24,6 +24,8 @@ class FontExtractorTest extends UnitTestCase {
 
   use IconTestTrait;
 
+  private const TEST_MODULE_PATH = __DIR__ . '/../../../../../tests/modules/ui_icons_font_test';
+
   /**
    * This test plugin id (icon pack id).
    */
@@ -47,7 +49,7 @@ class FontExtractorTest extends UnitTestCase {
           ],
         ],
         'template' => '_foo_',
-        'absolute_path' => DRUPAL_ROOT . '/modules/custom/ui_icons/modules/ui_icons_font/tests/modules/ui_icons_font_test',
+        'absolute_path' => self::TEST_MODULE_PATH,
 
       ],
       $this->pluginId,
@@ -94,7 +96,7 @@ class FontExtractorTest extends UnitTestCase {
           ],
         ],
         'template' => '_foo_',
-        'absolute_path' => DRUPAL_ROOT . '/modules/custom/ui_icons/modules/ui_icons_font/tests/modules/ui_icons_font_test',
+        'absolute_path' => self::TEST_MODULE_PATH,
 
       ],
       $this->pluginId,
@@ -120,7 +122,7 @@ class FontExtractorTest extends UnitTestCase {
           ],
         ],
         'template' => '_foo_',
-        'absolute_path' => DRUPAL_ROOT . '/modules/custom/ui_icons/modules/ui_icons_font/tests/modules/ui_icons_font_test',
+        'absolute_path' => self::TEST_MODULE_PATH,
 
       ],
       $this->pluginId,
@@ -147,7 +149,7 @@ class FontExtractorTest extends UnitTestCase {
           ],
         ],
         'template' => '_foo_',
-        'absolute_path' => DRUPAL_ROOT . '/modules/custom/ui_icons/modules/ui_icons_font/tests/modules/ui_icons_font_test',
+        'absolute_path' => self::TEST_MODULE_PATH,
 
       ],
       $this->pluginId,
@@ -184,7 +186,7 @@ class FontExtractorTest extends UnitTestCase {
           'offset' => 3,
         ],
         'template' => '_foo_',
-        'absolute_path' => DRUPAL_ROOT . '/modules/custom/ui_icons/modules/ui_icons_font/tests/modules/ui_icons_font_test',
+        'absolute_path' => self::TEST_MODULE_PATH,
 
       ],
       $this->pluginId,

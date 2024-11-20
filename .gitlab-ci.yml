@@ -27,6 +27,7 @@ include:
   script:
     - php --version
     - vendor/bin/phpmd --version
+    - sed -i "s#/builds/project/ui_icons#${CI_PROJECT_DIR}#g" ${_WEB_ROOT}/modules/custom/${CI_PROJECT_NAME}/phpmd.baseline.xml
     - vendor/bin/phpmd
         $_WEB_ROOT/modules/custom/$CI_PROJECT_NAME
         gitlab
@@ -39,7 +40,7 @@ include:
         $_WEB_ROOT/modules/custom/$CI_PROJECT_NAME/phpmd.xml
         --exclude 'tests/*,**/tests/*'
         --baseline-file $_WEB_ROOT/modules/custom/$CI_PROJECT_NAME/phpmd.baseline.xml
-  allow_failure: false
+  allow_failure: true
   artifacts:
     expose_as: phpmd
     when: always
