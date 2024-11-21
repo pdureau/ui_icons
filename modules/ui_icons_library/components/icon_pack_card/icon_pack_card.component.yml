@@ -3,10 +3,6 @@ status: stable
 props:
   type: object
   properties:
-    attributes:
-      type: Drupal\Core\Template\Attribute
-      title: Attributes
-      description: Wrapper attributes.
     link:
       type: string
       format: iri-reference
