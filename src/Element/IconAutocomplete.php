@@ -144,7 +144,7 @@ class IconAutocomplete extends FormElementBase {
    * @return \Drupal\Core\Ajax\AjaxResponse
    *   The ajax response of the ajax icon.
    */
-  public static function buildSettingsAjaxCallback(array &$form, FormStateInterface &$form_state, Request $request): AjaxResponse {
+  public static function buildAjaxCallback(array &$form, FormStateInterface &$form_state, Request $request): AjaxResponse {
     /** @var \Drupal\Core\Render\RendererInterface $renderer */
     $renderer = \Drupal::service('renderer');
 
@@ -240,7 +240,7 @@ class IconAutocomplete extends FormElementBase {
     $element['icon_id']['#attributes']['data-wrapper-id'] = $ajax_wrapper_id;
 
     $element['icon_id']['#ajax'] = [
-      'callback' => [static::class, 'buildSettingsAjaxCallback'],
+      'callback' => [static::class, 'buildAjaxCallback'],
       'options' => [
         'query' => [
           'element_parents' => implode('/', $element['#array_parents']),

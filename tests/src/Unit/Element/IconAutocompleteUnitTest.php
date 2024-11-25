@@ -27,7 +27,7 @@ use Symfony\Component\HttpFoundation\Request;
  *
  * @group ui_icons
  */
-class IconAutocompleteTest extends UnitTestCase {
+class IconAutocompleteUnitTest extends UnitTestCase {
 
   use IconTestTrait;
 
@@ -630,9 +630,9 @@ class IconAutocompleteTest extends UnitTestCase {
   }
 
   /**
-   * Test the buildSettingsAjaxCallback method.
+   * Test the buildAjaxCallback method.
    */
-  public function testBuildSettingsAjaxCallback(): void {
+  public function testBuildAjaxCallback(): void {
     $form = [
       'foo' => [
         '#prefix' => '',
@@ -648,7 +648,7 @@ class IconAutocompleteTest extends UnitTestCase {
     $renderer = $prophecy->reveal();
     $this->container->set('renderer', $renderer);
 
-    $actual = IconAutocomplete::buildSettingsAjaxCallback($form, $form_state, $request);
+    $actual = IconAutocomplete::buildAjaxCallback($form, $form_state, $request);
 
     $expected = [
       'command' => 'insert',
