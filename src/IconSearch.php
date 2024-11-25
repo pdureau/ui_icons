@@ -66,21 +66,20 @@ class IconSearch implements ContainerInjectionInterface {
       return [];
     }
 
-    // Prepare multi words search by removing unwanted characters.
-    $words = preg_split('/\s+/', trim(preg_replace('/[^ \w-]/', ' ', mb_strtolower($query))));
-    if (empty($words)) {
-      return [];
-    }
-
     $icons = $this->pluginManagerIconPack->getIcons($allowed_icon_pack);
-
     if (empty($icons)) {
       return [];
     }
 
     // If the search is an exact icon full id let return faster.
-    if (isset($icons[reset($words)])) {
-      return [reset($words)];
+    if (isset($icons[$query])) {
+      return [$this->createResultEntry($query, $result_callback)];
+    }
+
+    // Prepare multi words search by removing unwanted characters.
+    $words = preg_split('/\s+/', trim(preg_replace('/[^ \w-]/', ' ', mb_strtolower($query))));
+    if (empty($words)) {
+      return [];
     }
 
     // Prepare pattern for exact and any order matches.
