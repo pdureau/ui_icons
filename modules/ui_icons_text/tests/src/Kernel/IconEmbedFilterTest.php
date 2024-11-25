@@ -128,8 +128,7 @@ class IconEmbedFilterTest extends KernelTestBase {
       '<p>Test icon: <drupal-icon data-icon-id="invalid:icon" /></p>',
       TRUE,
       [
-        '<span class="drupal-icon">',
-        'The referenced icon: invalid:icon is missing',
+        '<span class="drupal-icon"></span>',
       ],
     ];
 

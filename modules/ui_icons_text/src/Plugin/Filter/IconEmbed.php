@@ -13,7 +13,7 @@ use Drupal\Core\Render\RenderContext;
 use Drupal\Core\Render\RendererInterface;
 use Drupal\Core\StringTranslation\TranslatableMarkup;
 use Drupal\Core\Template\Attribute;
-use Drupal\Core\Theme\Icon\IconDefinitionInterface;
+use Drupal\Core\Theme\Icon\IconDefinition;
 use Drupal\Core\Theme\Icon\Plugin\IconPackManagerInterface;
 use Drupal\filter\Attribute\Filter;
 use Drupal\filter\FilterProcessResult;
@@ -165,14 +165,6 @@ class IconEmbed extends FilterBase implements ContainerFactoryPluginInterface {
         $settings = json_decode($data_settings, TRUE);
       }
 
-      // @todo do not call getIcon() here as it double with preRenderIcon().
-      $icon = $this->pluginManagerIconPack->getIcon($icon_id);
-      assert($icon === NULL || $icon instanceof IconDefinitionInterface);
-
-      if (!$icon) {
-        $this->loggerFactory->get('ui_icons')->error('During rendering of embedded icon: the icon item with ID "@id" does not exist.', ['@id' => $icon_id]);
-      }
-
       $attributes = [];
       if ($class = $node->getAttribute('class')) {
         $attributes['class'] = explode(' ', $class);
@@ -193,10 +185,7 @@ class IconEmbed extends FilterBase implements ContainerFactoryPluginInterface {
         }
       }
 
-      $build = $icon
-        ? $this->getWrappedRenderable($icon, $settings, $attributes)
-        : $this->renderMissingIconIndicator($icon_id);
-
+      $build = $this->getWrappedRenderable($icon_id, $settings, $attributes);
       $this->renderIntoDomNode($build, $node, $result);
     }
 
@@ -225,8 +214,8 @@ class IconEmbed extends FilterBase implements ContainerFactoryPluginInterface {
   /**
    * Wrap icon renderable in a specific class.
    *
-   * @param \Drupal\Core\Theme\Icon\IconDefinitionInterface $icon
-   *   The icon to render.
+   * @param string $icon_full_id
+   *   The icon full id to render.
    * @param array $settings
    *   Settings to pass as context to the rendered icon.
    * @param array $attributes
@@ -237,11 +226,17 @@ class IconEmbed extends FilterBase implements ContainerFactoryPluginInterface {
    *
    * @todo wrapping, class and library as filter settings?
    */
-  protected function getWrappedRenderable(IconDefinitionInterface $icon, array $settings, array $attributes): array {
+  protected function getWrappedRenderable(string $icon_full_id, array $settings, array $attributes): array {
     $attributes['class'][] = 'drupal-icon';
     $attributes = new Attribute($attributes);
 
-    $build = $icon->getRenderable($settings);
+    $icon_data = IconDefinition::getIconDataFromId($icon_full_id);
+    $build = [
+      '#type' => 'icon',
+      '#pack_id' => $icon_data['pack_id'],
+      '#icon_id' => $icon_data['icon_id'],
+      '#settings' => $settings,
+    ];
 
     $build['#prefix'] = '<span' . $attributes . '>';
     $build['#suffix'] = '</span>';
@@ -276,28 +271,15 @@ class IconEmbed extends FilterBase implements ContainerFactoryPluginInterface {
     $markup = $this->renderer->executeInRenderContext(new RenderContext(), function () use (&$build) {
       return $this->renderer->render($build);
     });
+
+    // Empty rendered mean icon id is probably invalid or removed.
+    if ('<span class="drupal-icon"></span>' === (string) $markup) {
+      $param = ['@pack_id' => $build['#pack_id'], '@icon_id' => $build['#icon_id']];
+      $this->loggerFactory->get('ui_icons')->error('Failed rendering of icon ID "@pack_id:@icon_id", does not exist or has been deleted.', $param);
+    }
+
     $result = $result->merge(BubbleableMetadata::createFromRenderArray($build));
     static::replaceNodeContent($node, $markup);
-  }
-
-  /**
-   * Builds the render array for the indicator when icon cannot be loaded.
-   *
-   * @param string $icon_id
-   *   The icon id failing.
-   *
-   * @return array
-   *   A render array.
-   */
-  protected function renderMissingIconIndicator(string $icon_id): array {
-    $title = $this->t('The referenced icon: @name is missing and needs to be re-embedded.', ['@name' => $icon_id]);
-    $icon = '<svg width="15" height="14" fill="none" xmlns="http://www.w3.org/2000/svg"><title>' . $title . '</title><path d="M7.002 0a7 7 0 100 14 7 7 0 000-14zm3 5c0 .551-.16 1.085-.477 1.586l-.158.22c-.07.093-.189.241-.361.393a9.67 9.67 0 01-.545.447l-.203.189-.141.129-.096.17L8 8.369v.63H5.999v-.704c.026-.396.078-.73.204-.999a2.83 2.83 0 01.439-.688l.225-.21-.01-.015.176-.14.137-.128c.186-.139.357-.277.516-.417l.148-.18A.948.948 0 008.002 5 1.001 1.001 0 006 5H4a3 3 0 016.002 0zm-1.75 6.619a.627.627 0 01-.625.625h-1.25a.627.627 0 01-.626-.625v-1.238c0-.344.281-.625.626-.625h1.25c.344 0 .625.281.625.625v1.238z" fill="#d72222"/></svg>';
-    return [
-      '#type' => 'inline_template',
-      '#template' => '<span class="drupal-icon">{{ icon|raw }}<span>',
-      '#context' => ['icon' => $icon],
-      '#attached' => ['library' => ['ui_icons_text/icon.content']],
-    ];
   }
 
   /**
