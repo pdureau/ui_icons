@@ -92,6 +92,9 @@ class IconCollector extends CacheCollector {
 
     $icon_definition['icon_id'] = $icon_data['icon_id'];
 
+    // Clean to data to reduce the array passed to createInstance().
+    unset($definition['icons']);
+
     /** @var \Drupal\Core\Theme\Icon\IconExtractorInterface $extractor */
     $extractor = $this->iconPackExtractorManager->createInstance($definition['extractor'], $definition);
     return $extractor->loadIcon($icon_definition);
