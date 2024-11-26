@@ -3,7 +3,7 @@ test_minimal:
   config:
     sources:
       - icons/flat/foo.png
-  template: >
+  template: >-
     {{ icon_id }}: <img src="{{ source }}" width="32" height="32">
 
 test_path:
@@ -39,7 +39,7 @@ test_path:
       type: "string"
       default: 'Default title'
   # Template class is important for tests.
-  template: >
+  template: >-
     {{ icon_id }}: <img
       class="icon icon-{{ icon_id|clean_class }}"
       src="{{ source }}"
@@ -62,7 +62,7 @@ test_svg:
     size:
       title: "Size"
       type: "integer"
-  template: >
+  template: >-
     {{ icon_id }}: <svg
       xmlns="https://www.w3.org/2000/svg"
       viewBox="0 0 50 50"
@@ -89,7 +89,7 @@ test_svg_sprite:
       title: "Height"
       type: "integer"
       default: 32
-  template: >
+  template: >-
     {{ icon_id }}: <svg
       xmlns="https://www.w3.org/2000/svg"
       width="{{ width|default(32) }}"
@@ -157,7 +157,7 @@ test_settings:
       minimum: 10
       maximum: 100
       multipleOf: 10
-  template: >
+  template: >-
     {{ icon_id }}: <img
       class="icon icon-{{ icon_id|clean_class }}"
       src="{{ source }}"
@@ -188,7 +188,7 @@ test_no_settings:
   config:
     sources:
       - icons/no_settings/*.svg
-  template: >
+  template: >-
     {{ icon_id }}: <img
       src="{{ source }}"
       width="32"
@@ -204,7 +204,7 @@ test_url_path:
       - https://www.drupal.org/files/D10-logo.png
       - https://www.drupal.org/files/drupal-wordmark.png
       - htp://test.com/invalid.jpg
-  template: >
+  template: >-
     {{ icon_id }}: <img src="{{ source }}" width="32" height="32">
 
 test_url_svg:
@@ -215,7 +215,7 @@ test_url_svg:
     sources:
       # This will be ignored.
       - https://www.drupal.org/files/drupal-wordmark.svg
-  template: >
+  template: >-
     {{ icon_id }}: <svg xmlns="https://www.w3.org/2000/svg">
       {{ content }}
     </svg>
@@ -228,7 +228,7 @@ test_url_svg_sprite:
     sources:
       - https://test.com/ignored.png
       - https://test.com/ignored.gif
-  template: >
+  template: >-
     <svg xmlns="https://www.w3.org/2000/svg">
       <use xlink:href="{{ source }}#{{ icon_id }}"/>
     </svg>

@@ -15,7 +15,7 @@ test_font:
       title: "Color"
       type: "string"
       format: "color"
-  template: >
+  template: >-
     <i class="icon icon-{{ icon_id }}"
       style="
         font-size:{{ size|default(32) }}px;

@@ -36,6 +36,7 @@
       {% set icon_id = icon_full_id|split(':') %}
       <div class="ui-icons-item" title="{{ icon_full_id }}">
         {{ icon(icon_id.0, icon_id.1, settings) }}
+        <br><small>{{ icon_id.1 }}</small>
       </div>
     {% endfor %}
   </div>

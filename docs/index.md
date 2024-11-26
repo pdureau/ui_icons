@@ -73,7 +73,7 @@ my_icons:
   config:
     sources:
       - icons/*.png
-  template: >
+  template: >-
     <img src="{{ source }}" width="32" height="32" role="presentation">
 
 my_icons_svg:
@@ -81,7 +81,7 @@ my_icons_svg:
   config:
     sources:
       - icons/*.svg
-  template: >
+  template: >-
     <svg
       xmlns="https://www.w3.org/2000/svg"
       width="32"
@@ -96,7 +96,7 @@ my_icons_svg_sprite:
   config:
     sources:
       - icons/icons.svg
-  template: >
+  template: >-
     <svg
       width="32"
       height="32"
@@ -120,7 +120,7 @@ my_icons:
       title: "Size"
       type: "integer"
       default: 32 # Recommended, must match the template default
-  template: >
+  template: >-
     <img
       class="icon icon-{{ icon_id|clean_class }}"
       src="{{ source }}"
@@ -145,7 +145,7 @@ my_icons_svg:
       title: "Color"
       type: "string"
       format: "color"
-  template: >
+  template: >-
     <svg
       xmlns="https://www.w3.org/2000/svg"
       fill="{{ color|default(currentColor) }}"
@@ -172,7 +172,7 @@ my_icons_svg_sprite:
       title: "Color"
       type: "string"
       format: "color"
-  template: >
+  template: >-
     <svg
       class="icon icon-{{ icon_id|clean_class }}"
       width="{{ size|default(32) }}"
@@ -282,7 +282,7 @@ For example with `img` extractor and a `size` setting:
       title: "Size"
       type: "integer"
       default: 32
-  template: >
+  template: >-
     <img
       class="icon icon-{{ icon_id|clean_class }}"
       src="{{ source }}"
@@ -304,7 +304,7 @@ For example with `svg` extractor and a `size` setting:
       title: "Size"
       type: "integer"
       default: 32
-  template: >
+  template: >-
     <svg
       xmlns="http://www.w3.org/2000/svg"
       class="icon icon-{{ icon_id|clean_class }}"
