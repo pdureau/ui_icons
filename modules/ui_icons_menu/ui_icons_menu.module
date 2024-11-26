@@ -95,8 +95,36 @@ function ui_icons_menu__preprocess_menu_item(array &$item): void {
     return;
   }
 
-  $url->setOption('ui_icons_menu_processed', TRUE);
+  if ($url->getOption('ui_icons_processed')) {
+    return;
+  }
+
+  $url->setOption('ui_icons_processed', TRUE);
   ui_icons_menu_generate_markup($item['title'], $icon['target_id'], $icon['settings'] ?? [], $url->getOption('icon_display') ?? 'before');
+}
+
+/**
+ * Implements hook_link_alter().
+ *
+ * Allow the icon to be displayed on the menu administration context in
+ * /admin/structure/menu/manage.
+ */
+function ui_icons_menu_link_alter(array &$variables): void {
+  if (!isset($variables['url']) || !isset($variables['text'])) {
+    return;
+  }
+
+  if (!$icon = $variables['url']->getOption('icon')) {
+    return;
+  }
+
+  // Do not handle link handled by field link in IconLinkFormatter.
+  if ($variables['url']->getOption('ui_icons_processed')) {
+    return;
+  }
+
+  $variables['url']->setOption('ui_icons_processed', TRUE);
+  ui_icons_menu_generate_markup($variables['text'], $icon['target_id'], $icon['settings'] ?? [], $variables['url']->getOption('icon_display') ?? 'before');
 }
 
 /**
@@ -147,28 +175,4 @@ function ui_icons_menu_generate_markup(mixed &$text, string $icon_full_id, array
       ]);
       break;
   }
-}
-
-/**
- * Implements hook_link_alter().
- *
- * Allow the icon to be displayed on the menu administration context.
- */
-function ui_icons_menu_link_alter(array &$variables): void {
-  if (!isset($variables['url']) || !isset($variables['text'])) {
-    return;
-  }
-
-  // Do not handle link passed through ui_icons_menu__preprocess_menu_item,
-  // alter of menu link will not allow markup and the text html will be escaped.
-  if ($variables['url']->getOption('ui_icons_menu_processed')) {
-    return;
-  }
-
-  if (!$icon = $variables['url']->getOption('icon')) {
-    return;
-  }
-
-  $variables['url']->setOption('ui_icons_menu_processed', TRUE);
-  ui_icons_menu_generate_markup($variables['text'], $icon['target_id'], $icon['settings'] ?? [], $variables['url']->getOption('icon_display') ?? 'before');
 }

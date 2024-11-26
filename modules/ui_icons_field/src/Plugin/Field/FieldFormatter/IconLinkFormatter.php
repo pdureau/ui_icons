@@ -323,6 +323,10 @@ class IconLinkFormatter extends LinkFormatter {
           $elements[$delta]['#title'] = $icon->getRenderable($settings);
           break;
       }
+
+      // Mark processed to avoid double pass with
+      // ui_icons_menu::ui_icons_menu_link_alter.
+      $elements[$delta]['#url']->setOption('ui_icons_processed', TRUE);
     }
 
     return $elements;
