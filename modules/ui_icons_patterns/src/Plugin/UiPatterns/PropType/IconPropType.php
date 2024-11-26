@@ -31,4 +31,17 @@ use Drupal\ui_patterns\PropTypePluginBase;
 )]
 class IconPropType extends PropTypePluginBase {
 
+  /**
+   * {@inheritdoc}
+   */
+  public function getSummary(array $definition): array {
+    $summary = parent::getSummary($definition);
+    if (isset($definition['properties']['pack_id']['enum'])) {
+      $icon_packs = $definition['properties']['pack_id']['enum'];
+      $summary[] = $this->t("Allowed icon packs: @values", ["@values" => implode(',', $icon_packs)]);
+    }
+
+    return $summary;
+  }
+
 }

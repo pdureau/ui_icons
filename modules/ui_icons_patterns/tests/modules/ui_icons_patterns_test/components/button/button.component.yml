@@ -8,11 +8,26 @@ props:
     icon1:
       title: 'Icon 1, with explicit typing'
       $ref: ui-patterns://icon
+    icon1_limited:
+      title: 'Icon 1 limited pack, with explicit typing'
+      $ref: ui-patterns://icon
+      properties:
+        pack_id:
+          type: 'string'
+          enum: ['test_svg']
     icon2:
       title: 'Icon 2, with implicit typing'
       type: object
       properties:
         pack_id: {type: 'string'}
+        icon_id: {type: 'string'}
+    icon2_limited:
+      title: 'Icon 2 limited pack, with implicit typing'
+      type: object
+      properties:
+        pack_id:
+          type: 'string'
+          enum: ['test_svg']
         icon_id: {type: 'string'}
 stories:
   preview:
@@ -20,13 +35,16 @@ stories:
     slots:
       label:
         type: ui_icon
-        pack_id: icon_pack_example_drupal_core
-        icon_id: circle
+        pack_id: test_svg
+        icon_id: 'foo'
     props:
       icon1:
-        pack_id: 'icon_pack_example_drupal_core'
-        icon_id: 'arrow-left'
+        pack_id: 'test_svg'
+        icon_id: 'bar'
       icon2:
-        pack_id: 'icon_pack_example_drupal_core'
-        icon_id: 'arrow-right'
+        pack_id: 'test_svg'
+        icon_id: 'baz-2'
         settings: {}
+      icon_limited_pack:
+        pack_id: 'test_svg'
+        icon_id: 'bar-2'

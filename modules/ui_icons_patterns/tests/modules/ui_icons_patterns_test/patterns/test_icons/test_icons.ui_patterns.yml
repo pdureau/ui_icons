@@ -6,19 +6,19 @@ test_icons:
       label: 'Label'
       preview:
         type: ui_icon
-        icon_pack: icon_pack_example_drupal_core
-        icon: circle
+        icon_pack: test_svg
+        icon: foo
   settings:
     icon1:
       label: 'Icon 1'
       type: 'icon'
       preview:
-        icon_pack: 'icon_pack_example_drupal_core'
-        icon: 'arrow-left'
+        icon_pack: 'test_svg'
+        icon: 'bar'
     icon2:
       label: 'Icon 2'
       type: 'icon'
       preview:
-        icon_pack: 'icon_pack_example_drupal_core'
-        icon: 'arrow-right'
+        icon_pack: 'test_svg'
+        icon: 'baz-2'
         settings: {}

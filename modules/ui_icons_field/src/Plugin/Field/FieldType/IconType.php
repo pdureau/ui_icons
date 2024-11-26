@@ -143,7 +143,7 @@ class IconType extends FieldItemBase {
     // Pick a random icon from allowed if no default.
     $allowed_icon_pack = $field_definition->getSetting('allowed_icon_pack');
     if (empty($allowed_icon_pack)) {
-      $allowed_icon_pack = NULL;
+      $allowed_icon_pack = [];
     }
     $icons = \Drupal::service('plugin.manager.icon_pack')->getIcons($allowed_icon_pack);
 

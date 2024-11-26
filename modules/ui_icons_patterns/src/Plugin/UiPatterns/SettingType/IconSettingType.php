@@ -49,11 +49,18 @@ class IconSettingType extends PatternSettingTypeBase {
       return $value;
     }
     // Data coming from ::settingsForm() have an IconDefinition objects.
-    [$pack_id, $icon_id] = explode(IconDefinition::ICON_SEPARATOR, $value['target_id']);
+    if (!$icon_data = IconDefinition::getIconDataFromId($value['target_id'])) {
+      return [
+        'pack_id' => '',
+        'icon_id' => '',
+        'settings' => [],
+      ];
+    }
+
     return [
-      'pack_id' => $pack_id ?: '',
-      'icon_id' => $icon_id ?: '',
-      'settings' => $value['settings'][$pack_id] ?? [],
+      'pack_id' => $icon_data['pack_id'],
+      'icon_id' => $icon_data['icon_id'],
+      'settings' => $value['settings'][$icon_data['pack_id']] ?? [],
     ];
   }
 

@@ -26,12 +26,15 @@ class IconSource extends SourcePluginBase {
    */
   public function getPropValue(): mixed {
     $value = $this->getSetting('value');
-    [$pack_id, $icon_id] = explode(IconDefinition::ICON_SEPARATOR, $value['icon_id']);
-    return [
-      'pack_id' => $pack_id ?: '',
-      'icon_id' => $icon_id ?: '',
-      'settings' => $value['icon_settings'][$pack_id] ?? [],
-    ];
+    $icon_settings = $value['icon_settings'] ?? [];
+
+    if (!$icon_data = IconDefinition::getIconDataFromId($value['icon_id'] ?? '')) {
+      return NULL;
+    }
+
+    $icon_data['settings'] = $icon_settings[$icon_data['pack_id']] ?? [];
+
+    return $icon_data;
   }
 
   /**
@@ -39,7 +42,7 @@ class IconSource extends SourcePluginBase {
    */
   public function settingsForm(array $form, FormStateInterface $form_state): array {
     $value = $this->getSetting('value');
-    return [
+    $element = [
       'value' => [
         '#type' => 'icon_autocomplete',
         '#default_value' => $value['icon_id'] ?? '',
@@ -48,6 +51,14 @@ class IconSource extends SourcePluginBase {
         '#return_id' => TRUE,
       ],
     ];
+
+    if (isset($this->propDefinition['properties']['pack_id']['enum'])) {
+      $icon_packs = $this->propDefinition['properties']['pack_id']['enum'];
+      $element['value']['#allowed_icon_pack'] = $icon_packs;
+      $element['value']['#description'] = $this->t("Allowed icon packs: @values", ["@values" => implode(',', $icon_packs)]);
+    }
+
+    return $element;
   }
 
 }
