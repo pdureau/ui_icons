@@ -289,7 +289,6 @@ class IconLinkFormatter extends LinkFormatter {
         continue;
       }
 
-      $settings = [];
       $formatter_settings = $this->getSetting('icon_settings') ?? [];
 
       $icon_display = $item->options['icon_display'] ?? $formatter_icon_display ?? NULL;
