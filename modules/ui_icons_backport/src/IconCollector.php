@@ -7,7 +7,6 @@ namespace Drupal\ui_icons_backport;
 use Drupal\Core\Cache\CacheBackendInterface;
 use Drupal\Core\Cache\CacheCollector;
 use Drupal\Core\Lock\LockBackendInterface;
-use Drupal\Core\Theme\Icon\IconExtractorPluginManager;
 
 /**
  * A CacheCollector implementation for building icons info.
@@ -36,8 +35,12 @@ class IconCollector extends CacheCollector {
    * {@inheritdoc}
    */
   public function set($key, $value): void {
-    parent::set($key, $value);
+    $this->lazyLoadCache();
+    $this->storage[$key] = $value;
     $this->persist($key);
+    // Chances are very small but the key might have been marked for deletion.
+    unset($this->keysToRemove[$key]);
+    static::updateCache();
   }
 
   /**
@@ -57,10 +60,12 @@ class IconCollector extends CacheCollector {
    * {@inheritdoc}
    */
   public function resolveCacheMiss($key, array $definition = []): ?IconDefinitionInterface {
-    $this->storage[$key] = $this->getIconFromExtractor($key, $definition);
+    $icon = $this->getIconFromExtractor($key, $definition);
+    $this->storage[$key] = $icon;
     $this->persist($key);
+    $this->set($key, $icon);
 
-    return $this->storage[$key];
+    return $icon;
   }
 
   /**

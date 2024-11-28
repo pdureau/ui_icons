@@ -90,13 +90,13 @@ class IconSearch implements ContainerInjectionInterface {
     $matches = $matched_ids = [];
     $icon_list = array_keys($icons);
     foreach ($icon_list as $icon_full_id) {
-      [$pack_id, $icon_id] = explode(IconDefinition::ICON_SEPARATOR, $icon_full_id);
-      if ($allowed_icon_pack && !in_array($pack_id, $allowed_icon_pack)) {
+      $icon_data = IconDefinition::getIconDataFromId($icon_full_id);
+      if ($allowed_icon_pack && !in_array($icon_data['pack_id'], $allowed_icon_pack)) {
         continue;
       }
 
       // Priority search is on id and then pack for order.
-      $icon_search = $icon_id . ' ' . $pack_id;
+      $icon_search = $icon_data['icon_id'] . ' ' . $icon_data['pack_id'];
 
       // Check for exact order or any order matches.
       if (preg_match($pattern, $icon_search)) {

@@ -5,11 +5,11 @@
 <div{{ attributes.addClass(classes) }}>
   <a class="link" href="{{ link }}">
     <h3 class="title">
-    {%- if not enabled -%}
+    {%- if not enabled %}
       <em>({{ 'Disabled'|t }})</em>
-    {%- endif -%}
+    {% endif -%}
     {{- label -}}{% if version %} <span class="version">{{ version }}</span>{% endif %}
-    {%- if total > 0 -%}
+    {%- if total > 0 %}
       <small>
         {% trans %}
           (1 icon)
@@ -17,7 +17,7 @@
           ({{ total }} icons)
         {% endtrans %}
       </small>
-    {%- endif -%}
+    {% endif -%}
     </h3>
   </a>
   {% if description %}<p class="description">{{ description }}</p>{% endif %}

@@ -167,7 +167,7 @@ class IconPluginTest extends WebDriverTestBase {
   }
 
   /**
-   * Test the CKEditor Icon plugin.
+   * Test the CKEditor icon plugin.
    *
    * @dataProvider providerIconPlugin
    */
@@ -251,7 +251,7 @@ class IconPluginTest extends WebDriverTestBase {
   }
 
   /**
-   * Test Icon values.
+   * Test icon values.
    *
    * @param \Behat\Mink\Element\NodeElement $element
    *   The NodeElement whose icon values are to be asserted.

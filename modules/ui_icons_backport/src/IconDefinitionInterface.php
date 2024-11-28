@@ -28,7 +28,8 @@ interface IconDefinitionInterface {
    * @param string|null $group
    *   The group of the icon.
    * @param array $data
-   *   The additional data of the icon.
+   *   The additional data of the icon. Used by extractors to dynamically add
+   *   any needed value.
    *
    * @return self
    *   The icon definition.
@@ -39,7 +40,7 @@ interface IconDefinitionInterface {
     string $template,
     ?string $source = NULL,
     ?string $group = NULL,
-    ?array $data = NULL,
+    array $data = [],
   ): self;
 
   /**
@@ -67,7 +68,7 @@ interface IconDefinitionInterface {
   public static function getIconDataFromId(string $icon_full_id): ?array;
 
   /**
-   * Get the Icon label as human friendly.
+   * Get the icon label as human friendly.
    *
    * @return string
    *   The icon label.
@@ -75,7 +76,7 @@ interface IconDefinitionInterface {
   public function getLabel(): string;
 
   /**
-   * Get the full Icon id.
+   * Get the full icon id.
    *
    * @return string
    *   The icon id as pack_id:icon_id.
@@ -83,7 +84,7 @@ interface IconDefinitionInterface {
   public function getId(): string;
 
   /**
-   * Get the Icon id.
+   * Get the icon id.
    *
    * @return string
    *   The icon id as icon_id.
@@ -91,72 +92,85 @@ interface IconDefinitionInterface {
   public function getIconId(): string;
 
   /**
-   * Get the Icon Pack id.
+   * Get the icon Pack id.
    *
    * @return string
-   *   The Icon Pack id.
+   *   The icon Pack id.
    */
   public function getPackId(): string;
 
   /**
-   * Get the Icon source, path or url.
+   * Get the icon source, path or url.
    *
    * @return string|null
-   *   The Icon source.
+   *   The icon source.
    */
   public function getSource(): ?string;
 
   /**
-   * Get the Icon Group.
+   * Get the icon Group.
    *
    * @return string|null
-   *   The Icon Group.
+   *   The icon Group.
    */
   public function getGroup(): ?string;
 
   /**
-   * Get the Icon Twig template.
+   * Get the icon Twig template.
    *
    * @return string
-   *   The Icon template.
+   *   The icon template.
    */
   public function getTemplate(): string;
 
   /**
-   * Get the Icon pack label.
+   * Get the icon pack label.
    *
    * @return \Drupal\Core\StringTranslation\TranslatableMarkup|null
-   *   The Icon pack label.
+   *   The icon pack label.
    */
   public function getPackLabel(): ?TranslatableMarkup;
 
   /**
-   * Get the Icon Twig library.
+   * Get the icon Twig library.
    *
    * @return string|null
-   *   The Icon library.
+   *   The icon library.
    */
   public function getLibrary(): ?string;
 
   /**
-   * Get the Icon data.
+   * Get all icon data.
    *
-   * @param string|null $key
-   *   The optional data key to find, if null return all data.
+   * Icon data is injected by extractors and can be used to set any values
+   * needed for the extractor loadIcon() method.
+   * The data is then injected in the Twig template of the icon.
    *
-   * @return string|array|null
-   *   The icon data if exist or null.
+   * @return array
+   *   All the icon data.
    */
-  public function getData(?string $key = NULL): string|array|NULL;
+  public function getAllData(): array;
 
   /**
-   * Get the Icon renderable array.
+   * Get a specific icon data.
+   *
+   * @param string $key
+   *   The data key to retrieve.
+   *
+   * @return mixed
+   *   The icon specific data if exist or null. The data being added as an array
+   *   by extractors, there is no specific type enforced.
+   */
+  public function getData(string $key): mixed;
+
+  /**
+   * Get the icon renderable array.
    *
    * @param array $settings
    *   Settings to pass to the renderable for context.
    *
    * @return array
-   *   The Icon renderable.
+   *   The icon renderable.
    */
   public function getRenderable(array $settings = []): array;
 

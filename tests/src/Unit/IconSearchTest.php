@@ -51,7 +51,7 @@ class IconSearchTest extends TestCase {
   private RendererInterface $renderer;
 
   /**
-   * The Icon search.
+   * The icon search service.
    *
    * @var \Drupal\ui_icons\IconSearch
    */

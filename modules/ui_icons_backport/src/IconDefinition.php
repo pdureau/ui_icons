@@ -40,7 +40,7 @@ class IconDefinition implements IconDefinitionInterface {
     private string $template,
     private ?string $source,
     private ?string $group,
-    private ?array $data,
+    private array $data,
   ) {}
 
   /**
@@ -52,7 +52,7 @@ class IconDefinition implements IconDefinitionInterface {
     string $template,
     ?string $source = NULL,
     ?string $group = NULL,
-    ?array $data = NULL,
+    array $data = [],
   ): self {
     $errors = [];
     if (0 === strlen($pack_id)) {
@@ -86,7 +86,7 @@ class IconDefinition implements IconDefinitionInterface {
    * {@inheritdoc}
    */
   public static function getIconDataFromId(string $icon_full_id): ?array {
-    $icon_data = explode(self::ICON_SEPARATOR, $icon_full_id);
+    $icon_data = explode(self::ICON_SEPARATOR, $icon_full_id, 2);
     if (count($icon_data) < 2) {
       return NULL;
     }
@@ -163,10 +163,14 @@ class IconDefinition implements IconDefinitionInterface {
   /**
    * {@inheritdoc}
    */
-  public function getData(?string $key = NULL): string|array|NULL {
-    if (!$key) {
-      return $this->data;
-    }
+  public function getAllData(): array {
+    return $this->data;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getData(string $key): mixed {
     return $this->data[$key] ?? NULL;
   }
 

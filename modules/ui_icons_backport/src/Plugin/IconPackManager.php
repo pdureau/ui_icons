@@ -22,9 +22,9 @@ use JsonSchema\Constraints\Constraint;
 use JsonSchema\Validator;
 
 /**
- * Defines an Icon Pack plugin manager to deal with icons.
+ * Defines an icon pack plugin manager to deal with icons.
  *
- * An extension can define icon pack in an EXTENSION_NAME.icons.yml file
+ * An extension can define an icon pack in an EXTENSION_NAME.icons.yml file
  * contained in the extension's base directory.
  * Each icon pack must have an `extractor` and `template` property. An optional
  * `config` property can be required based on the value of the `extractor`
@@ -60,10 +60,10 @@ use JsonSchema\Validator;
  *     # ... Other keys for specific or contributed extractor plugins.
  *
  *   # Recommended values:
- *   label: (string) The name of the Icon pack for display
+ *   label: (string) The name of the icon pack for display
  *
  *   # Optional values:
- *   description: (string) The description of the Icon pack for display.
+ *   description: (string) The description of the icon pack for display.
  *   license:
  *     name: (string) A System Package Data Exchange (SPDX) license identifier
  *       such as "GPL-2.0-or-later" (see https://spdx.org/licenses/), or if
@@ -75,7 +75,7 @@ use JsonSchema\Validator;
  *     - (string) The URL of a Documentation page.
  *     - ...
  *   version: (string) The version of the icon pack.
- *   enabled: (boolean) Set FALSE to disable the Icon pack discovering process.
+ *   enabled: (boolean) Set FALSE to disable the icon pack discovering process.
  *     Definition will not be populated with icons. Defaults to TRUE.
  *   preview: (string) Optional Twig template for previewing icons in the admin
  *     backend when the standard template does not support proper icon display.
@@ -129,7 +129,7 @@ use JsonSchema\Validator;
  *       type: "integer"
  *       minimum: 24
  *       default: 32
- *   template: >-
+ *   template: >
  *     <img src={{ source }} width="{{ size|default(32) }}" height="{{ size|default(32) }}"/>
  *   library: "my_theme/my_lib"
  * @endcode
@@ -140,12 +140,13 @@ use JsonSchema\Validator;
  * @see plugin_api
  *
  * @internal
- *   The Icon API is experimental and is not meant for production use.
+ *   The icon API is experimental and is not meant for production use.
  *   See https://www.drupal.org/core/experimental for more information.
  */
 class IconPackManager extends DefaultPluginManager implements IconPackManagerInterface {
 
   private const SCHEMA_VALIDATE = 'icon_pack.schema.json';
+
 
   /**
    * The schema validator.
@@ -193,7 +194,7 @@ class IconPackManager extends DefaultPluginManager implements IconPackManagerInt
    *   The JSON Validator class.
    */
   public function setValidator(?Validator $validator = NULL): void {
-    if ($validator) {
+    if (NULL !== $validator) {
       $this->validator = $validator;
       return;
     }
@@ -207,7 +208,7 @@ class IconPackManager extends DefaultPluginManager implements IconPackManagerInt
    */
   public function processDefinition(&$definition, $plugin_id): void {
     if (preg_match('@[^a-z0-9_]@', $plugin_id)) {
-      throw new IconPackConfigErrorException(sprintf('Invalid Icon Pack id in: %s, name: %s must contain only lowercase letters, numbers, and underscores.', $definition['provider'], $plugin_id));
+      throw new IconPackConfigErrorException(sprintf('Invalid icon pack id in: %s, name: %s must contain only lowercase letters, numbers, and underscores.', $definition['provider'], $plugin_id));
     }
 
     $this->validateDefinition($definition);
@@ -285,15 +286,15 @@ class IconPackManager extends DefaultPluginManager implements IconPackManagerInt
   /**
    * {@inheritdoc}
    */
-  public function getExtractorPluginForms(array &$form, FormStateInterface $form_state, array $default_settings = [], array $allowed_icon_packs = [], bool $wrap_details = FALSE): void {
+  public function getExtractorPluginForms(array &$form, FormStateInterface $form_state, array $default_settings = [], array $allowed_icon_pack = [], bool $wrap_details = FALSE): void {
     $icon_pack_definitions = $this->getDefinitions();
 
     if (NULL === $icon_pack_definitions) {
       return;
     }
 
-    if (!empty($allowed_icon_packs)) {
-      $icon_pack_definitions = array_intersect_key($icon_pack_definitions, $allowed_icon_packs);
+    if (!empty($allowed_icon_pack)) {
+      $icon_pack_definitions = array_intersect_key($icon_pack_definitions, $allowed_icon_pack);
     }
 
     $extractor_forms = $this->iconPackExtractorManager->getExtractorForms($icon_pack_definitions);
@@ -311,7 +312,7 @@ class IconPackManager extends DefaultPluginManager implements IconPackManagerInt
       // extractor form.
       $form[$pack_id] = [
         '#type' => $wrap_details ? 'details' : 'container',
-        '#title' => $wrap_details ? $definition['label'] ?? $pack_id : $pack_id,
+        '#title' => $definition['label'] ?? $pack_id,
       ];
 
       // Create the extractor form and set settings so we can build with values.

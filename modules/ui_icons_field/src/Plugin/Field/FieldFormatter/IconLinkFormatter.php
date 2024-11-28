@@ -289,6 +289,7 @@ class IconLinkFormatter extends LinkFormatter {
         continue;
       }
 
+      // @todo do not call getIcon here and simply create the renderable.
       $icon = $this->pluginManagerIconPack->getIcon($icon_full_id);
       if (!$icon instanceof IconDefinitionInterface) {
         continue;

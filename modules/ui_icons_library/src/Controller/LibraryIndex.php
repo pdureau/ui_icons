@@ -107,8 +107,12 @@ class LibraryIndex extends ControllerBase {
       $icon_preview = [];
       foreach (array_keys($icons) as $icon_id) {
         // @todo avoid load icon and pass template for preview.
-        $icon = $this->pluginManagerIconPack->getIcon($icon_id);
-        $icon_preview[] = IconPreview::getPreview($icon, ['size' => self::PREVIEW_ICON_SIZE]);
+        if ($icon = $this->pluginManagerIconPack->getIcon($icon_id)) {
+          $icon_preview[] = IconPreview::getPreview($icon, ['size' => self::PREVIEW_ICON_SIZE]);
+        }
+        else {
+          dpm($icon_id);
+        }
       }
 
       $build['grid'][$pack_id]['#slots']['icons'] = $icon_preview;

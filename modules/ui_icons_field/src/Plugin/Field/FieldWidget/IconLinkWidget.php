@@ -184,6 +184,7 @@ class IconLinkWidget extends LinkWidget implements ContainerFactoryPluginInterfa
     $icon_full_id = NULL;
     $options = $item->get('options')->getValue() ?? [];
     if (isset($options['icon']['target_id'])) {
+      // @todo do not call getIcon here and simply create the renderable.
       $icon = $this->pluginManagerIconPack->getIcon($options['icon']['target_id']);
       if ($icon instanceof IconDefinitionInterface) {
         $icon_full_id = $icon->getId();

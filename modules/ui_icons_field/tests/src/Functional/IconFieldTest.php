@@ -85,7 +85,7 @@ class IconFieldTest extends BrowserTestBase {
   }
 
   /**
-   * Test field Icon create, save and display.
+   * Test field icon create, save and display.
    */
   public function testIconFieldSave(): void {
     $label = 'Icon test';
@@ -137,7 +137,7 @@ class IconFieldTest extends BrowserTestBase {
     $this->drupalGet('/node/add/article');
     $assert_session->statusCodeEquals(200);
 
-    // Check if the Icon field is present.
+    // Check if the icon field is present.
     $assert_session->fieldExists($this->fieldName . '[0][value][icon_id]');
 
     // Try to save the node without selecting an icon.

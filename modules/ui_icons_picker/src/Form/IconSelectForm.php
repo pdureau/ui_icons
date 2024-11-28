@@ -93,28 +93,29 @@ final class IconSelectForm extends FormBase {
     }
 
     if (!$modal_state = static::getModalState($form_state)) {
-      $icons_list = $this->getIconPackManager()->getIcons($allowed_icon_pack);
+      $icon_list = $this->getIconPackManager()->getIcons($allowed_icon_pack);
       $modal_state = [
         'page' => 0,
-        'icon_list' => $icons_list,
-        'total_available' => count($icons_list),
+        'icon_list' => $icon_list,
+        'total_available' => count($icon_list),
       ];
       static::setModalState($form_state, $modal_state);
     }
 
     $input = $form_state->getUserInput();
     $query = $input['filter'] ?? '';
-    $icons_list = $modal_state['icon_list'] ?? [];
+    $icon_list = $modal_state['icon_list'] ?? [];
     $total_available = $modal_state['total_available'] ?? 0;
 
     if (empty($query)) {
-      $icons = array_keys($icons_list);
+      $icons = array_keys($icon_list);
+      $pager = $this->createPager($modal_state['page'], $total_available);
     }
     else {
       $icons = $this->getIconSearch()->search($query, $allowed_icon_pack, $total_available);
+      $pager = $this->createPager($modal_state['page'], count($icons));
     }
 
-    $pager = $this->createPager($modal_state['page'], count($icons));
     $icons = array_slice($icons, $pager['offset'], self::NUM_PER_PAGE);
 
     $form['#prefix'] = '<div id="' . self::AJAX_WRAPPER_ID . '"><div id="' . self::MESSAGE_WRAPPER_ID . '"></div>';
@@ -197,6 +198,7 @@ final class IconSelectForm extends FormBase {
 
     // @todo use search callable an theme.
     foreach ($icons as $icon_id) {
+      // @todo do not call getIcon here and simply create the renderable.
       $icon = $this->getIconPackManager()->getIcon($icon_id);
       if (!$icon instanceof IconDefinitionInterface) {
         continue;

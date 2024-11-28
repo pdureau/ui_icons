@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace Drupal\ui_icons_backport\Template;
 
 use Drupal\Core\Theme\Icon\IconDefinition;
-use Drupal\Core\Theme\Icon\Plugin\IconPackManagerInterface;
 use Twig\Extension\AbstractExtension;
 use Twig\TwigFunction;
 
@@ -52,13 +51,13 @@ final class IconsTwigExtension extends AbstractExtension {
     if (!$pack_id || !$icon_id) {
       return [];
     }
-    $icon_full_id = IconDefinition::createIconId($pack_id, $icon_id);
-    $icon = $this->pluginManagerIconPack->getIcon($icon_full_id);
-    if (!$icon) {
-      return [];
-    }
 
-    return $icon->getRenderable($settings ?? []);
+    return [
+      '#type' => 'icon',
+      '#pack_id' => $pack_id,
+      '#icon_id' => $icon_id,
+      '#settings' => $settings,
+    ];
   }
 
 }

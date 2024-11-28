@@ -54,6 +54,7 @@ final class IconFilterController implements ContainerInjectionInterface {
       $settings = json_decode($query_settings, TRUE);
     }
 
+    // @todo do not call getIcon here and simply create the renderable.
     /** @var \Drupal\Core\Theme\Icon\IconDefinitionInterface $icon */
     $icon = $this->pluginManagerIconPack->getIcon($icon_id);
 

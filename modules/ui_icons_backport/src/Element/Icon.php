@@ -65,35 +65,32 @@ class Icon extends RenderElementBase {
       return $element;
     }
 
+    // Build context minimal values as icon_id, optional source and attributes.
     $context = [
       'icon_id' => $icon->getIconId(),
     ];
+    // Better to not have source value if not set for the template.
     if ($source = $icon->getSource()) {
       $context['source'] = $source;
     }
-
-    // Pass all data to the template, extractors can add specific values.
-    if ($data = $icon->getData()) {
-      if (is_array($data)) {
-        foreach ($data as $data_name => $data_value) {
-          if (!$data_value) {
-            continue;
-          }
-          $context[$data_name] = $data_value;
-        }
-      }
+    // Silently ensure settings is an array.
+    if (!is_array($element['#settings'])) {
+      $element['#settings'] = [];
     }
 
+    $extractor_data = $icon->getAllData();
     // Inject attributes variable if not created by the extractor.
-    if (!isset($context['attributes'])) {
-      $context['attributes'] = new Attribute();
+    if (!isset($extractor_data['attributes'])) {
+      $extractor_data['attributes'] = new Attribute();
     }
 
     $element['inline-template'] = [
       '#type' => 'inline_template',
       '#template' => $icon->getTemplate(),
-      // Settings are added to be always from element and not extractor.
-      '#context' => $context + $element['#settings'],
+      // Context include data from extractor and settings, priority on settings
+      // from this element. Context as last value to be sure nothing override
+      // icon_id or source if set.
+      '#context' => array_merge($extractor_data, $element['#settings'], $context),
     ];
 
     if ($library = $icon->getLibrary()) {

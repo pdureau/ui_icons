@@ -31,7 +31,7 @@ interface IconFinderInterface {
    * This allow usage in extractor and easier unit test.
    *
    * @param string $uri
-   *   The URI to process.
+   *   The URI to process, only local path allowed.
    *
    * @return string|bool
    *   The file content.

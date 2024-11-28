@@ -19,7 +19,7 @@ use Symfony\Component\Finder\Finder;
  *
  * Local Paths:
  * For local paths, the class leverage Symfony Finder features with some extra
- * functionalities related to our Icon definition:
+ * functionalities related to our icon definition:
  * - Icon ID Extraction (`{icon_id}`): A placeholder `{icon_id}` within
  *   the filename allows extracting a portion as the icon ID. For
  *   example, a source definition like `/{icon_id}-24.svg` would extract
@@ -112,6 +112,13 @@ class IconFinder implements ContainerInjectionInterface, IconFinderInterface {
    * {@inheritdoc}
    */
   public function getFileContents(string $uri): string|bool {
+    $url = parse_url($uri);
+    if (isset($url['scheme']) || isset($url['host'])) {
+      return FALSE;
+    }
+    if (!file_exists($uri)) {
+      return FALSE;
+    }
     return file_get_contents($uri);
   }
 
@@ -152,7 +159,7 @@ class IconFinder implements ContainerInjectionInterface, IconFinderInterface {
    */
   private function getFileFromUrl(string $scheme, string $path, string $source): array {
     if (!in_array($scheme, UrlHelper::getAllowedProtocols(), TRUE)) {
-      $this->logger->warning('Invalid Icon source: @source', ['@source' => $source]);
+      $this->logger->warning('Invalid icon source: @source', ['@source' => $source]);
       return [];
     }
 
@@ -198,7 +205,7 @@ class IconFinder implements ContainerInjectionInterface, IconFinderInterface {
     // extensions.
     $extension = empty($extension) ? '*' : $extension;
     if ('*' !== $extension && !in_array($extension, self::ALLOWED_EXTENSION, TRUE)) {
-      $this->logger->warning('Invalid Icon path extension @filename.@extension in source: @source', [
+      $this->logger->warning('Invalid icon path extension @filename.@extension in source: @source', [
         '@filename' => $filename,
         '@extension' => $extension,
         '@source' => $source,
@@ -258,12 +265,12 @@ class IconFinder implements ContainerInjectionInterface, IconFinderInterface {
         ->sortByExtension();
     }
     catch (\Throwable) {
-      $this->logger->warning('Invalid Icon path in source: @source', ['@source' => $path]);
+      $this->logger->warning('Invalid icon path in source: @source', ['@source' => $path]);
       return NULL;
     }
 
     if (!$finder->hasResults()) {
-      $this->logger->warning('No Icon found in source: @source', ['@source' => $path]);
+      $this->logger->warning('No icon found in source: @source', ['@source' => $path]);
       return NULL;
     }
 

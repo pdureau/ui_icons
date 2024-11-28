@@ -26,7 +26,7 @@ interface IconExtractorInterface extends PluginFormInterface {
   public function discoverIcons(): array;
 
   /**
-   * Load an Icon object.
+   * Load an icon object.
    *
    * @param array $icon_data
    *   The icon data build in the discoverIcons() method.
@@ -59,7 +59,7 @@ interface IconExtractorInterface extends PluginFormInterface {
    *   The icon data.
    *
    * @return \Drupal\Core\Theme\Icon\IconDefinitionInterface
-   *   The Icon definition.
+   *   The icon definition.
    *
    * @see \Drupal\Core\Theme\Icon\IconDefinition::create()
    */

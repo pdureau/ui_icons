@@ -15,6 +15,8 @@ class IconPreview {
 
   /**
    * {@inheritdoc}
+   *
+   * @todo do not work with an icon from getIcon to avoid too much cache.
    */
   public static function getPreview(IconDefinitionInterface $icon, array $settings = []): array {
     if ($preview = $icon->getData('preview')) {

@@ -97,7 +97,7 @@ class SvgSpriteExtractor extends IconExtractorWithFinder {
 
     $ids = [];
     foreach ($wrapper as $symbol) {
-      if (isset($symbol['id'])) {
+      if (isset($symbol['id']) && 0 === preg_match('/[^\w-]/', (string) $symbol['id'])) {
         $ids[] = (string) $symbol['id'];
       }
     }

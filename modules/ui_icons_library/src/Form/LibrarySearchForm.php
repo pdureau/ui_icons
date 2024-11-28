@@ -85,6 +85,9 @@ final class LibrarySearchForm extends FormBase {
       '#title' => $this->t('Keywords'),
       '#title_display' => 'invisible',
       '#placeholder' => $this->t('Keywords'),
+      '#attributes' => [
+        'minlength' => IconSearch::SEARCH_MIN_LENGTH,
+      ],
     ];
 
     $form['actions']['submit'] = [

@@ -3,5 +3,4 @@ type: module
 description: 'Provides test icons and settings for font extractor.'
 package: 'Testing'
 dependencies:
-  - ui_icons:ui_icons
   - ui_icons:ui_icons_font
