@@ -103,6 +103,7 @@ class IconAutocomplete extends FormElementBase {
       }
       $return = $input;
 
+      // @todo avoid calling getIcon, perhaps get rid of object return.
       /** @var \Drupal\Core\Theme\Icon\IconDefinitionInterface $icon */
       $icon = self::iconPack()->getIcon($input['icon_id']);
       if (NULL === $icon) {
@@ -277,9 +278,11 @@ class IconAutocomplete extends FormElementBase {
       '#title' => $element['#settings_title'],
     ];
 
-    $icon_full_id = explode(IconDefinition::ICON_SEPARATOR, $icon_full_id);
-    $pack_id = $icon_full_id[0];
+    if (!$icon_data = IconDefinition::getIconDataFromId($icon_full_id)) {
+      return $element;
+    }
 
+    $pack_id = $icon_data['pack_id'];
     if (!empty($element['#allowed_icon_pack'])) {
       if (!in_array($pack_id, $element['#allowed_icon_pack'])) {
         unset($element['icon_settings']);
@@ -315,8 +318,6 @@ class IconAutocomplete extends FormElementBase {
    *   The form state object.
    * @param array $complete_form
    *   The complete form array.
-   *
-   * @todo reduce complexity.
    */
   public static function validateIcon(array &$element, FormStateInterface $form_state, array &$complete_form): void {
     $input_exists = FALSE;

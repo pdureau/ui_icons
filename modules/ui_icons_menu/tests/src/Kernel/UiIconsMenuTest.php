@@ -4,12 +4,7 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\ui_icons_menu\Kernel;
 
-@class_alias('Drupal\ui_icons_backport\IconDefinitionInterface', 'Drupal\Core\Theme\Icon\IconDefinitionInterface');
-@class_alias('Drupal\ui_icons_backport\Plugin\IconPackManagerInterface', 'Drupal\Core\Theme\Icon\Plugin\IconPackManagerInterface');
-
 use Drupal\Core\Field\BaseFieldDefinition;
-use Drupal\Core\Theme\Icon\IconDefinitionInterface;
-use Drupal\Core\Theme\Icon\Plugin\IconPackManagerInterface;
 use Drupal\KernelTests\KernelTestBase;
 use Drupal\menu_link_content\Entity\MenuLinkContent;
 
@@ -31,6 +26,7 @@ class UiIconsMenuTest extends KernelTestBase {
     'ui_icons',
     'ui_icons_backport',
     'ui_icons_menu',
+    'ui_icons_test',
   ];
 
   /**
@@ -80,7 +76,7 @@ class UiIconsMenuTest extends KernelTestBase {
   public function testPreprocessMenu(?string $iconDisplay, array $expectedOrder): void {
     // Create a mock menu item.
     $title = 'Test Item';
-    $markup = '<img class="icon drupal-icon" src="" />';
+    $markup = 'foo: <img src="/modules/custom/ui_icons/tests/modules/ui_icons_test/icons/flat/foo.png" width="32" height="32">';
 
     $menu_link = MenuLinkContent::create([
       'title' => $title,
@@ -101,42 +97,36 @@ class UiIconsMenuTest extends KernelTestBase {
     $url = $variables['items'][0]['url'];
     $options = $url->getOptions();
 
-    $options['icon'] = ['target_id' => 'test_pack:test_icon'];
+    $options['icon'] = ['target_id' => 'test_minimal:foo'];
     if ($iconDisplay !== NULL) {
       $options['icon_display'] = $iconDisplay;
     }
     $url->setOptions($options);
 
-    // Create a mock IconDefinitionInterface.
-    $icon = $this->createMock(IconDefinitionInterface::class);
-    $icon->method('getPackId')->willReturn('test_pack');
-    $icon->method('getRenderable')->willReturn(['#markup' => $markup]);
-
-    // Mock the icon pack manager service.
-    $icon_pack_manager = $this->createMock(IconPackManagerInterface::class);
-    $icon_pack_manager->method('getIcon')->willReturn($icon);
-    $this->container->set('plugin.manager.icon_pack', $icon_pack_manager);
-
     ui_icons_menu_preprocess_menu($variables);
+    $actual = (string) $variables['items'][0]['title'];
 
+    // Test the position of the dom element, the icon test is prefix by icon id,
+    // let ignore HTML markup and compare only string.
+    $result_dom = new \DOMDocument();
+    $result_dom->loadHTML($actual);
+
+    $actual = trim($result_dom->textContent);
     switch ($iconDisplay) {
       case 'icon_only':
-        $expected = $markup;
+        $this->assertEquals('foo:', $actual);
         break;
 
       case 'before':
-        $expected = $markup . '&nbsp;<span class="ui-icons-menu-text">' . $title . '</span>';
+        $this->assertStringStartsWith('foo:', $actual);
+        $this->assertStringEndsWith('Test Item', $actual);
         break;
 
       case 'after':
-        $expected = '<span class="ui-icons-menu-text">' . $title . '</span>&nbsp;' . $markup;
+        $this->assertStringStartsWith('Test Item', $actual);
+        $this->assertStringEndsWith('foo:', $actual);
         break;
     }
-
-    $this->assertSame(
-      $expected,
-      (string) $variables['items'][0]['title']
-    );
   }
 
 }

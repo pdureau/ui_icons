@@ -6,8 +6,7 @@ namespace Drupal\ui_icons_ckeditor5\Controller;
 
 use Drupal\Core\DependencyInjection\ContainerInjectionInterface;
 use Drupal\Core\Render\RendererInterface;
-use Drupal\Core\Theme\Icon\IconDefinitionInterface;
-use Drupal\Core\Theme\Icon\Plugin\IconPackManagerInterface;
+use Drupal\Core\Theme\Icon\IconDefinition;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -19,7 +18,6 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 final class IconFilterController implements ContainerInjectionInterface {
 
   public function __construct(
-    private readonly IconPackManagerInterface $pluginManagerIconPack,
     private readonly RendererInterface $renderer,
   ) {}
 
@@ -28,7 +26,6 @@ final class IconFilterController implements ContainerInjectionInterface {
    */
   public static function create(ContainerInterface $container): self {
     return new static(
-      $container->get('plugin.manager.icon_pack'),
       $container->get('renderer'),
     );
   }
@@ -43,8 +40,8 @@ final class IconFilterController implements ContainerInjectionInterface {
    *   The icon string rendered.
    */
   public function preview(Request $request): Response {
-    $icon_id = (string) $request->query->get('icon_id');
-    if ($icon_id == '') {
+    $icon_full_id = (string) $request->query->get('icon_id');
+    if ($icon_full_id == '') {
       throw new NotFoundHttpException();
     }
 
@@ -54,21 +51,12 @@ final class IconFilterController implements ContainerInjectionInterface {
       $settings = json_decode($query_settings, TRUE);
     }
 
-    // @todo do not call getIcon here and simply create the renderable.
-    /** @var \Drupal\Core\Theme\Icon\IconDefinitionInterface $icon */
-    $icon = $this->pluginManagerIconPack->getIcon($icon_id);
-
-    if (!$icon instanceof IconDefinitionInterface) {
-      return (new Response('', 404));
-    }
-
-    // Use default settings if none set.
-    if (empty($settings)) {
-      $settings = $this->pluginManagerIconPack->getExtractorFormDefaults($icon->getPackId());
-    }
-
-    $build = $icon->getRenderable($settings);
+    $build = IconDefinition::getRenderable($icon_full_id, $settings);
     $html = $this->renderer->renderInIsolation($build);
+
+    if (empty($html)) {
+      return (new Response(sprintf('Icon %s not found!', $icon_full_id), 404));
+    }
 
     return (new Response((string) $html, 200))
       // Do not allow any intermediary to cache the response, only the end user.

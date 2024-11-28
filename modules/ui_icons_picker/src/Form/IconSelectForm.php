@@ -196,10 +196,10 @@ final class IconSelectForm extends FormBase {
     // Empty icon to delete selection.
     $options['_none_'] = '<div class="icon-preview-none icon-preview-wrapper"><img class="icon icon-preview" src="/core/themes/claro/images/icons/e34f4f/crossout.svg" title="None" width="32" height="32"></div>';
 
-    // @todo use search callable an theme.
-    foreach ($icons as $icon_id) {
+    // @todo use search callable.
+    foreach ($icons as $icon_full_id) {
       // @todo do not call getIcon here and simply create the renderable.
-      $icon = $this->getIconPackManager()->getIcon($icon_id);
+      $icon = $this->getIconPackManager()->getIcon($icon_full_id);
       if (!$icon instanceof IconDefinitionInterface) {
         continue;
       }

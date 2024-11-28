@@ -68,6 +68,20 @@ interface IconDefinitionInterface {
   public static function getIconDataFromId(string $icon_full_id): ?array;
 
   /**
+   * Get the icon renderable element array.
+   *
+   * @param string $icon_full_id
+   *   The id of the icon including the pack.
+   * @param array $settings
+   *   Settings to pass to the renderable for context. Can be indexed by the
+   *   icon pack id for lookup.
+   *
+   * @return array|null
+   *   The icon renderable.
+   */
+  public static function getRenderable(string $icon_full_id, array $settings = []): ?array;
+
+  /**
    * Get the icon label as human friendly.
    *
    * @return string
@@ -162,16 +176,5 @@ interface IconDefinitionInterface {
    *   by extractors, there is no specific type enforced.
    */
   public function getData(string $key): mixed;
-
-  /**
-   * Get the icon renderable array.
-   *
-   * @param array $settings
-   *   Settings to pass to the renderable for context.
-   *
-   * @return array
-   *   The icon renderable.
-   */
-  public function getRenderable(array $settings = []): array;
 
 }

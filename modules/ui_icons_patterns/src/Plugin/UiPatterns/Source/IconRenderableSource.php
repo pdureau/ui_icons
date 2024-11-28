@@ -27,17 +27,7 @@ class IconRenderableSource extends IconSource {
     if (!$value) {
       return [];
     }
-
-    if (!$icon_data = IconDefinition::getIconDataFromId($value['icon_id'])) {
-      return NULL;
-    }
-
-    return [
-      '#type' => 'icon',
-      '#pack_id' => $icon_data['pack_id'],
-      '#icon_id' => $icon_data['icon_id'],
-      '#settings' => $value['icon_settings'][$icon_data['pack_id']] ?? [],
-    ];
+    return IconDefinition::getRenderable($value['icon_id'], $value['icon_settings'] ?? []);
   }
 
 }

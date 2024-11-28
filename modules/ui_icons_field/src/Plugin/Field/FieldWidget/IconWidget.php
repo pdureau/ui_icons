@@ -90,7 +90,7 @@ class IconWidget extends WidgetBase implements ContainerFactoryPluginInterface {
    * {@inheritdoc}
    */
   public function massageFormValues(array $values, array $form, FormStateInterface $form_state): array {
-    // Only store the Icon Id from the FormElement result.
+    // Only store the icon ID from the FormElement result.
     // @todo #return_id by default?
     foreach ($values as &$item) {
       if (empty($item['value']['icon']) || !$item['value']['icon'] instanceof IconDefinitionInterface) {

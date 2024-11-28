@@ -65,6 +65,7 @@ class IconPluginTest extends WebDriverTestBase {
   protected static $modules = [
     'node',
     'ui_icons',
+    'ui_icons_backport',
     'ui_icons_ckeditor5',
     'ui_icons_test',
   ];

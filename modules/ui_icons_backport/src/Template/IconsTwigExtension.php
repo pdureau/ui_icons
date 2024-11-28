@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Drupal\ui_icons_backport\Template;
 
-use Drupal\Core\Theme\Icon\IconDefinition;
 use Twig\Extension\AbstractExtension;
 use Twig\TwigFunction;
 
@@ -14,16 +13,6 @@ use Twig\TwigFunction;
  * @internal
  */
 final class IconsTwigExtension extends AbstractExtension {
-
-  /**
-   * Creates TwigExtension.
-   *
-   * @param \Drupal\Core\Theme\Icon\Plugin\IconPackManagerInterface $pluginManagerIconPack
-   *   The icon plugin manager.
-   */
-  public function __construct(
-    private readonly IconPackManagerInterface $pluginManagerIconPack,
-  ) {}
 
   /**
    * {@inheritdoc}

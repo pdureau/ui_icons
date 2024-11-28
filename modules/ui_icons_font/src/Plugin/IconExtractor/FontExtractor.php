@@ -163,7 +163,7 @@ class FontExtractor extends IconExtractorBase {
     }
 
     if (!json_validate((string) $data)) {
-      // @todo log error.
+      // @todo log error?
       return [];
     }
 
@@ -195,12 +195,12 @@ class FontExtractor extends IconExtractorBase {
       $data = Yaml::decode((string) $data);
     }
     catch (InvalidDataTypeException $e) {
-      // @todo log error.
+      // @todo log error?
       return [];
     }
 
     if (empty($data)) {
-      // @todo log warning.
+      // @todo log warning?
       return [];
     }
 

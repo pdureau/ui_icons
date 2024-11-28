@@ -100,6 +100,26 @@ class IconDefinition implements IconDefinitionInterface {
   /**
    * {@inheritdoc}
    */
+  public static function getRenderable(string $icon_full_id, array $settings = []): ?array {
+    if (!$icon_data = self::getIconDataFromId($icon_full_id)) {
+      return NULL;
+    }
+
+    if (isset($settings[$icon_data['pack_id']])) {
+      $settings = $settings[$icon_data['pack_id']];
+    }
+
+    return [
+      '#type' => 'icon',
+      '#pack_id' => $icon_data['pack_id'],
+      '#icon_id' => $icon_data['icon_id'],
+      '#settings' => $settings,
+    ];
+  }
+
+  /**
+   * {@inheritdoc}
+   */
   public function getLabel(): string {
     return self::humanize($this->icon_id);
   }
@@ -172,18 +192,6 @@ class IconDefinition implements IconDefinitionInterface {
    */
   public function getData(string $key): mixed {
     return $this->data[$key] ?? NULL;
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function getRenderable(array $settings = []): array {
-    return [
-      '#type' => 'icon',
-      '#pack_id' => $this->pack_id,
-      '#icon_id' => $this->icon_id,
-      '#settings' => $settings,
-    ];
   }
 
   /**

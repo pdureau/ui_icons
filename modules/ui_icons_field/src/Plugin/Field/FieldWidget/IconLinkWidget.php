@@ -10,7 +10,6 @@ use Drupal\Core\Field\FieldItemListInterface;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
 use Drupal\Core\StringTranslation\TranslatableMarkup;
-use Drupal\Core\Theme\Icon\IconDefinitionInterface;
 use Drupal\Core\Theme\Icon\Plugin\IconPackManagerInterface;
 use Drupal\link\Plugin\Field\FieldWidget\LinkWidget;
 use Symfony\Component\DependencyInjection\ContainerInterface;
@@ -104,7 +103,6 @@ class IconLinkWidget extends LinkWidget implements ContainerFactoryPluginInterfa
       '#type' => 'checkboxes',
       '#title' => $this->t('Allowed icon packs'),
       '#description' => $this->t('If none are selected, all will be allowed.'),
-      // @todo is there a way to have this without DI?
       '#options' => $this->pluginManagerIconPack->listIconPackOptions(TRUE),
       '#default_value' => $this->getSetting('allowed_icon_pack'),
       '#multiple' => TRUE,
@@ -145,7 +143,6 @@ class IconLinkWidget extends LinkWidget implements ContainerFactoryPluginInterfa
     $allowed_icon_pack = array_filter($settings['allowed_icon_pack']);
 
     if (!empty($allowed_icon_pack)) {
-      // @todo is there a way to have this without DI?
       $labels = $this->pluginManagerIconPack->listIconPackOptions();
       $list = array_intersect_key($labels, $allowed_icon_pack);
       $summary[] = $this->t('With Icon set: @set', ['@set' => implode(', ', $list)]);
@@ -181,15 +178,8 @@ class IconLinkWidget extends LinkWidget implements ContainerFactoryPluginInterfa
     /** @var \Drupal\Core\Field\FieldItemInterface $item */
     $item = $items[$delta];
 
-    $icon_full_id = NULL;
     $options = $item->get('options')->getValue() ?? [];
-    if (isset($options['icon']['target_id'])) {
-      // @todo do not call getIcon here and simply create the renderable.
-      $icon = $this->pluginManagerIconPack->getIcon($options['icon']['target_id']);
-      if ($icon instanceof IconDefinitionInterface) {
-        $icon_full_id = $icon->getId();
-      }
-    }
+    $icon_full_id = $options['icon']['target_id'] ?? NULL;
 
     $icon_display = $options['icon_display'] ?? 'icon_only';
     $allowed_icon_pack = array_filter($this->getSetting('allowed_icon_pack') ?? []);
@@ -220,27 +210,29 @@ class IconLinkWidget extends LinkWidget implements ContainerFactoryPluginInterfa
       $element['icon']['#default_settings'] = $options['icon']['settings'];
     }
 
-    if (TRUE == $settings['icon_position']) {
-      $element['icon_display'] = [
-        '#type' => 'select',
-        '#title' => $this->t('@name icon display', ['@name' => $label]),
-        '#description' => $this->t('Choose display for this icon link.'),
-        '#default_value' => $icon_display,
-        '#options' => $this->getDisplayPositions(),
-        '#states' => [
-          'visible' => [
-            ':input[name="' . $field_name . '[' . $delta . '][options][icon]"]' => ['empty' => FALSE],
-          ],
-        ],
-        // Put the parent to allow saving under `options`.
-        '#parents' => array_merge($element['#field_parents'], [
-          $field_name,
-          $delta,
-          'options',
-          'icon_display',
-        ]),
-      ];
+    if (FALSE === $settings['icon_position']) {
+      return $element;
     }
+
+    $element['icon_display'] = [
+      '#type' => 'select',
+      '#title' => $this->t('@name icon display', ['@name' => $label]),
+      '#description' => $this->t('Choose display for this icon link.'),
+      '#default_value' => $icon_display,
+      '#options' => $this->getDisplayPositions(),
+      '#states' => [
+        'visible' => [
+          ':input[name="' . $field_name . '[' . $delta . '][options][icon]"]' => ['empty' => FALSE],
+        ],
+      ],
+      // Put the parent to allow saving under `options`.
+      '#parents' => array_merge($element['#field_parents'], [
+        $field_name,
+        $delta,
+        'options',
+        'icon_display',
+      ]),
+    ];
 
     return $element;
   }

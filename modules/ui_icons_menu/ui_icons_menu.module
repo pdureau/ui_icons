@@ -8,6 +8,7 @@
 use Drupal\Component\Render\FormattableMarkup;
 use Drupal\Core\Entity\EntityTypeInterface;
 use Drupal\Core\Routing\RouteMatchInterface;
+use Drupal\Core\Theme\Icon\IconDefinition;
 
 /**
  * Implements hook_help().
@@ -140,18 +141,8 @@ function ui_icons_menu_link_alter(array &$variables): void {
  *   The icon position, `icon_only`, `after` or default `before`.
  */
 function ui_icons_menu_generate_markup(mixed &$text, string $icon_full_id, array $icon_settings, string $icon_display = 'before'): void {
-  /** @var \Drupal\Core\Theme\Icon\Plugin\IconPackManagerInterface $pluginManagerIconPack */
-  $pluginManagerIconPack = \Drupal::service('plugin.manager.icon_pack');
-  $icon = $pluginManagerIconPack->getIcon($icon_full_id);
 
-  if (NULL === $icon) {
-    return;
-  }
-
-  if (isset($icon_settings[$icon->getPackId()])) {
-    $icon_settings = $icon_settings[$icon->getPackId()];
-  }
-  $icon_renderable = $icon->getRenderable($icon_settings);
+  $icon_renderable = IconDefinition::getRenderable($icon_full_id, $icon_settings);
   $icon = \Drupal::service('renderer')->renderInIsolation($icon_renderable);
 
   switch ($icon_display) {

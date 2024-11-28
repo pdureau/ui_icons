@@ -139,42 +139,42 @@ class Icon extends MediaSourceBase {
    */
   public function getMetadata(MediaInterface $media, $attribute_name) {
     $iconFieldValue = $media->get($this->configuration['source_field'])->getValue();
-    $iconFullId = $iconFieldValue[0]['target_id'] ?? NULL;
+    $icon_full_id = $iconFieldValue[0]['target_id'] ?? NULL;
 
-    if ($iconFullId == NULL) {
+    if ($icon_full_id == NULL) {
       return parent::getMetadata($media, $attribute_name);
     }
 
-    $iconDefinition = $this->iconPackManager->getIcon($iconFullId);
-    if ($iconDefinition == NULL) {
+    $icon = $this->iconPackManager->getIcon($icon_full_id);
+    if ($icon == NULL) {
       return parent::getMetadata($media, $attribute_name);
     }
 
     switch ($attribute_name) {
       case 'thumbnail_uri':
-        return $this->getThumbnail($iconDefinition) ?: parent::getMetadata($media, $attribute_name);
+        return $this->getThumbnail($icon) ?: parent::getMetadata($media, $attribute_name);
 
       case static::METADATA_ATTRIBUTE_PACK_ID:
-        return $iconDefinition->getPackId();
+        return $icon->getPackId();
 
       case static::METADATA_ATTRIBUTE_PACK_LABEL:
-        return $iconDefinition->getPackLabel();
+        return $icon->getPackLabel();
 
       case static::METADATA_ATTRIBUTE_PACK_LICENSE:
-        $licenseInfos = $iconDefinition->getData('license');
+        $licenseInfos = $icon->getData('license');
         return $licenseInfos['name'] ?? NULL;
 
       case static::METADATA_ATTRIBUTE_ICON_ID:
-        return $iconDefinition->getIconId();
+        return $icon->getIconId();
 
       case static::METADATA_ATTRIBUTE_ICON_FULL_ID:
-        return $iconDefinition->getId();
+        return $icon->getId();
 
       case static::METADATA_ATTRIBUTE_ICON_GROUP:
-        return $iconDefinition->getGroup();
+        return $icon->getGroup();
 
       case static::METADATA_ATTRIBUTE_ICON_SOURCE:
-        return $iconDefinition->getSource();
+        return $icon->getSource();
 
       default:
         return parent::getMetadata($media, $attribute_name);
@@ -186,19 +186,19 @@ class Icon extends MediaSourceBase {
    *
    * Do the same logic as in the icon--preview template.
    *
-   * @param \Drupal\Core\Theme\Icon\IconDefinitionInterface $iconDefinition
+   * @param \Drupal\Core\Theme\Icon\IconDefinitionInterface $icon
    *   The icon definition.
    *
    * @return string|null
    *   File URI of the thumbnail image or NULL if there is no specific icon.
    */
-  protected function getThumbnail(IconDefinitionInterface $iconDefinition): ?string {
-    $extractor = $iconDefinition->getData('extractor');
+  protected function getThumbnail(IconDefinitionInterface $icon): ?string {
+    $extractor = $icon->getData('extractor');
     if (!\in_array($extractor, ['path', 'svg'])) {
       return NULL;
     }
 
-    $source = $iconDefinition->getSource();
+    $source = $icon->getSource();
     if (!$source) {
       return NULL;
     }
@@ -214,7 +214,7 @@ class Icon extends MediaSourceBase {
     }
 
     $filename = pathinfo($source, PATHINFO_BASENAME);
-    $directory = $this::THUMBNAIL_DIRECTORY . DIRECTORY_SEPARATOR . $iconDefinition->getPackId();
+    $directory = $this::THUMBNAIL_DIRECTORY . DIRECTORY_SEPARATOR . $icon->getPackId();
     $destinationPath = $directory . DIRECTORY_SEPARATOR . $filename;
     try {
       $this->fileSystem->prepareDirectory($directory, FileSystemInterface::CREATE_DIRECTORY | FileSystemInterface::MODIFY_PERMISSIONS);

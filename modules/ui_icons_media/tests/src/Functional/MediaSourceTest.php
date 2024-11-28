@@ -27,6 +27,7 @@ class MediaSourceTest extends MediaFunctionalTestBase {
    * {@inheritdoc}
    */
   protected static $modules = [
+    'ui_icons_backport',
     'ui_icons_media',
   ];
 

@@ -230,13 +230,7 @@ class IconEmbed extends FilterBase implements ContainerFactoryPluginInterface {
     $attributes['class'][] = 'drupal-icon';
     $attributes = new Attribute($attributes);
 
-    $icon_data = IconDefinition::getIconDataFromId($icon_full_id);
-    $build = [
-      '#type' => 'icon',
-      '#pack_id' => $icon_data['pack_id'],
-      '#icon_id' => $icon_data['icon_id'],
-      '#settings' => $settings,
-    ];
+    $build = IconDefinition::getRenderable($icon_full_id, $settings);
 
     $build['#prefix'] = '<span' . $attributes . '>';
     $build['#suffix'] = '</span>';

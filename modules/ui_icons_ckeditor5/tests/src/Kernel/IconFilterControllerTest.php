@@ -66,7 +66,6 @@ class IconFilterControllerTest extends KernelTestBase {
     $this->installConfig(['system', 'ui_icons']);
 
     $this->controller = new IconFilterController(
-      $this->container->get('plugin.manager.icon_pack'),
       $this->container->get('renderer')
     );
   }

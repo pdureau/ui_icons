@@ -17,7 +17,7 @@ use Drupal\Core\Form\FormStateInterface;
  * - boolean => #type = checkbox
  * - number => #type = number
  * - integer => #type = number
- * - string => #type = textfield
+ * - string => #type = textfield.
  *
  * For all types, basic values from YAML to Drupal Form API:
  * - title => #title
@@ -27,7 +27,7 @@ use Drupal\Core\Form\FormStateInterface;
  * The string type convert:
  * - pattern => #pattern
  * - maxLength => #maxLength and #size
- * - minLength => override #pattern
+ * - minLength => override #patternIconsTw
  * A specific string key `format` is converted to support color field:
  * - format: color => #type = color
  *

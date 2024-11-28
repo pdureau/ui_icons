@@ -15,8 +15,6 @@ use Symfony\Component\HttpFoundation\Request;
 
 /**
  * Returns responses for UI Icons routes.
- *
- * @todo provide the icon rendered in the result or after selection
  */
 class IconAutocompleteController extends ControllerBase {
 
@@ -44,8 +42,6 @@ class IconAutocompleteController extends ControllerBase {
    *
    * @return \Symfony\Component\HttpFoundation\JsonResponse
    *   A JSON response containing the autocomplete suggestions for Icons.
-   *
-   * @todo cache search for faster lookup.
    */
   public function handleSearchIcons(Request $request): JsonResponse {
     $query = trim((string) $request->query->get('q', ''));

@@ -11,7 +11,7 @@ use Drupal\Core\Field\FieldItemListInterface;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Path\PathValidatorInterface;
 use Drupal\Core\StringTranslation\TranslatableMarkup;
-use Drupal\Core\Theme\Icon\IconDefinitionInterface;
+use Drupal\Core\Theme\Icon\IconDefinition;
 use Drupal\Core\Theme\Icon\Plugin\IconPackManagerInterface;
 use Drupal\link\Plugin\Field\FieldFormatter\LinkFormatter;
 use Symfony\Component\DependencyInjection\ContainerInterface;
@@ -289,26 +289,16 @@ class IconLinkFormatter extends LinkFormatter {
         continue;
       }
 
-      // @todo do not call getIcon here and simply create the renderable.
-      $icon = $this->pluginManagerIconPack->getIcon($icon_full_id);
-      if (!$icon instanceof IconDefinitionInterface) {
-        continue;
-      }
-
-      $pack_id = $icon->getPackId();
-
       $settings = [];
       $formatter_settings = $this->getSetting('icon_settings') ?? [];
-      if (isset($formatter_settings[$pack_id])) {
-        $settings = $formatter_settings[$pack_id];
-      }
 
       $icon_display = $item->options['icon_display'] ?? $formatter_icon_display ?? NULL;
+      $icon_element = IconDefinition::getRenderable($icon_full_id, $formatter_settings);
 
       switch ($icon_display) {
         case 'before':
           $elements[$delta] = [
-            'icon' => $icon->getRenderable($settings),
+            'icon' => $icon_element,
             'link' => $elements[$delta],
           ];
           break;
@@ -316,18 +306,23 @@ class IconLinkFormatter extends LinkFormatter {
         case 'after':
           $elements[$delta] = [
             'link' => $elements[$delta],
-            'icon' => $icon->getRenderable($settings),
+            'icon' => $icon_element,
           ];
           break;
 
         default:
-          $elements[$delta]['#title'] = $icon->getRenderable($settings);
+          $elements[$delta]['#title'] = $icon_element;
           break;
       }
 
       // Mark processed to avoid double pass with
       // ui_icons_menu::ui_icons_menu_link_alter.
-      $elements[$delta]['#url']->setOption('ui_icons_processed', TRUE);
+      if (isset($elements[$delta]['#url'])) {
+        $elements[$delta]['#url']->setOption('ui_icons_processed', TRUE);
+      }
+      if (isset($elements[$delta]['link']['#url'])) {
+        $elements[$delta]['link']['#url']->setOption('ui_icons_processed', TRUE);
+      }
     }
 
     return $elements;

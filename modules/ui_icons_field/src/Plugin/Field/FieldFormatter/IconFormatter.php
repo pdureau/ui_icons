@@ -11,6 +11,7 @@ use Drupal\Core\Field\FormatterBase;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
 use Drupal\Core\StringTranslation\TranslatableMarkup;
+use Drupal\Core\Theme\Icon\IconDefinition;
 use Drupal\Core\Theme\Icon\Plugin\IconPackManagerInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
@@ -213,20 +214,10 @@ class IconFormatter extends FormatterBase implements ContainerFactoryPluginInter
         continue;
       }
 
-      $icon_id = $item->get('target_id')->getValue();
-      if (!$icon = $this->pluginManagerIconPack->getIcon((string) $icon_id)) {
-        continue;
-      }
-
-      $pack_id = $icon->getPackId();
-
-      $settings = [];
+      $icon_full_id = $item->get('target_id')->getValue();
       $formatter_settings = $this->getSetting('icon_settings') ?? [];
-      if (isset($formatter_settings[$pack_id])) {
-        $settings = $formatter_settings[$pack_id];
-      }
 
-      $elements[$delta] = $icon->getRenderable($settings);
+      $elements[$delta] = IconDefinition::getRenderable($icon_full_id, $formatter_settings);
     }
 
     return $elements;
