@@ -1,4 +1,5 @@
 test_iconify:
+  enabled: false
   extractor: iconify
   config:
     collections:

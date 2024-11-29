@@ -11,6 +11,7 @@ use Drupal\Core\Theme\Icon\IconDefinitionInterface;
  */
 class IconPreview {
 
+  public const SPINNER_ICON = '/core/themes/claro/images/icons/003ecc/spinner.svg';
   private const ICON_DEFAULT_SIZE = 48;
 
   /**

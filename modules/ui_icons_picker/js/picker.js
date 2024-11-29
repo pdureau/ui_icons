@@ -2,8 +2,8 @@
  * @file
  * JavaScript behavior for UI Icons picker selector in Drupal.
  */
-// eslint-disable-next-line func-names
-(function ($, Drupal, once) {
+
+(($, Drupal, once) => {
   function openDialog(event) {
     event.preventDefault();
 

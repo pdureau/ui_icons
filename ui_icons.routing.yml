@@ -4,3 +4,11 @@ ui_icons.autocomplete:
     _controller: '\Drupal\ui_icons\Controller\IconAutocompleteController::handleSearchIcons'
   requirements:
     _permission: 'access ui icons library'
+
+ui_icons.preview:
+  path: '/ui-icons/ajax/preview/icons'
+  defaults:
+    _controller: '\Drupal\ui_icons\Controller\IconPreviewController::preview'
+  requirements:
+    _permission: 'access ui icons library'
+    _method: 'POST'

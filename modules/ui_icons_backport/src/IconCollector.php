@@ -63,7 +63,6 @@ class IconCollector extends CacheCollector {
     $icon = $this->getIconFromExtractor($key, $definition);
     $this->storage[$key] = $icon;
     $this->persist($key);
-    $this->set($key, $icon);
 
     return $icon;
   }

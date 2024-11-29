@@ -12,7 +12,6 @@ use Drupal\Core\Ajax\HtmlCommand;
 use Drupal\Core\Ajax\ReplaceCommand;
 use Drupal\Core\Form\FormBase;
 use Drupal\Core\Form\FormStateInterface;
-use Drupal\Core\Theme\Icon\IconDefinitionInterface;
 use Drupal\Core\Theme\Icon\Plugin\IconPackManagerInterface;
 use Drupal\ui_icons\IconPreview;
 use Drupal\ui_icons\IconSearch;
@@ -20,13 +19,14 @@ use Drupal\ui_icons_picker\Ajax\UpdateIconSelectionCommand;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
- * Provides a UI Icons picker selector form.
+ * Provides an icon picker selector form.
  */
 final class IconSelectForm extends FormBase {
 
   private const AJAX_WRAPPER_ID = 'icon-results-wrapper';
   private const MESSAGE_WRAPPER_ID = 'icon-message-wrapper';
-  private const NUM_PER_PAGE = 308;
+  private const NUM_PER_PAGE = 185;
+  private const PREVIEW_ICON_SIZE = 32;
 
   /**
    * The icon search service.
@@ -84,6 +84,8 @@ final class IconSelectForm extends FormBase {
       return [];
     }
 
+    // @todo get total of icons cached.
+    // @todo get first x num of icons cached.
     $allowed_icon_pack = $options['query']['allowed_icon_pack'] ?? [];
     if (!empty($allowed_icon_pack)) {
       $allowed_icon_pack = explode('+', $allowed_icon_pack);
@@ -176,54 +178,43 @@ final class IconSelectForm extends FormBase {
       return $form;
     }
 
+    // Add the generic mass preview library.
+    // Set a specific key to have the list of icons to load for preview.
     $form['list'] = [
       '#type' => 'container',
       '#attributes' => [
         'class' => ['icon-picker-modal__content'],
       ],
-      '#attached' => ['library' => ['ui_icons_picker/library']],
-    ];
-
-    $form['list']['icons_preview'] = [
-      '#type' => 'container',
-      '#attributes' => [
-        'class' => ['hidden'],
+      '#attached' => [
+        'library' => [
+          'ui_icons_picker/library',
+          'ui_icons/ui_icons.preview',
+        ],
+        'drupalSettings' => [
+          'ui_icons_preview_data' => [
+            'icon_full_ids' => $icons,
+            'settings' => ['size' => self::PREVIEW_ICON_SIZE],
+            'target_input_label' => TRUE,
+          ],
+        ],
       ],
     ];
 
+    // Build a list of radio for each icon, without preview for performance. So
+    // the modal is displayed as fast as possible.
+    // Script js/library.js will handle lazy preview.
     $options = [];
-
-    // Empty icon to delete selection.
-    $options['_none_'] = '<div class="icon-preview-none icon-preview-wrapper"><img class="icon icon-preview" src="/core/themes/claro/images/icons/e34f4f/crossout.svg" title="None" width="32" height="32"></div>';
-
-    // @todo use search callable.
+    // Empty icon to allow deletion of selection.
+    $options['_none_'] = '<img src="/core/themes/claro/images/icons/e34f4f/crossout.svg" title="Select none" width="32" height="32">';
     foreach ($icons as $icon_full_id) {
-      // @todo do not call getIcon here and simply create the renderable.
-      $icon = $this->getIconPackManager()->getIcon($icon_full_id);
-      if (!$icon instanceof IconDefinitionInterface) {
-        continue;
-      }
-      $id = $icon->getId();
-      $preview = IconPreview::getPreview($icon, ['size' => 32]);
-      $form['list']['icons_preview'][$id] = [
-        '#type' => 'html_tag',
-        '#tag' => 'div',
-        '#attributes' => [
-          'class' => [
-            'icon-preview-wrapper',
-          ],
-          'data-icon-id' => $id,
-        ],
-        'icon' => $preview,
-      ];
-      $options[$id] = $icon->getLabel();
+      $options[$icon_full_id] = '<img src="' . IconPreview::SPINNER_ICON . '" title="' . $icon_full_id . '" width="32" height="32">';
     }
 
     $form['list']['icon_full_id'] = [
       '#type' => 'radios',
       '#options' => $options,
       '#attributes' => [
-        'class' => ['icon-radio', 'hidden'],
+        'class' => ['icon-preview-load'],
       ],
     ];
 

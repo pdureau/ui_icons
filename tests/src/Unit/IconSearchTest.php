@@ -10,6 +10,7 @@ namespace Drupal\Tests\ui_icons\Unit\Controller;
 @class_alias('Drupal\ui_icons_backport\IconDefinitionInterface', 'Drupal\Core\Theme\Icon\IconDefinitionInterface');
 @class_alias('Drupal\Tests\ui_icons_backport\IconTestTrait', 'Drupal\Tests\Core\Theme\Icon\IconTestTrait');
 
+use Drupal\Core\Cache\CacheBackendInterface;
 use Drupal\Core\DependencyInjection\ContainerBuilder;
 use Drupal\Core\Render\Markup;
 use Drupal\Core\Render\RendererInterface;
@@ -74,7 +75,9 @@ class IconSearchTest extends TestCase {
 
     $this->iconSearch = new IconSearch(
       $this->iconPackManager,
-      $this->renderer
+      $this->renderer,
+      // @todo test the cache.
+      $this->createMock(CacheBackendInterface::class),
     );
   }
 
@@ -84,7 +87,8 @@ class IconSearchTest extends TestCase {
   public function testConstructor(): void {
     $iconSearch = new IconSearch(
       $this->createMock(IconPackManagerInterface::class),
-      $this->createMock(RendererInterface::class)
+      $this->createMock(RendererInterface::class),
+      $this->createMock(CacheBackendInterface::class)
     );
 
     $this->assertInstanceOf(IconSearch::class, $iconSearch);

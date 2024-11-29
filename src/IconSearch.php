@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Drupal\ui_icons;
 
+use Drupal\Core\Cache\CacheBackendInterface;
 use Drupal\Core\DependencyInjection\ContainerInjectionInterface;
 use Drupal\Core\Render\RendererInterface;
 use Drupal\Core\Theme\Icon\IconDefinition;
@@ -14,7 +15,7 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 /**
  * Handle an Icon search.
  *
- * @todo add search cache.
+ * Main entrypoint to search and filter icons based on name or pack.
  */
 class IconSearch implements ContainerInjectionInterface {
 
@@ -24,6 +25,7 @@ class IconSearch implements ContainerInjectionInterface {
   public function __construct(
     private readonly IconPackManagerInterface $pluginManagerIconPack,
     private readonly RendererInterface $renderer,
+    private CacheBackendInterface $cache,
   ) {}
 
   /**
@@ -33,6 +35,7 @@ class IconSearch implements ContainerInjectionInterface {
     return new static(
       $container->get('plugin.manager.icon_pack'),
       $container->get('renderer'),
+      $container->get('cache.default'),
     );
   }
 
@@ -74,6 +77,14 @@ class IconSearch implements ContainerInjectionInterface {
     // If the search is an exact icon full id let return faster.
     if (isset($icons[$query])) {
       return [$this->createResultEntry($query, $result_callback)];
+    }
+
+    $cache_data = [];
+    if ($cache = $this->cache->get('icon_search')) {
+      $cache_data = $cache->data;
+      if (isset($cache_data[$query])) {
+        return $cache_data[$query];
+      }
     }
 
     // Prepare multi words search by removing unwanted characters.
@@ -124,6 +135,14 @@ class IconSearch implements ContainerInjectionInterface {
         break;
       }
     }
+
+    $cache_data[$query] = $matches;
+    $this->cache->set(
+      'icon_search',
+      $cache_data,
+      CacheBackendInterface::CACHE_PERMANENT,
+      ['icon_pack_plugin', 'icon_pack_collector']
+    );
 
     return $matches;
   }

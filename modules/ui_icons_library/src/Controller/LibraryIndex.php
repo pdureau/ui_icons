@@ -18,7 +18,7 @@ use Symfony\Component\HttpFoundation\RedirectResponse;
  */
 class LibraryIndex extends ControllerBase {
 
-  private const PREVIEW_ICON_NUM = 30;
+  private const PREVIEW_ICON_NUM = 32;
   private const PREVIEW_ICON_SIZE = 40;
 
   public function __construct(
@@ -39,7 +39,7 @@ class LibraryIndex extends ControllerBase {
   /**
    * Index of Pack list.
    *
-   * @return array<string, mixed>
+   * @return array
    *   Render array of packs.
    */
   public function index(): array {
@@ -69,6 +69,7 @@ class LibraryIndex extends ControllerBase {
     ];
 
     $icon_pack = $this->pluginManagerIconPack->getDefinitions();
+    $icon_preview_ids = [];
     foreach ($icon_pack as $pack_id => $pack_definition) {
 
       if ('off' === $show_disable) {
@@ -105,17 +106,41 @@ class LibraryIndex extends ControllerBase {
       }
 
       $icon_preview = [];
-      foreach (array_keys($icons) as $icon_id) {
-        // @todo avoid load icon and pass template for preview.
-        if ($icon = $this->pluginManagerIconPack->getIcon($icon_id)) {
-          $icon_preview[] = IconPreview::getPreview($icon, ['size' => self::PREVIEW_ICON_SIZE]);
-        }
+      $icon_full_ids = array_keys($icons);
+      $icon_preview_ids = array_merge($icon_full_ids, $icon_preview_ids);
+      foreach ($icon_full_ids as $icon_full_id) {
+        $icon_preview[] = [
+          '#type' => 'html_tag',
+          '#tag' => 'img',
+          '#attributes' => [
+            'src' => IconPreview::SPINNER_ICON,
+            'title' => $icon_full_id,
+            'data-icon-id' => $icon_full_id,
+            'class' => [
+              'icon-preview-load',
+            ],
+          ],
+        ];
       }
 
       $build['grid'][$pack_id]['#slots']['icons'] = $icon_preview;
     }
 
     ksort($build['grid']);
+
+    // Add the generic mass preview library.
+    // Set a specific key to have the list of icons to load for preview.
+    $build[] = [
+      '#attached' => [
+        'library' => ['ui_icons/ui_icons.preview'],
+        'drupalSettings' => [
+          'ui_icons_preview_data' => [
+            'icon_full_ids' => $icon_preview_ids,
+            'settings' => ['size' => self::PREVIEW_ICON_SIZE],
+          ],
+        ],
+      ],
+    ];
 
     return $build;
   }

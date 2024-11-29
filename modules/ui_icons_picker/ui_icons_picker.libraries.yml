@@ -15,5 +15,5 @@ library:
     component:
       css/library.css: {}
   dependencies:
-    - core/jquery
-    - core/jquery.form
+    - core/drupalSettings
+

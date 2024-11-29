@@ -10,3 +10,12 @@ ui_icons.autocomplete:
     - core/drupal
     - core/once
     - core/drupal.autocomplete
+
+ui_icons.preview:
+  version: VERSION
+  js:
+    js/icon.preview.js: {}
+  dependencies:
+    - core/drupal
+    - core/drupalSettings
+    - core/once

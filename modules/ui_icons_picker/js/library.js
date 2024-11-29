@@ -2,67 +2,68 @@
  * @file
  * JavaScript behavior for UI Icons picker library in Drupal.
  */
-// eslint-disable-next-line func-names
-(function ($, Drupal, once) {
+
+((Drupal, drupalSettings, once) => {
   /**
-   * UI Icons picker library.
+   * UI Icons picker library search.
    *
    * @type {Drupal~behavior}
    */
-  Drupal.behaviors.IconPickerLibrary = {
+  Drupal.behaviors.IconPickerLibrarySearch = {
     attach(context) {
-      // Auto submit filter by name.
-      const iconPickerLibrarySearch = once(
-        'setIconPickerSearch',
-        '.icon-filter-input',
-        context,
-      );
       let typingTimer;
       const typingInterval = 600;
 
-      iconPickerLibrarySearch.forEach((element) => {
-        element.addEventListener('keypress', function (event) {
-          if (event.keyCode === 13) {
-            document
-              .querySelector('.icon-ajax-search-submit')
-              .dispatchEvent(new MouseEvent('mousedown'));
-          }
-        });
+      // Auto submit filter by name.
+      once('setIconPickerSearch', '.icon-filter-input', context).forEach(
+        (element) => {
+          element.addEventListener('keypress', function (event) {
+            if (event.keyCode === 13) {
+              document
+                .querySelector('.icon-ajax-search-submit')
+                .dispatchEvent(new MouseEvent('mousedown'));
+            }
+          });
 
-        element.addEventListener('keyup', function () {
-          clearTimeout(typingTimer);
-          typingTimer = setTimeout(function () {
-            document
-              .querySelector('.icon-ajax-search-submit')
-              .dispatchEvent(new MouseEvent('mousedown'));
-          }, typingInterval);
-        });
+          element.addEventListener('keyup', function () {
+            clearTimeout(typingTimer);
+            typingTimer = setTimeout(function () {
+              document
+                .querySelector('.icon-ajax-search-submit')
+                .dispatchEvent(new MouseEvent('mousedown'));
+            }, typingInterval);
+          });
 
-        element.addEventListener('keydown', function () {
-          clearTimeout(typingTimer);
-        });
-      });
+          element.addEventListener('keydown', function () {
+            clearTimeout(typingTimer);
+          });
+        },
+      );
 
-      // Move the icon instead of label in each radio.
-      const iconPickerPreview = once('setIconPreview', '.icon-radio', context);
-      iconPickerPreview.forEach((element) => {
-        // See templates/icon-preview.html.twig for css selector.
-        const iconPreview = document.querySelector(
-          `.icon-preview-wrapper[data-icon-id='${element.value}']`,
-        );
-
-        // Submit when clicked any icon.
+      // Submit the form when clicked any icon.
+      once('setIconPick', '.icon-preview-load', context).forEach((element) => {
         element.addEventListener('click', function (event) {
           document.querySelector('.icon-ajax-select-submit').click();
         });
-
-        // Move preview to label.
-        if (!iconPreview || typeof element.labels[0] === 'undefined') {
-          return;
-        }
-        element.labels[0].textContent = '';
-        element.labels[0].prepend(iconPreview);
       });
     },
   };
-})(jQuery, Drupal, once);
+
+  /**
+   * UI Icons picker library preview.
+   *
+   * @type {Drupal~behavior}
+   */
+  Drupal.behaviors.IconPickerLibraryPreview = {
+    attach(context, settings) {
+      once('loadIconPreview', '.icon-picker-modal__content', context).forEach(
+        () => {
+          if (!settings.ui_icons_preview_data) {
+            return;
+          }
+          Drupal.Icon.loadIconPreview(settings.ui_icons_preview_data);
+        },
+      );
+    },
+  };
+})(Drupal, drupalSettings, once);
