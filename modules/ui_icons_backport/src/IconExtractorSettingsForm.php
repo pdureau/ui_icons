@@ -27,7 +27,7 @@ use Drupal\Core\Form\FormStateInterface;
  * The string type convert:
  * - pattern => #pattern
  * - maxLength => #maxLength and #size
- * - minLength => override #patternIconsTw
+ * - minLength => override #pattern
  * A specific string key `format` is converted to support color field:
  * - format: color => #type = color
  *

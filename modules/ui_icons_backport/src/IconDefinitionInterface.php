@@ -70,6 +70,9 @@ interface IconDefinitionInterface {
   /**
    * Get the icon renderable element array.
    *
+   * Shortcut to use icon element quickly without check if the icon id is valid,
+   * then the element will simply be empty.
+   *
    * @param string $icon_full_id
    *   The id of the icon including the pack.
    * @param array $settings
