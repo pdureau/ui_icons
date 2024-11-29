@@ -42,6 +42,8 @@ services:
         '@cache.default',
         '@lock',
       ]
+    tags:
+      - { name: needs_destruction }
 
   # Alias to support core namespace.
   Drupal\ui_icons_backport\IconFinder: '@Drupal\Core\Theme\Icon\IconFinder'

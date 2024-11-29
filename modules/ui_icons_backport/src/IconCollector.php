@@ -40,7 +40,6 @@ class IconCollector extends CacheCollector {
     $this->persist($key);
     // Chances are very small but the key might have been marked for deletion.
     unset($this->keysToRemove[$key]);
-    static::updateCache();
   }
 
   /**
