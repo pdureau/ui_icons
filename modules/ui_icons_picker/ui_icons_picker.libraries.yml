@@ -16,4 +16,4 @@ library:
       css/library.css: {}
   dependencies:
     - core/drupalSettings
-
+    - ui_icons/ui_icons.preview

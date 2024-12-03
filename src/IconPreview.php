@@ -19,6 +19,18 @@ class IconPreview {
    *
    * @todo do not work with an icon from getIcon to avoid too much cache.
    */
+
+  /**
+   * Render icon preview.
+   *
+   * @param \Drupal\Core\Theme\Icon\IconDefinitionInterface $icon
+   *   The icon object to use.
+   * @param array $settings
+   *   The icon settings to pass.
+   *
+   * @return array
+   *   The icon renderable.
+   */
   public static function getPreview(IconDefinitionInterface $icon, array $settings = []): array {
     if ($preview = $icon->getData('preview')) {
       $context = [

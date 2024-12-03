@@ -5,6 +5,7 @@ declare(strict_types=1);
 // cspell:ignore corge quux
 namespace Drupal\Tests\ui_icons\Unit\Controller;
 
+// @todo remove for 11.1.
 @class_alias('Drupal\ui_icons_backport\Plugin\IconPackManagerInterface', 'Drupal\Core\Theme\Icon\Plugin\IconPackManagerInterface');
 @class_alias('Drupal\ui_icons_backport\IconDefinition', 'Drupal\Core\Theme\Icon\IconDefinition');
 @class_alias('Drupal\ui_icons_backport\IconDefinitionInterface', 'Drupal\Core\Theme\Icon\IconDefinitionInterface');
@@ -277,7 +278,7 @@ class IconSearchTest extends TestCase {
     ];
 
     yield 'words with one match' => [
-      'query' => 'other bar',
+      'query' => 'part bar',
       'allowed_icon_pack' => [],
       'icons' => [
         'foo:_partial_barista_',
@@ -291,7 +292,7 @@ class IconSearchTest extends TestCase {
     ];
 
     yield 'words with one match wrong pack' => [
-      'query' => 'foo bar',
+      'query' => 'part bar',
       'allowed_icon_pack' => ['other'],
       'icons' => [
         'foo:_partial_barista_',
@@ -303,7 +304,7 @@ class IconSearchTest extends TestCase {
     ];
 
     yield 'words with one match good pack' => [
-      'query' => 'foo bar',
+      'query' => 'part bar',
       'allowed_icon_pack' => ['_match_pack_'],
       'icons' => [
         '_match_pack_:_partial_barista_',
@@ -333,20 +334,20 @@ class IconSearchTest extends TestCase {
 
     yield 'words with multiple match and one pack' => [
       'query' => 'foo bar',
-      'allowed_icon_pack' => ['_match_pack_'],
+      'allowed_icon_pack' => ['foo'],
       'icons' => [
-        '_match_pack_:_partial_barista_',
+        'foo:_partial_barista_',
         'qux:quux',
-        '_other_match_pack_: some foolish',
+        'baz: some foolish',
         'baz:baz',
       ],
       'expected' => [
-        '_match_pack_:_partial_barista_',
+        'foo:_partial_barista_',
       ],
     ];
 
     yield 'words with multiple match and multiple pack' => [
-      'query' => 'foo bar',
+      'query' => 'part bar',
       'allowed_icon_pack' => ['_match_pack_', '_other_match_pack'],
       'icons' => [
         '_match_pack_:_partial_barista_',
@@ -356,7 +357,6 @@ class IconSearchTest extends TestCase {
       ],
       'expected' => [
         '_match_pack_:_partial_barista_',
-        '_match_pack_: some foolish',
       ],
     ];
 

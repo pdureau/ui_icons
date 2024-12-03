@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\ui_icons_ckeditor5\Functional;
 
+// @todo remove for 11.1.
 @class_alias('Drupal\ui_icons_backport\IconDefinition', 'Drupal\Core\Theme\Icon\IconDefinition');
 
 use Behat\Mink\Element\NodeElement;
@@ -65,6 +66,7 @@ class IconPluginTest extends WebDriverTestBase {
   protected static $modules = [
     'node',
     'ui_icons',
+    // @todo remove for 11.1.
     'ui_icons_backport',
     'ui_icons_ckeditor5',
     'ui_icons_test',

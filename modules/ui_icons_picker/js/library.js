@@ -1,8 +1,9 @@
+/* eslint-disable no-unused-vars, max-nested-callbacks */
 /**
  * @file
  * JavaScript behavior for UI Icons picker library in Drupal.
  */
-
+// eslint-disable-next-line func-names
 ((Drupal, drupalSettings, once) => {
   /**
    * UI Icons picker library search.

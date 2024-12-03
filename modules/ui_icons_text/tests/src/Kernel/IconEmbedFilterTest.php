@@ -4,8 +4,10 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\ui_icons_text\Kernel;
 
+// @todo remove for 11.1.
 @class_alias('Drupal\ui_icons_backport\IconDefinition', 'Drupal\Core\Theme\Icon\IconDefinition');
 @class_alias('Drupal\ui_icons_backport\Plugin\IconPackManagerInterface', 'Drupal\Core\Theme\Icon\Plugin\IconPackManagerInterface');
+@class_alias('Drupal\ui_icons_backport\IconFinder', 'Drupal\Core\Theme\Icon\IconFinder');
 
 use Drupal\Core\Theme\Icon\IconDefinition;
 use Drupal\KernelTests\KernelTestBase;

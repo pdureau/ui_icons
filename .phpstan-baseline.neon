@@ -16,11 +16,6 @@ parameters:
 			path: modules/ui_icons_backport/src/IconExtractorSettingsForm.php
 
 		-
-			message: "#^Match expression does not handle remaining value\\: mixed$#"
-			count: 1
-			path: modules/ui_icons_backport/src/IconExtractorSettingsForm.php
-
-		-
 			message: "#^Call to an undefined method Drupal\\\\filter\\\\FilterPluginCollection\\|Drupal\\\\filter\\\\Plugin\\\\FilterInterface\\:\\:has\\(\\)\\.$#"
 			count: 1
 			path: modules/ui_icons_ckeditor5/src/Plugin/CKEditor5Plugin/IconPlugin.php
@@ -74,11 +69,6 @@ parameters:
 			message: "#^Call to an undefined method Drupal\\\\filter\\\\FilterPluginCollection\\|Drupal\\\\filter\\\\Plugin\\\\FilterInterface\\:\\:get\\(\\)\\.$#"
 			count: 1
 			path: modules/ui_icons_text/ui_icons_text.module
-
-		-
-			message: "#^Parameter \\#3 \\$subject of function preg_replace expects array\\|string, array\\<int, string\\>\\|false given\\.$#"
-			count: 1
-			path: src/Controller/IconAutocompleteController.php
 
 		-
 			message: "#^Parameter \\#2 \\$content of class Drupal\\\\Core\\\\Ajax\\\\ReplaceCommand constructor expects array\\|string, Drupal\\\\Component\\\\Render\\\\MarkupInterface given\\.$#"

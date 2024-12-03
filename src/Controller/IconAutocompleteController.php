@@ -60,7 +60,7 @@ class IconAutocompleteController extends ControllerBase {
       $query,
       $allowed_icon_pack,
       $max_result,
-      [$this::class, 'createResultEntry']
+     [$this::class, 'createResultEntry']
     );
 
     return new JsonResponse($result);

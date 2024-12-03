@@ -1,7 +1,9 @@
+/* eslint-disable no-restricted-syntax */
 /**
  * @file
  * JavaScript behavior for UI Icons preview in Drupal.
  */
+// eslint-disable-next-line func-names
 ((Drupal, drupalSettings, once) => {
   /**
    * @namespace
@@ -14,29 +16,37 @@
         method: 'POST',
         body: JSON.stringify(data),
       });
-      if (!iconData.ok) throw new Error('Failed to get data!');
+      if (!iconData.ok) {
+        // eslint-disable-next-line no-console
+        console.error('Cannot retrieve icon data!');
+        return;
+      }
       const iconsPreview = await iconData.json();
-      for (const [icon_full_id, icon_preview] of Object.entries(iconsPreview)) {
-        // Standard library mode, direct replacement.
+      for (const [iconFullId, iconPreview] of Object.entries(iconsPreview)) {
+        // Standard mode, direct replacement.
         if (!data.target_input_label) {
-          const icon_target = document.querySelector(
-            `.icon-preview-load[data-icon-id='${icon_full_id}']`,
+          const iconTarget = document.querySelector(
+            `.icon-preview-load[data-icon-id='${iconFullId}']`,
           );
-          icon_target.outerHTML = icon_preview;
+          iconTarget.outerHTML = iconPreview;
           continue;
         }
 
         // Form with input mode, for icon picker.
-        const icon_target = document.querySelector(
-          `.icon-preview-load[value='${icon_full_id}']`,
+        const iconTarget = document.querySelector(
+          `.icon-preview-load[value='${iconFullId}']`,
         );
-        const icon_label = document.querySelector(
-          `label[for='${icon_target.id}']`,
+        if (!iconTarget) {
+          continue;
+        }
+        const iconLabel = document.querySelector(
+          `label[for='${iconTarget.id}']`,
         );
-        icon_label.innerHTML = icon_preview;
+        iconLabel.innerHTML = iconPreview;
       }
     } catch (err) {
-      alert(`Something went wrong! ${err.message}`);
+      // eslint-disable-next-line no-console
+      console.error(`Something went wrong! ${err.message}`);
     }
   };
 

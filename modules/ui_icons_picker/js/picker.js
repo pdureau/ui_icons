@@ -1,8 +1,9 @@
+/* eslint-disable no-unused-vars */
 /**
  * @file
  * JavaScript behavior for UI Icons picker selector in Drupal.
  */
-
+// eslint-disable func-names
 (($, Drupal, once) => {
   function openDialog(event) {
     event.preventDefault();

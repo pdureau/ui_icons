@@ -42,6 +42,67 @@ class IconSearch implements ContainerInjectionInterface {
   /**
    * Find an icon based on search string.
    *
+   * @param string $query
+   *   The query to search for.
+   * @param array $allowed_icon_pack
+   *   Restrict to an icon pack list.
+   * @param int $max_result
+   *   Maximum result to return.
+   * @param callable|null $result_callback
+   *   A callable to process each result.
+   *
+   * @return array
+   *   The icons matching the search, loaded and formatted if a callback is set.
+   */
+  public function search(
+    string $query,
+    array $allowed_icon_pack = [],
+    int $max_result = self::SEARCH_MAX_RESULT,
+    ?callable $result_callback = NULL,
+  ): array {
+    if (empty($query) || mb_strlen($query) < self::SEARCH_MIN_LENGTH) {
+      return [];
+    }
+
+    $cache_key = $query . implode('', $allowed_icon_pack);
+    if (NULL !== $result_callback && is_array($result_callback)) {
+      $cache_key .= implode('', $result_callback);
+    }
+    $cache_key = hash('xxh3', $cache_key);
+    if ($cache = $this->cache->get('icon_search')) {
+      $cache_data = $cache->data;
+      if (isset($cache_data[$cache_key])) {
+        return $cache_data[$cache_key];
+      }
+    }
+
+    $result = $this->doSearch($query, $allowed_icon_pack, $max_result);
+    if (empty($result)) {
+      return [];
+    }
+
+    if ($result_callback) {
+      $result_with_callback = [];
+      foreach ($result as $icon_full_id) {
+        $result_with_callback[] = $this->createResultEntry($icon_full_id, $result_callback);
+      }
+      $result = $result_with_callback;
+    }
+
+    $cache_data[$cache_key] = $result;
+    $this->cache->set(
+      'icon_search',
+      $cache_data,
+      CacheBackendInterface::CACHE_PERMANENT,
+      ['icon_pack_plugin', 'icon_pack_collector']
+    );
+
+    return $result;
+  }
+
+  /**
+   * Do a search and return icon id as result.
+   *
    * The search try to be fuzzy on words with a priority:
    *  - Words in order
    *  - Words in any order
@@ -51,24 +112,13 @@ class IconSearch implements ContainerInjectionInterface {
    *   The query to search for.
    * @param array $allowed_icon_pack
    *   Restrict to an icon pack list.
-   * @param int|null $max_result
-   *   Maximum result to return, all icons if null.
-   * @param callable|null $result_callback
-   *   A callable to process each result.
+   * @param int $max_result
+   *   Maximum result to return.
    *
    * @return array
    *   The icons matching the search.
    */
-  public function search(
-    string $query,
-    array $allowed_icon_pack = [],
-    ?int $max_result = self::SEARCH_MAX_RESULT,
-    ?callable $result_callback = NULL,
-  ): array {
-    if (empty($query) || mb_strlen($query) < self::SEARCH_MIN_LENGTH) {
-      return [];
-    }
-
+  private function doSearch(string $query, array $allowed_icon_pack, int $max_result): array {
     $icons = $this->pluginManagerIconPack->getIcons($allowed_icon_pack);
     if (empty($icons)) {
       return [];
@@ -76,73 +126,68 @@ class IconSearch implements ContainerInjectionInterface {
 
     // If the search is an exact icon full id let return faster.
     if (isset($icons[$query])) {
-      return [$this->createResultEntry($query, $result_callback)];
-    }
-
-    $cache_data = [];
-    if ($cache = $this->cache->get('icon_search')) {
-      $cache_data = $cache->data;
-      if (isset($cache_data[$query])) {
-        return $cache_data[$query];
-      }
+      return [$query];
     }
 
     // Prepare multi words search by removing unwanted characters.
-    $words = preg_split('/\s+/', trim(preg_replace('/[^ \w-]/', ' ', mb_strtolower($query))));
-    if (empty($words)) {
+    $search_terms = preg_split('/\s+/', trim(preg_replace('/[^ \w-]/', ' ', mb_strtolower($query))));
+    if (empty($search_terms)) {
       return [];
     }
 
-    // Prepare pattern for exact and any order matches.
-    $pattern = '/\b(' . implode('|', array_map(function ($word) {
-      return preg_quote($word, '/');
-    }, $words)) . ')\b/i';
+    // Multiple scenarios to check.
+    $exact_order_pattern = '/\b' . implode('\b.*\b', $search_terms) . '\b/i';
 
-    $matches = $matched_ids = [];
+    $any_order_pattern = '/\b(' . implode('|', $search_terms) . ')\b.*\b(' . implode('|', $search_terms) . ')\b/i';
+    $any_order_pattern = preg_replace_callback('/\((.*?)\)/', function ($match) {
+      return '(' . implode('|', array_map(function ($word) {
+        return preg_quote($word, '/');
+      }, explode('|', $match[1]))) . ')';
+    }, $any_order_pattern);
+
+    $any_part_pattern = '/' . implode('.*', array_map('preg_quote', $search_terms)) . '/i';
+
+    $any_part_any_order_pattern = '/\b(?:' . implode('|', array_map(function ($word) {
+      return preg_quote($word, '/') . '\b.*\b|' . '\b.*\b' . preg_quote($word, '/');
+    }, $search_terms)) . ')/i';
+
+    // Search with a priority.
+    // @todo optimize as it looks messy.
+    $matches_priority = [0 => [], 1 => [], 2 => [], 3 => []];
     $icon_list = array_keys($icons);
     foreach ($icon_list as $icon_full_id) {
       $icon_data = IconDefinition::getIconDataFromId($icon_full_id);
-      if ($allowed_icon_pack && !in_array($icon_data['pack_id'], $allowed_icon_pack)) {
-        continue;
-      }
 
       // Priority search is on id and then pack for order.
       $icon_search = $icon_data['icon_id'] . ' ' . $icon_data['pack_id'];
 
-      // Check for exact order or any order matches.
-      if (preg_match($pattern, $icon_search)) {
-        $entry = $this->createResultEntry($icon_full_id, $result_callback);
-        if ($entry && !isset($matched_ids[$icon_full_id])) {
-          $matches[] = $entry;
-          $matched_ids[$icon_full_id] = TRUE;
+      if (preg_match($exact_order_pattern, $icon_search)) {
+        if (count($matches_priority[0]) < $max_result) {
+          $matches_priority[0][$icon_full_id] = $icon_full_id;
+          continue;
         }
       }
-      else {
-        // Fallback to search partial string.
-        foreach ($words as $word) {
-          if (str_contains($icon_search, $word)) {
-            $entry = $this->createResultEntry($icon_full_id, $result_callback);
-            if ($entry && !isset($matched_ids[$icon_full_id])) {
-              $matches[] = $entry;
-              $matched_ids[$icon_full_id] = TRUE;
-            }
-            break;
-          }
+      elseif (count($matches_priority[0]) < $max_result && preg_match($any_order_pattern, $icon_search)) {
+        if (count($matches_priority[1]) < $max_result) {
+          $matches_priority[1][$icon_full_id] = $icon_full_id;
+          continue;
         }
       }
-
-      if ($max_result && count($matches) >= $max_result) {
-        break;
+      elseif (count($matches_priority[0]) < $max_result && count($matches_priority[1]) < $max_result && preg_match($any_part_pattern, $icon_search)) {
+        if (count($matches_priority[2]) < $max_result) {
+          $matches_priority[2][$icon_full_id] = $icon_full_id;
+          continue;
+        }
+      }
+      elseif (count($matches_priority[0]) < $max_result && count($matches_priority[1]) < $max_result && count($matches_priority[2]) < $max_result && preg_match($any_part_any_order_pattern, $icon_search)) {
+        if (count($matches_priority[3]) < $max_result) {
+          $matches_priority[3][$icon_full_id] = $icon_full_id;
+          continue;
+        }
       }
     }
 
-    $cache_data[$query] = $matches;
-    $this->cache->set(
-      'icon_search',
-      $cache_data,
-      CacheBackendInterface::CACHE_PERMANENT,
-      ['icon_pack_plugin', 'icon_pack_collector']
-    );
+    $matches = array_slice(array_merge($matches_priority[0], $matches_priority[1], $matches_priority[2], $matches_priority[3]), 0, $max_result);
 
     return $matches;
   }
@@ -152,17 +197,13 @@ class IconSearch implements ContainerInjectionInterface {
    *
    * @param string $icon_full_id
    *   The icon full id.
-   * @param callable|null $callback
+   * @param callable $callback
    *   A callable to process the result.
    *
    * @return string|array|null
    *   The icon result passed through the callback.
    */
-  private function createResultEntry(string $icon_full_id, ?callable $callback = NULL): mixed {
-    if (NULL === $callback) {
-      return $icon_full_id;
-    }
-
+  private function createResultEntry(string $icon_full_id, callable $callback): mixed {
     $icon = $this->pluginManagerIconPack->getIcon($icon_full_id);
     if (!$icon instanceof IconDefinitionInterface) {
       return NULL;

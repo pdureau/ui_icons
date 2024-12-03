@@ -25,7 +25,7 @@ final class IconSelectForm extends FormBase {
 
   private const AJAX_WRAPPER_ID = 'icon-results-wrapper';
   private const MESSAGE_WRAPPER_ID = 'icon-message-wrapper';
-  private const NUM_PER_PAGE = 185;
+  private const NUM_PER_PAGE = 247;
   private const PREVIEW_ICON_SIZE = 32;
 
   /**
@@ -84,8 +84,6 @@ final class IconSelectForm extends FormBase {
       return [];
     }
 
-    // @todo get total of icons cached.
-    // @todo get first x num of icons cached.
     $allowed_icon_pack = $options['query']['allowed_icon_pack'] ?? [];
     if (!empty($allowed_icon_pack)) {
       $allowed_icon_pack = explode('+', $allowed_icon_pack);
@@ -200,14 +198,24 @@ final class IconSelectForm extends FormBase {
       ],
     ];
 
+    foreach ($this->getIconPackManager()->getDefinitions() as $pack_definition) {
+      if (isset($pack_definition['library']) && isset($form['list']['#attached']['library'])) {
+        $form['list']['#attached']['library'][] = $pack_definition['library'];
+      }
+    }
+
     // Build a list of radio for each icon, without preview for performance. So
     // the modal is displayed as fast as possible.
     // Script js/library.js will handle lazy preview.
     $options = [];
     // Empty icon to allow deletion of selection.
     $options['_none_'] = '<img src="/core/themes/claro/images/icons/e34f4f/crossout.svg" title="Select none" width="32" height="32">';
-    foreach ($icons as $icon_full_id) {
-      $options[$icon_full_id] = '<img src="' . IconPreview::SPINNER_ICON . '" title="' . $icon_full_id . '" width="32" height="32">';
+    foreach ($icons as $icon_data) {
+      if (is_array($icon_data)) {
+        $options[$icon_data['value']] = $icon_data['label'];
+        continue;
+      }
+      $options[$icon_data] = '<img src="' . IconPreview::SPINNER_ICON . '" title="' . $icon_data . '" width="32" height="32">';
     }
 
     $form['list']['icon_full_id'] = [
