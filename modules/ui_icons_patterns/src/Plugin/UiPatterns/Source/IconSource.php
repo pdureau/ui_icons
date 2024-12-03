@@ -26,12 +26,12 @@ class IconSource extends SourcePluginBase {
    */
   public function getPropValue(): mixed {
     $value = $this->getSetting('value');
-    $icon_settings = $value['icon_settings'] ?? [];
 
-    if (!$icon_data = IconDefinition::getIconDataFromId($value['icon_id'] ?? '')) {
+    if (!$icon_data = IconDefinition::getIconDataFromId($value['target_id'] ?? '')) {
       return NULL;
     }
 
+    $icon_settings = $value['settings'] ?? [];
     $icon_data['settings'] = $icon_settings[$icon_data['pack_id']] ?? [];
 
     return $icon_data;
@@ -45,8 +45,8 @@ class IconSource extends SourcePluginBase {
     $element = [
       'value' => [
         '#type' => 'icon_autocomplete',
-        '#default_value' => $value['icon_id'] ?? '',
-        '#default_settings' => $value['icon_settings'] ?? [],
+        '#default_value' => $value['target_id'] ?? '',
+        '#default_settings' => $value['settings'] ?? [],
         '#show_settings' => TRUE,
         '#return_id' => TRUE,
       ],
