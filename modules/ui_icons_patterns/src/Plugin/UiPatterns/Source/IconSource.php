@@ -26,12 +26,11 @@ class IconSource extends SourcePluginBase {
    */
   public function getPropValue(): mixed {
     $value = $this->getSetting('value');
-
-    if (!$icon_data = IconDefinition::getIconDataFromId($value['target_id'] ?? '')) {
+    if (!$icon_data = IconDefinition::getIconDataFromId($value['target_id'] ?? $value['icon_id'] ?? '')) {
       return NULL;
     }
 
-    $icon_settings = $value['settings'] ?? [];
+    $icon_settings = $value['settings'] ?? $value['icon_settings'] ?? [];
     $icon_data['settings'] = $icon_settings[$icon_data['pack_id']] ?? [];
 
     return $icon_data;

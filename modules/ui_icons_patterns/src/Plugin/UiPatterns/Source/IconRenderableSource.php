@@ -27,11 +27,8 @@ class IconRenderableSource extends IconSource {
     if (!$value) {
       return [];
     }
-    if (!isset($value['target_id'])) {
-      return [];
-    }
 
-    return IconDefinition::getRenderable($value['target_id'], $value['settings'] ?? []);
+    return IconDefinition::getRenderable($value['target_id'] ?? $value['icon_id'] ?? '', $value['settings'] ?? $value['icon_settings'] ?? []);
   }
 
 }
