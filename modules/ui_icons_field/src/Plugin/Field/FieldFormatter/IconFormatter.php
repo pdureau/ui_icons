@@ -216,6 +216,9 @@ class IconFormatter extends FormatterBase implements ContainerFactoryPluginInter
 
       $icon_full_id = $item->get('target_id')->getValue();
       $formatter_settings = $this->getSetting('icon_settings') ?? [];
+      if (!is_array($formatter_settings)) {
+        $formatter_settings = [];
+      }
 
       $elements[$delta] = IconDefinition::getRenderable($icon_full_id, $formatter_settings);
     }
