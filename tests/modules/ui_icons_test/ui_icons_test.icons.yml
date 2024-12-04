@@ -6,6 +6,16 @@ test_minimal:
   template: >-
     {{ icon_id }}: <img src="{{ source }}" width="32" height="32">
 
+test_preview:
+  extractor: path
+  config:
+    sources:
+      - icons/flat/foo.png
+  template: >-
+    _template_ {{ icon_id }}
+  preview: >-
+    _preview_ {{ icon_id }}
+
 test_path:
   enabled: true
   label: Test path
