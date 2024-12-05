@@ -13,6 +13,10 @@ include:
   if: '$SKIP_PHPMD == "1"'
   when: never
 
+.skip-coverage-rule: &skip-coverage-rule
+  if: '$SKIP_COVERAGE == "1"'
+  when: never
+
 .phpmd-base:
   stage: validate
   rules:
@@ -53,3 +57,28 @@ include:
 
 phpmd:
   extends: .phpmd-base
+
+coverage:
+  extends:
+    - .phpunit-base
+  services:
+    - !reference [.with-database]
+  rules:
+    - !reference [.opt-in-current-rule]
+    - *skip-coverage-rule
+    - !reference [.phpunit-tests-exist-rule]
+  before_script:
+    - echo -e "\e[0Ksection_start:`date +%s`:install_xdebug[collapsed=true]\r\e[0KInstall PHP Xdebug"
+    - apt-get update
+    - apt-get install -y --no-install-recommends $PHPIZE_DEPS
+    - pecl install xdebug && docker-php-ext-enable xdebug
+    - echo -e "\e[0Ksection_end:`date +%s`:install_xdebug\r\e[0K"
+    - export XDEBUG_MODE=coverage
+  variables:
+    SYMFONY_DEPRECATIONS_HELPER: 'disabled'
+    _PHPUNIT_TESTGROUPS: ui_icons
+    _PHPUNIT_EXTRA: --testsuite unit,kernel --strict-coverage --coverage-text --only-summary-for-coverage-text
+  # @see https://docs.gitlab.com/ee/ci/yaml/#coverage
+  coverage: '/^\s*Lines:\s*\d+.\d+\%/'
+  allow_failure: true
+  when: manual

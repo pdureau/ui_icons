@@ -46,7 +46,7 @@ class IconSourceTest extends MediaKernelTestBase {
   ];
 
   /**
-   * @covers ::getMetadata
+   * Test the method ::getMetadata().
    */
   public function testGetMetadata(): void {
     /** @var \Drupal\Core\Extension\ModuleExtensionList $extensionList */
