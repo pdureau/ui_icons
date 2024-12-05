@@ -1,0 +1,8 @@
+name: 'UI Icons Linkit'
+type: module
+description: 'Linkit integration.'
+package: Field types
+core_version_requirement: ^10.3 || ^11
+dependencies:
+  - linkit:linkit
+  - ui_icons:ui_icons_field

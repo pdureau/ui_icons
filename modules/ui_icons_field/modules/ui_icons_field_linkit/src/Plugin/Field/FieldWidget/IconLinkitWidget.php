@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Drupal\ui_icons_field\Plugin\Field\FieldWidget;
+namespace Drupal\ui_icons_field_linkit\Plugin\Field\FieldWidget;
 
 use Drupal\Core\Field\Attribute\FieldWidget;
 use Drupal\Core\Field\FieldItemListInterface;
@@ -10,26 +10,26 @@ use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
 use Drupal\Core\StringTranslation\TranslatableMarkup;
 use Drupal\Core\Theme\Icon\Plugin\IconPackManagerInterface;
-use Drupal\link\Plugin\Field\FieldWidget\LinkWidget;
 use Drupal\ui_icons_field\IconFieldTrait;
 use Drupal\ui_icons_field\IconLinkWidgetTrait;
 use Symfony\Component\DependencyInjection\ContainerInterface;
+use Drupal\linkit\Plugin\Field\FieldWidget\LinkitWidget;
 
 /**
- * Plugin implementation of the 'link field' widget with ui icons support.
+ * Plugin implementation of the 'linkit field with icon' widget.
  */
 #[FieldWidget(
-  id: 'icon_link_widget',
-  label: new TranslatableMarkup('Link icon'),
+  id: 'icon_linkit_widget',
+  label: new TranslatableMarkup('Linkit icon'),
   field_types: ['link'],
 )]
-class IconLinkWidget extends LinkWidget implements ContainerFactoryPluginInterface {
+class IconLinkitWidget extends LinkitWidget implements ContainerFactoryPluginInterface {
 
   use IconFieldTrait, IconLinkWidgetTrait {
-    defaultSettings as protected traitDefaultSettings;
-    settingsForm as protected traitSettingsForm;
-    settingsSummary as protected traitSettingsSummary;
-    formElement as protected traitFormElement;
+    IconLinkWidgetTrait::defaultSettings as protected traitDefaultSettings;
+    IconLinkWidgetTrait::settingsForm as protected traitSettingsForm;
+    IconLinkWidgetTrait::settingsSummary as protected traitSettingsSummary;
+    IconLinkWidgetTrait::formElement as protected traitFormElement;
   }
 
   /**
@@ -70,8 +70,10 @@ class IconLinkWidget extends LinkWidget implements ContainerFactoryPluginInterfa
    * {@inheritdoc}
    */
   public function settingsSummary(): array {
-    $summary = parent::settingsSummary();
-    $summary += $this->traitSettingsSummary();
+    $summary = array_merge(
+      parent::settingsSummary(),
+      $this->traitSettingsSummary()
+    );
     return $summary;
   }
 

@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Drupal\ui_icons_field_link_attributes\Plugin\Field\FieldWidget;
+namespace Drupal\ui_icons_field_linkit_attributes\Plugin\Field\FieldWidget;
 
 use Drupal\Core\Field\Attribute\FieldWidget;
 use Drupal\Core\Field\FieldItemListInterface;
@@ -15,17 +15,17 @@ use Drupal\link_attributes\LinkWithAttributesWidgetTrait;
 use Drupal\ui_icons_field\IconFieldTrait;
 use Drupal\ui_icons_field\IconLinkWidgetTrait;
 use Symfony\Component\DependencyInjection\ContainerInterface;
-use Drupal\link\Plugin\Field\FieldWidget\LinkWidget;
+use Drupal\linkit\Plugin\Field\FieldWidget\LinkitWidget;
 
 /**
- * Plugin implementation of the 'link field with attributes' widget.
+ * Plugin implementation of the 'linkit field with attributes' widget.
  */
 #[FieldWidget(
-  id: 'icon_link_attributes_widget',
-  label: new TranslatableMarkup('Link icon (with attributes)'),
+  id: 'icon_linkit_attributes_widget',
+  label: new TranslatableMarkup('Linkit icon (with attributes)'),
   field_types: ['link'],
 )]
-class IconLinkWithAttributesWidget extends LinkWidget implements ContainerFactoryPluginInterface {
+class IconLinkitWithAttributesWidget extends LinkitWidget implements ContainerFactoryPluginInterface {
 
   use IconFieldTrait;
 

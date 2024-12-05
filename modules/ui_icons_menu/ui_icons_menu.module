@@ -119,6 +119,11 @@ function ui_icons_menu_link_alter(array &$variables): void {
     return;
   }
 
+  // Check if the link is from menu.
+  if (isset($variables['options']['ui_icons_processed'])) {
+    return;
+  }
+
   // Do not handle link handled by field link in IconLinkFormatter.
   if ($variables['url']->getOption('ui_icons_processed')) {
     return;

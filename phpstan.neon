@@ -14,6 +14,7 @@ parameters:
       - */ui_icons_field_link_attributes/src/Plugin/Field/FieldWidget/IconLinkWithAttributesWidget.php
       # Always fail because of missing ui_patterns module.
       - */ui_icons_patterns/src/Plugin/UiPatterns/*
+      - */ui_icons_patterns/src/Plugin/Derivative/FieldIconSourceDeriver.php
   fileExtensions:
     - php
     - module

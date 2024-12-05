@@ -2,40 +2,34 @@
 
 declare(strict_types=1);
 
-namespace Drupal\ui_icons_field\Plugin\Field\FieldFormatter;
+namespace Drupal\ui_icons_field_linkit\Plugin\Field\FieldFormatter;
 
 use Drupal\Core\Entity\EntityDisplayRepositoryInterface;
 use Drupal\Core\Field\Attribute\FieldFormatter;
-use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Render\RendererInterface;
 use Drupal\Core\StringTranslation\TranslatableMarkup;
 use Drupal\Core\Theme\Icon\Plugin\IconPackManagerInterface;
 use Drupal\link\Plugin\Field\FieldFormatter\LinkFormatter;
+use Drupal\ui_icons_field\IconLinkFormatterTrait;
 use Drupal\ui_icons_field\IconFieldHelpers;
 use Drupal\ui_icons_field\IconFieldTrait;
-use Drupal\ui_icons_field\IconLinkFormatterTrait;
+use Drupal\linkit\Plugin\Field\FieldFormatter\LinkitFormatter;
 use Symfony\Component\DependencyInjection\ContainerInterface;
+use Drupal\Core\Form\FormStateInterface;
 
 /**
  * A field formatter for displaying icon in link field content.
  */
 #[FieldFormatter(
-  id: 'icon_link_formatter',
-  label: new TranslatableMarkup('Link icon'),
+  id: 'icon_linkit_formatter',
+  label: new TranslatableMarkup('Linkit icon'),
   field_types: [
     'link',
   ],
 )]
-class IconLinkFormatter extends LinkFormatter {
+class IconLinkitFormatter extends LinkitFormatter {
 
   use IconFieldTrait, IconLinkFormatterTrait;
-
-  /**
-   * The renderer service.
-   *
-   * @var \Drupal\Core\Render\RendererInterface
-   */
-  protected RendererInterface $renderer;
 
   /**
    * The icon pack manager.
@@ -50,6 +44,13 @@ class IconLinkFormatter extends LinkFormatter {
    * @var \Drupal\Core\Entity\EntityDisplayRepositoryInterface
    */
   protected EntityDisplayRepositoryInterface $entityDisplayRepository;
+
+  /**
+   * The renderer service.
+   *
+   * @var \Drupal\Core\Render\RendererInterface
+   */
+  protected RendererInterface $renderer;
 
   /**
    * {@inheritdoc}
@@ -79,6 +80,10 @@ class IconLinkFormatter extends LinkFormatter {
 
     // Clean unwanted values from link formatter.
     foreach (array_keys(LinkFormatter::defaultSettings()) as $key) {
+      unset($filtered_values[$key]);
+    }
+    // Clean unwanted values from linkit formatter.
+    foreach (array_keys(LinkitFormatter::defaultSettings()) as $key) {
       unset($filtered_values[$key]);
     }
 
