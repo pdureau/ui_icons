@@ -58,7 +58,8 @@ include:
 phpmd:
   extends: .phpmd-base
 
-coverage:
+# Coverage seems slow and not manual.
+.coverage:
   extends:
     - .phpunit-base
   services:
