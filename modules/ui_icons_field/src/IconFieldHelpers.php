@@ -73,7 +73,7 @@ class IconFieldHelpers {
 
     // Clean some icon values.
     unset($filtered_values['icon_display']);
-    // @phpstan-ignore-next-line
+
     return reset($filtered_values);
   }
 
